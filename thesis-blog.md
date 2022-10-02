@@ -2,9 +2,21 @@
 
 *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+# 10.01.22
+
+*Finalizing code for Jump Flooding Algorithm*
+
+I've been trying to run the code for the JFA and have run into a number of small bugs that I have fixed:
+
+- [x] Better prompts for user input and allowing for resizing of input images that aren't `N x N` squares
+- [x] For the seed dictionary entries need to be tuples, not lists since you cannot hash a mutable object
+- [x] Making sure that when I loop through the neighbors I don't go out of bounds on the image
+
+The main issue that I'm facing is that this algorithm is *super slow*. It does have  O ( N 2 log 2 ⁡ ( N ) ) {\displaystyle O(N^{2}\log _{2}(N))} {\displaystyle O(N^{2}\log _{2}(N))} complexity (N^2)
+
 ## 09.30.22
 
-Working on basic image operations! Converting an image to grayscale and implementing the jump flooding algorithm. 
+Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.**
 
 Grayscaling an image was easy to implement in `js` and in `python` (having a bit of trouble with `pyscript` due to the `pyodide` module not downloading). 
 
