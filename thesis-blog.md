@@ -12,7 +12,7 @@ I've been trying to run the code for the JFA and have run into a number of small
 - [x] For the seed dictionary entries need to be tuples, not lists since you cannot hash a mutable object
 - [x] Making sure that when I loop through the neighbors I don't go out of bounds on the image
 
-The main issue that I'm facing is that this algorithm is *super slow*. It does have  O ( N 2 log 2 ⁡ ( N ) ) {\displaystyle O(N^{2}\log _{2}(N))} {\displaystyle O(N^{2}\log _{2}(N))} complexity (N^2)
+The main issue that I'm facing is that this algorithm is *super slow*. It does have  O(N^2 log2(N)) complexity. But I think I am implementing something wrong and have some extra loops because this is taking way too long. 
 
 ## 09.30.22
 
