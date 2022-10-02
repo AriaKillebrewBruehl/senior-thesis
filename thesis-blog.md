@@ -16,7 +16,7 @@ The main issue that I'm facing is that this algorithm is *super slow*. It does h
 
 ## 09.30.22
 
-Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.**
+*Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.*
 
 Grayscaling an image was easy to implement in `js` and in `python` (having a bit of trouble with `pyscript` due to the `pyodide` module not downloading). 
 
