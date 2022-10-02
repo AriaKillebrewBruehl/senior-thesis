@@ -9,8 +9,7 @@ def grayscale(img: str) -> None:
         # import image
         input_image = Image.open(img)
     except:
-        print("File " + img + " could not be opened.")
-        return 
+        raise Exception("File " + img + " could not be opened.") 
 
     # extract pixel map 
     pixel_map = input_image.load()
@@ -23,7 +22,7 @@ def grayscale(img: str) -> None:
 
             avg = int((0.299*r + 0.587*g + 0.114*b))
             pixel_map[i, j] = (avg, avg, avg)
-    # svae new image
+    # save new image
     input_image.save(img+".-grayscale.png", format = "png")
 
 
