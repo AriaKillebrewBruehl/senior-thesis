@@ -25,7 +25,7 @@ For example, here is a drawing of my roommates cat:
 Fig.1 - My roommates cat, Tess
 </p>
 
-![tess](./hello-jmp-flood/images/tess-jmp-flood.png-jump-flood.png)
+![tess](./hello-jmp-flood/images/tess-jmp-flood.png.-jump-flood.png)
 </p>
 <p align = "center">
 Fig.2 - My roommates cat, Tess after being jump flooded
