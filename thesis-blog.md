@@ -14,6 +14,24 @@ I've been trying to run the code for the JFA and have run into a number of small
 
 The main issue that I'm facing is that this algorithm is *super slow*. It does have  O(N^2 log2(N)) complexity. But I think I am implementing something wrong and have some extra loops because this is taking way too long. 
 
+Still running slow but I made input images using Aseprite that are super small and I have been able to run the code and see 
+that it works!
+
+For example, here is a drawing of my roommates cat:
+
+![tess](./images/tess-jmp-flood.png)
+</p>
+<p align = "center">
+Fig.1 - My roommates cat, Tess
+</p>
+
+![tess](./images/tess-jmp-flood.png-jump-flood.png)
+</p>
+<p align = "center">
+Fig.2 - My roommates cat, Tess after being jump flooded
+</p>
+
+
 ## 09.30.22
 
 *Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.*
