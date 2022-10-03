@@ -7,5 +7,5 @@ I plan to keep an unofficial [thesis-blog](https://github.com/AriaKillebrewBrueh
 ## matter
 The `matter` folder houses the couple of files that Jim gave me when we were thinking about doing a `matter.js` thesis.
 
-## hello-world
-The `hello-world` folder houses all the simple programs I have written to familiarize myself with differnt libarareies.
+## hello-*
+All folders that start with `hello-` house work I have done to familiarize myself with libraries and algorithms. 
