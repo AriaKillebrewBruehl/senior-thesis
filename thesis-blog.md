@@ -1,11 +1,28 @@
 # Aria's Thesis Blog :partying_face:
 
-*Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
+## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
+
+# 10.4.22
+### *Fixing Include paths and Cython to the resccue!*
+<br>
+
+First thing I did today was fix my include paths in VS Code. I am still having errors compiling c++ code, just linker failures
+that I need to take a second and look back at. 
+
+Since `opencv` works with python and c++ my plan (Jim's suggestion) is to use both python and c++ throughout the process, hopefully 
+settling on c++ for final things. So I want to go back and change all my python code to work with `opencv` rather than `PILLOW`. From 
+what I've read `for` loops are really slow in `opencv` which is ofc not great. My Googling has led me to `Cython` which should fix these 
+performance issues. So now I am working on learning `Cython` and then using `Cython` to speed up `opencv`! 
+
+# 10.3.22
+
+### *Playing around with things in c++*
+<br>
 
 # 10.01.22
 
-*Finalizing code for Jump Flooding Algorithm*
-
+### *Finalizing code for Jump Flooding Algorithm*
+<br>
 I've been trying to run the code for the JFA and have run into a number of small bugs that I have fixed:
 
 - [x] Better prompts for user input and allowing for resizing of input images that aren't `N x N` squares
@@ -31,11 +48,13 @@ Fig.1 - My roommates cat, Tess
 Fig.2 - My roommates cat, Tess after being jump flooded
 </p>
 
+Also thinking about edge detection, Laplacian of Gaussian seems promising and [python has a built in function](https://stackoverflow.com/questions/22050199/python-implementation-of-the-laplacian-of-gaussian-edge-detection) for part of the algorithm. 
+
 
 ## 09.30.22
 
-*Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.*
-
+### *Working on basic image operations! Converting an image to grayscale and implementing the Jump Flooding Algorithm.*
+<br>
 Grayscaling an image was easy to implement in `js` and in `python` (having a bit of trouble with `pyscript` due to the `pyodide` module not downloading). 
 
 When I started trying to implement the jump flooding algorithm in `js` I realized that it would be somewhat tricky / expensive. This is because the pixels need to hold more information that just their `r, g, b` values (what their seed pixel is). Since we can't edit the pixels that we get when iterating over the image as an array my idea was to create a dictionary like so:
