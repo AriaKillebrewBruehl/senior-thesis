@@ -1,3 +1,3 @@
-import ex
+import example_original
 
-ex.test(5)
+example_original.test(5)
