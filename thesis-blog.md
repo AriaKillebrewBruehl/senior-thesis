@@ -13,8 +13,8 @@ Today I shall attempt to implement DoG! I understand the basics of the algorithm
 
 Here is what I don't understand 
 
-    - [ ] What is sigma?
-    - [ ] What is a Gaussian kernel?
+    - [] What is sigma?
+    - [] What is a Gaussian kernel?
 
 [This stack overflow post](https://stackoverflow.com/questions/17841098/gaussian-blur-standard-deviation-radius-and-kernel-size) is helpful for how to pick `sigma` and the `kernel` (I guess it is standard to have the `kernel` be something like 3 * `sigma` or 4 * `sigma` + 0.5). I'll look and see if any of the papers say what `sigma` and `kernel` size they use. 
 
