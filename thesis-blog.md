@@ -12,22 +12,20 @@ For a couple of days I was having an issue where I would run jfa and it would do
 gradient on it. I had no clue what was happening since I looped through all the pixels right before I wrote them out and they were all 
 okay but when I looked at the image it was clearly not correct and using a color picker showed that some of them were not what they should be. It turns out what was going on was I was running jfa on a `.png` and then writing it out as a `.jpg` which was messing with the colors. 
 
-![original](./open_cv/jfa/images/simple-jmp-flood.png)
-</p>
 <p align = "center">
-Fig.1 - Original image
-</p>
 
-![bad jfa](./open_cv/jfa/images/simple-jmp-flood.png-jfa.jpg)
-</p>
-<p align = "center">
-Fig.1 - Weird JFA :(
-</p>
+<img src="./blog-images/zoomed-in-input.png" alt="drawing" width="100"/>
+<br>
+Fig.1 - Input image
+<br>
 
-![good jfa](./open_cv/jfa/images/simple-jmp-flood.png-jfa.png)
-</p>
-<p align = "center">
-Fig.1 - Weird JFA :(
+<img src="./blog-images/zoomed-in-bad.png" alt="drawing" width="100"/>
+<br>
+Fig.2 - Weird jfa 
+<br>
+<img src="./blog-images/zoomed-in-good.png" alt="drawing" width="100"/>
+<br>
+Fig.3 - Correct jfa
 </p>
 
 
