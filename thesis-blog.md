@@ -2,6 +2,24 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+# 10.09.2022 
+### *Who is Mr. Gaussian and why is he so important?*
+
+Today I shall attempt to implement DoG! I understand the basics of the algorithm:
+
+    1. blur image with high sigma
+    2. blur image with low sigma 
+    3. subtract the two and now you have the edges!
+
+Here is what I don't understand 
+
+    - [ ] What is sigma?
+    - [ ] What is a Gaussian kernel?
+
+[This stack overflow post](https://stackoverflow.com/questions/17841098/gaussian-blur-standard-deviation-radius-and-kernel-size) is helpful for how to pick `sigma` and the `kernel` (I guess it is standard to have the `kernel` be something like 3 * `sigma` or 4 * `sigma` + 0.5). I'll look and see if any of the papers say what `sigma` and `kernel` size they use. 
+
+Another thing that I need to do is figure out `CMake` because having all my code in one file is unideal...
+
 # 10.08.2022
 ### *OMG I finally figured it out!!!*
 <br>
