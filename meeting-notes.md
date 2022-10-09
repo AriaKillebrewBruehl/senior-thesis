@@ -1,5 +1,32 @@
 ## Meeting Notes
 
+## 10 / 04 
+
+- prototype in python then do in c++ 
+  - write python not so pythonic bc I have to rewrite 
+  - do small images in python 
+  - larger things in c++ / c 
+  - compiled c++ that python calls (are there ways to do this)
+  - or do on GPU
+- opencv seems like a good thing because it has compatibility for c++ and python 
+
+- for wasm use something that a lot of ppl work with 
+
+- jump flood: inner loop is not the full range!!! just 3 values! 
+
+- paper about lum quantization 
+
+- maybe to make headcuts better adjust stroke size on the outside, blend two isophote papers (stipling and line thickness)
+  - for hashing paper use this too 
+  
+
+- next steps:
+  - work on DoG using opencv 
+    - port existing python to use opencv
+
+  - isophote calculation 
+
+
 
 
 ## 09 / 27
