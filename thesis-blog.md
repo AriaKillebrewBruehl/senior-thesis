@@ -12,19 +12,19 @@ For a couple of days I was having an issue where I would run jfa and it would do
 gradient on it. I had no clue what was happening since I looped through all the pixels right before I wrote them out and they were all 
 okay but when I looked at the image it was clearly not correct and using a color picker showed that some of them were not what they should be. It turns out what was going on was I was running jfa on a `.png` and then writing it out as a `.jpg` which was messing with the colors. 
 
-![original](./opencv/jfa/images/simple-jmp-flood.png)
+![original](./open_cv/jfa/images/simple-jmp-flood.png)
 </p>
 <p align = "center">
 Fig.1 - Original image
 </p>
 
-![bad jfa](./opencv/jfa/images/simple-jmp-flood.png-jfa.jpg)
+![bad jfa](./open_cv/jfa/images/simple-jmp-flood.png-jfa.jpg)
 </p>
 <p align = "center">
 Fig.1 - Weird JFA :(
 </p>
 
-![good jfa](./opencv/jfa/images/simple-jmp-flood.png-jfa.png)
+![good jfa](./open_cv/jfa/images/simple-jmp-flood.png-jfa.png)
 </p>
 <p align = "center">
 Fig.1 - Weird JFA :(
@@ -65,13 +65,13 @@ that it works!
 
 For example, here is a drawing of my roommates cat:
 
-![tess](./hello-jmp-flood/images/tess-jmp-flood.png)
+![tess](./hello-python/jmp-flood/images/tess-jmp-flood.png)
 </p>
 <p align = "center">
 Fig.1 - My roommates cat, Tess
 </p>
 
-![tess](./hello-jmp-flood/images/tess-jmp-flood.png.-jump-flood.png)
+![tess](./hello-python/jmp-flood/images/tess-jmp-flood.png.-jump-flood.png)
 </p>
 <p align = "center">
 Fig.2 - My roommates cat, Tess after being jump flooded
