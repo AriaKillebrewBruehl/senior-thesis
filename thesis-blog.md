@@ -2,6 +2,35 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+# 10.08.2022
+### *OMG I finally figured it out!!!*
+<br>
+I've missed a couple days but basically what I have done recently is fix my opencv install since it was previously not working and 
+then reimplement jfa but in c++. 
+
+For a couple of days I was having an issue where I would run jfa and it would do the flood but the output image appeared to have a 
+gradient on it. I had no clue what was happening since I looped through all the pixels right before I wrote them out and they were all 
+okay but when I looked at the image it was clearly not correct and using a color picker showed that some of them were not what they should be. It turns out what was going on was I was running jfa on a `.png` and then writing it out as a `.jpg` which was messing with the colors. 
+
+![original](./opencv/jfa/images/simple-jmp-flood.png)
+</p>
+<p align = "center">
+Fig.1 - Original image
+</p>
+
+![bad jfa](./opencv/jfa/images/simple-jmp-flood.png-jfa.jpg)
+</p>
+<p align = "center">
+Fig.1 - Weird JFA :(
+</p>
+
+![good jfa](./opencv/jfa/images/simple-jmp-flood.png-jfa.png)
+</p>
+<p align = "center">
+Fig.1 - Weird JFA :(
+</p>
+
+
 # 10.4.22
 ### *Fixing Include paths and Cython to the resccue!*
 <br>
