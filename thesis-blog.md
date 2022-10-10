@@ -2,6 +2,20 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+# 10.10.2022
+### *Continuing with Edge Detection, Going Beyond Mr. Gaussian*
+
+In the "Automated Hedcut Illustration Using Isophotes" [Sung Ye Kim et al.] they use DoG for getting edges plus more, today I am looking at what that more is. These are their steps:
+
+- [x] use DoG with sigma_1 = 1.0 and sigma_2 = 1.5 
+    - right now I'm doing a kernel of (3, 3) and (9, 9) and I think that looks better but I'm open to changing it
+- [ ] remove edges with a length less that some predefined threshold
+    - how do they find these edges?
+- [ ] employ a morphological opening operation with a structuring element of a circle in order to alleviate nose and smooth the edges (radius 1)
+    - [ ] [binary erosion](https://en.wikipedia.org/wiki/Erosion_(morphology))
+    - [ ] [binary dilation](https://en.wikipedia.org/wiki/Dilation_(morphology))
+
+
 # 10.09.2022 
 ### *Who is Mr. Gaussian and why is he so important?*
 
@@ -13,8 +27,8 @@ Today I shall attempt to implement DoG! I understand the basics of the algorithm
 
 Here is what I don't understand 
 
-- [ ] What is sigma?
-- [ ] What is a Gaussian kernel?
+- [x] What is sigma?
+- [x] What is a Gaussian kernel?
 
 [This stack overflow post](https://stackoverflow.com/questions/17841098/gaussian-blur-standard-deviation-radius-and-kernel-size) is helpful for how to pick `sigma` and the `kernel` (I guess it is standard to have the `kernel` be something like 3 * `sigma` or 4 * `sigma` + 0.5). I'll look and see if any of the papers say what `sigma` and `kernel` size they use. 
 
