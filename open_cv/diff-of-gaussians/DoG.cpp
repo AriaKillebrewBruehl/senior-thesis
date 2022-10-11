@@ -23,6 +23,31 @@ cv::Mat grayscale(cv::Mat image) {
     return image;
 }
 
+
+int erode_dilate(std::string img) {
+    cv::Mat image;
+    // read image
+    image = cv::imread(img);
+    if (img.empty()) {
+        throw "Not a valid image file.";
+        return 1;
+    }
+
+    cv::Mat opened;
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2));
+
+    for (int i = 0; i < 5; i++) {
+        cv::morphologyEx(image, opened, cv::MORPH_OPEN, element);
+         // save image
+        std::string file_type = img.substr(img.length()-4, 4);
+        std::string output_file_morphed = img + "-morphed-" + std::to_string(i) + file_type;
+        cv::imwrite(output_file_morphed, opened);
+        image = opened;
+    }
+    
+    return 0;
+}
+
 int DoG(std::string img) {
     cv::Mat image;
     // read image
@@ -52,6 +77,8 @@ int DoG(std::string img) {
     std::string file_type = img.substr(img.length()-4, 4);
     std::string output_file = img + "-DoG" + file_type;
     cv::imwrite(output_file, DoG);
+
+    erode_dilate(output_file);
     return 0;
 }
 
@@ -60,7 +87,7 @@ int main(int argc, char** argv) {
          std::cerr << "Must pass in image to run DoG on." << std::endl;
     } else {
         for (int i = 1; i < argc; i++) {
-            DoG(argv[i]);
+            erode_dilate(argv[i]);
         }
     }
 }
