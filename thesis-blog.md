@@ -14,6 +14,25 @@ In the "Automated Hedcut Illustration Using Isophotes" [Sung Ye Kim et al.] they
 - [ ] employ a morphological opening operation with a structuring element of a circle in order to alleviate nose and smooth the edges (radius 1)
     - [ ] [binary erosion](https://en.wikipedia.org/wiki/Erosion_(morphology))
     - [ ] [binary dilation](https://en.wikipedia.org/wiki/Dilation_(morphology))
+    - heck yea! opencv has a [library function](https://docs.opencv.org/3.4/db/df6/tutorial_erosion_dilatation.html) to do this :partying_face: 
+
+Update, everything is working well expect that I can't figure out how to remove lines with a length less that 200 pixels. Maybe 
+doing repeated opening would work? That does **not** work it just makes things look funny and shifted. But alas! Opencv has a [function for that](https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga107a78bf7cd25dec05fb4dfc5c9e765f)!
+
+<p align = "center">
+
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png" alt="drawing" width="100"/>
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-0.png" alt="drawing" width="100"/>
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-1.png" alt="drawing" width="100"/>
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-2.png" alt="drawing" width="100"/>
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-2.png" alt="drawing" width="100"/>
+<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-4.png" alt="drawing" width="100"/>
+
+
+Fig.1 - Input image, output after 1, 2, 3, 4, 5 iterations of opening. 
+<br>
+
+
 
 
 # 10.09.2022 
