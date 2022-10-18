@@ -9,7 +9,7 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     }
     if (img.empty() && path != "") {
         // read image
-        image = cv::imread(path, 1);
+        image = cv::imread(path, 0);
         if (image.empty()) {
             throw "Not a valid image file.";
             return image;
@@ -17,6 +17,20 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     } else if (!img.empty()) {
         image = img;
     }
+    // convert to binary 
+    cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
+
+
+    // save image
+    if (path == "") {
+        int rand = std::rand() % 100;
+        path = "./" + std::to_string(rand) + ".png";
+    }
+    std::string file_type = path.substr(path.length()-4, 4);
+    std::string output_file = path + "-skel" + file_type;
+    cv::imwrite(output_file, image);
+
+    return image;
      
 
 }
