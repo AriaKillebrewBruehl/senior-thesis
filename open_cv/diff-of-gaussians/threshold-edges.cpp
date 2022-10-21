@@ -25,11 +25,6 @@ cv::Mat threshold(std::string path, cv::Mat img) {
     cv::Mat centroids;
 
     int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 	
-
-    
-    //std::cout << labels << std::endl;
-    std::cout << "stats.size()=" << stats.size() << std::endl;
-    //std::cout << centroids << std::endl;
     
     for(int i=0; i<stats.rows; i++) {
         int x = stats.at<int>(cv::Point(0, i));
@@ -38,11 +33,7 @@ cv::Mat threshold(std::string path, cv::Mat img) {
         int h = stats.at<int>(cv::Point(3, i));
       
         // extract just the component
-        std::cout << "x=" << x << " y=" << y << " w=" << w << " h=" << h << std::endl;
         cv::Mat comp = image(cv::Range(y, y+h), cv::Range(x,x+w));
-      
-        // save image
-        
        
         if (path == "") {
             srand (time(NULL));
@@ -52,6 +43,10 @@ cv::Mat threshold(std::string path, cv::Mat img) {
         std::string file_type = path.substr(path.length()-4, 4);
         std::string output_file = path + "-thresh-" + std::to_string(i) + file_type;
         cv::imwrite(output_file, comp);
+
+        // get the skeleton 
+        cv::Mat empty;
+        cv::Mat skel = skeleton(output_file, empty);
     }
 
 
