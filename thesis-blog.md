@@ -21,8 +21,8 @@ is the skeleton of my initials:
 
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png" alt="drawing">
-<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing">
+<img src="open_cv/diff-of-gaussians/images/akb.png" alt="drawing" width="200">
+<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing" width="200">
 
 Fig.1 - Input image and its skeleton. 
 <br>
@@ -33,7 +33,7 @@ Here are the connected components and their skeletons:
 <p align = "center">
 
 <img src="open_cv/diff-of-gaussians/images/akb.png-thresh-1.png" alt="drawing" width="100">
-<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing" width="100">
+<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-1.png-skel.png" alt="drawing" width="100">
 
 Fig.2 - A connected component and its skeleton. 
 <br>
