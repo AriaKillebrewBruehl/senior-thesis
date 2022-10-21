@@ -53,6 +53,17 @@ Fig.3 - Image skeleton and one of its components.
 <br>
 </p>
 
+But the issue is that I am getting back 4 components, each of the letters and then part of the "k"
+
+<p align = "center">
+
+<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-1.png" alt="drawing" width="100">
+<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-4.png" alt="drawing" width="100">
+
+Fig.4 - The full "k" component and a component that is just the "k"'s leg. 
+<br>
+</p>
+
 # 10.18.2022
 ### *Hello from FSD airport floor while plane is delayed because THEY FORGOT TO PUT ANTI FREEZE IN IT!!* 
 
