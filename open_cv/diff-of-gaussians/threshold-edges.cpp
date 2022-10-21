@@ -26,6 +26,35 @@ cv::Mat threshold(std::string path, cv::Mat img) {
 
     int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 	
 
+    
+    //std::cout << labels << std::endl;
+    std::cout << "stats.size()=" << stats.size() << std::endl;
+    //std::cout << centroids << std::endl;
+    
+    for(int i=0; i<stats.rows; i++) {
+        int x = stats.at<int>(cv::Point(0, i));
+        int y = stats.at<int>(cv::Point(1, i));
+        int w = stats.at<int>(cv::Point(2, i));
+        int h = stats.at<int>(cv::Point(3, i));
+      
+        // extract just the component
+        std::cout << "x=" << x << " y=" << y << " w=" << w << " h=" << h << std::endl;
+        cv::Mat comp = image(cv::Range(y, y+h), cv::Range(x,x+w));
+      
+        // save image
+        
+       
+        if (path == "") {
+            srand (time(NULL));
+             int rand = std::rand() % 1000;
+            path = "../images/" + std::to_string(rand) + ".png";
+        }
+        std::string file_type = path.substr(path.length()-4, 4);
+        std::string output_file = path + "-thresh-" + std::to_string(i) + file_type;
+        cv::imwrite(output_file, comp);
+    }
+
+
     // save image
     if (path == "") {
         srand (time(NULL));
@@ -33,10 +62,10 @@ cv::Mat threshold(std::string path, cv::Mat img) {
         path = "../images/" + std::to_string(rand) + ".png";
     }
     std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-skel" + file_type;
-    cv::imwrite(output_file, skel);
+    std::string output_file = path + "-thresh" + file_type;
+    cv::imwrite(output_file, labels);
 
-    return image
+    return labels;
 }
 
 int main(int argc, char** argv) {
@@ -45,7 +74,8 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            image = cv::imread(argv[i], 0);
+            // image = cv::imread(argv[i], 0);
+            threshold(argv[i], image);
         }
     }
 }
