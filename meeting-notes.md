@@ -1,5 +1,13 @@
 ## Meeting Notes
 
+- removing blobs based on area is okay if we know the general width 
+- when i start tuning things do 200 x 200 images 
+  - want to have "printable" resolution 
+  - scale at which i care about features 
+- see about spines or blobs to find their length?
+- label pixel with shortest linear distance from outer pixel?
+- pick radius, find all the ports where you can place a circle with that radius along the blob 
+
 ## 10 / 04 
 
 - prototype in python then do in c++ 
