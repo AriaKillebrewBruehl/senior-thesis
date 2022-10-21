@@ -8,4 +8,5 @@
 #include "skeleton.hpp"
 
 
-cv::Mat threshold(std::string path, cv::Mat img);
+cv::Mat threshold(std::string path, cv::Mat img, int threshold);
+bool meetsThreshold(cv::Mat img, int threshold);

@@ -1,6 +1,12 @@
 #include "threshold-edges.hpp"
 
-cv::Mat threshold(std::string path, cv::Mat img) {
+bool meetsThreshold(cv::Mat img, int threshold) {
+    if (img.empty()) {
+        return false;
+    }
+}
+
+cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     // read in image
     cv::Mat image;
     if (img.empty() && path == "") {
@@ -13,7 +19,7 @@ cv::Mat threshold(std::string path, cv::Mat img) {
         if (image.empty()) {
             throw "Not a valid image file.";
             return image;
-        }   
+        }
     } else if (!img.empty()) {
         image = img;
     }
@@ -23,6 +29,7 @@ cv::Mat threshold(std::string path, cv::Mat img) {
     cv::Mat labels;
     cv::Mat stats;
     cv::Mat centroids;
+    cv::Mat skel;
 
     int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 	
     
@@ -46,10 +53,24 @@ cv::Mat threshold(std::string path, cv::Mat img) {
 
         // get the skeleton 
         cv::Mat empty;
-        cv::Mat skel = skeleton(output_file, empty);
+        skel = skeleton(output_file, empty);
+
+        // check if skeleton meets threshold
+        bool meets = meetsThreshold(skel, threshold);
+        if (meets) {
+            continue;
+        } else {
+            // set each pixel to black 
+            for (int i = y; i < y + h; i++) {
+                for (int j = x; j < x + w; j++) {
+                    image.at<cv::Vec3b>(i, j)[0] = 0;
+                    image.at<cv::Vec3b>(i, j)[1] = 0;
+                    image.at<cv::Vec3b>(i, j)[2] = 0;
+                }
+            }
+        }
     }
-
-
+    
     // save image
     if (path == "") {
         srand (time(NULL));
@@ -58,9 +79,9 @@ cv::Mat threshold(std::string path, cv::Mat img) {
     }
     std::string file_type = path.substr(path.length()-4, 4);
     std::string output_file = path + "-thresh" + file_type;
-    cv::imwrite(output_file, labels);
+    cv::imwrite(output_file, image);
 
-    return labels;
+    return image;
 }
 
 int main(int argc, char** argv) {
@@ -70,7 +91,7 @@ int main(int argc, char** argv) {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
             // image = cv::imread(argv[i], 0);
-            threshold(argv[i], image);
+            threshold(argv[i], image, 100);
         }
     }
 }
