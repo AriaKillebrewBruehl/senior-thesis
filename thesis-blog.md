@@ -39,6 +39,20 @@ Fig.2 - A connected component and its skeleton.
 <br>
 </p>
 
+There is a difference in the skeleton of the "a" when it is in the big image versus when it is a component. 
+
+So I will try to run the skeleton first and then get the components and see what happens then.
+
+Okay so I did that and now the skeleton of the big images matches the skelton of the components:
+<p align = "center">
+
+<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-0.png" alt="drawing" width="100">
+<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-3.png" alt="drawing" width="100">
+
+Fig.3 - Image skeleton and one of its components. 
+<br>
+</p>
+
 # 10.18.2022
 ### *Hello from FSD airport floor while plane is delayed because THEY FORGOT TO PUT ANTI FREEZE IN IT!!* 
 
