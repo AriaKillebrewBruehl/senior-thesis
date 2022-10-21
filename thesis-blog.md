@@ -2,6 +2,52 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+# 10.20.2022
+### 
+
+Steps for gosh darn edge detection 
+
+1. DoG 
+2. Remove edges with length less that predefined threshold:
+
+    i. for each connected component:
+
+        I. find the skeleton 
+        II. compute the total length of the skeleton 
+3. morphological opening operation with circle 
+
+It looks like getting the skeleton on an image is different that getting a the skeleton on a connected component of an image. For example this 
+is the skeleton of my initials:
+
+<p align = "center">
+
+<img src="open_cv/diff-of-gaussians/images/akb.png" alt="drawing">
+<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing">
+
+Fig.1 - Input image and its skeleton. 
+<br>
+</p>
+
+Here are the connected components and their skeletons:
+
+<p align = "center">
+
+<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-1.png" alt="drawing" width="100">
+<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing" width="100">
+
+Fig.2 - A connected component and its skeleton. 
+<br>
+</p>
+
+# 10.18.2022
+### *Hello from FSD airport floor while plane is delayed because THEY FORGOT TO PUT ANTI FREEZE IN IT!!* 
+
+
+# 10.11.2022
+###
+
+I think I figured out how CMake works, now I shall do some code cleaning up bc there is a lot going on in my code rn. 
+
 # 10.10.2022
 ### *Continuing with Edge Detection, Going Beyond Mr. Gaussian*
 
