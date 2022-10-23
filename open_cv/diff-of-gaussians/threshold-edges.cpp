@@ -1,5 +1,15 @@
 #include "threshold-edges.hpp"
 
+bool meetsThreshold(cv::Mat img, int threshold) {
+    if (img.empty()) {
+        return false;
+    }
+    if (cv::countNonZero(img) < threshold) {
+        return false;
+    }
+    return true;
+}
+
 cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     // read in image
     cv::Mat image;
