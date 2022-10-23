@@ -1,9 +1,33 @@
 #include "threshold-edges.hpp"
 
+std::string type2str(int type) {
+  std::string r;
+
+  uchar depth = type & CV_MAT_DEPTH_MASK;
+  uchar chans = 1 + (type >> CV_CN_SHIFT);
+
+  switch ( depth ) {
+    case CV_8U:  r = "8U"; break;
+    case CV_8S:  r = "8S"; break;
+    case CV_16U: r = "16U"; break;
+    case CV_16S: r = "16S"; break;
+    case CV_32S: r = "32S"; break;
+    case CV_32F: r = "32F"; break;
+    case CV_64F: r = "64F"; break;
+    default:     r = "User"; break;
+  }
+
+  r += "C";
+  r += (chans+'0');
+
+  return r;
+}
+
 bool meetsThreshold(cv::Mat img, int threshold) {
     if (img.empty()) {
         return false;
     }
+
     if (cv::countNonZero(img) < threshold) {
         return false;
     }
@@ -125,15 +149,14 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
         // extract just the component
         cv::Mat comp = skel(cv::Range(y, y+h), cv::Range(x,x+w));
        
-        if (path == "") {
-            srand (time(NULL));
-             int rand = std::rand() % 1000;
-            path = "../images/" + std::to_string(rand) + ".png";
-        }
-        std::string file_type = path.substr(path.length()-4, 4);
-        std::string output_file = path + "-skelthresh-" + std::to_string(i) + file_type;
-        cv::imwrite(output_file, comp);
-
+        // if (path == "") {
+        //     srand (time(NULL));
+        //      int rand = std::rand() % 1000;
+        //     path = "../images/" + std::to_string(rand) + ".png";
+        // }
+        // std::string file_type = path.substr(path.length()-4, 4);
+        // std::string output_file = path + "-skelthresh-" + std::to_string(i) + file_type;
+        // cv::imwrite(output_file, comp);
 
         // check if component meets threshold
         bool meets = meetsThreshold(comp, threshold);
@@ -143,9 +166,9 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
             // if the component does not meet the threshold, set each pixel to black 
             for (int i = y; i < y + h; i++) {
                 for (int j = x; j < x + w; j++) {
-                    image.at<cv::Vec3b>(i, j)[0] = 0;
-                    image.at<cv::Vec3b>(i, j)[1] = 0;
-                    image.at<cv::Vec3b>(i, j)[2] = 0;
+                    image.at<uchar>(i, j) = 0;
+                    image.at<uchar>(i, j) = 0;
+                    image.at<uchar>(i, j) = 0;
                 }
             }
         }
@@ -171,8 +194,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            // image = cv::imread(argv[i], 0);
-            threshold(argv[i], image, 200);
+            threshold(argv[i], image, 50);
         }
     }
 }
