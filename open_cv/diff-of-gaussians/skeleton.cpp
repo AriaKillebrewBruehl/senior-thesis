@@ -57,13 +57,13 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     return skel;
 }
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-         std::cerr << "Must pass in image to run DoG on." << std::endl;
-    } else {
-        for (int i = 1; i < argc; i++) {
-            cv::Mat image;
-            skeleton(argv[i],image );
-        }
-    }
-}
+// int main(int argc, char** argv) {
+//     if (argc < 2) {
+//          std::cerr << "Must pass in image to run DoG on." << std::endl;
+//     } else {
+//         for (int i = 1; i < argc; i++) {
+//             cv::Mat image;
+//             skeleton(argv[i],image );
+//         }
+//     }
+// }
