@@ -9,7 +9,7 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     }
     if (img.empty() && path != "") {
         // read image
-        image = cv::imread(path, 0);
+        image = cv::imread(path, 1);
         if (image.empty()) {
             throw "Not a valid image file.";
             return image;
@@ -19,6 +19,7 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     }
     // convert to binary 
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
+    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
 
     // skeleton image and temp image 
     cv::Mat skel(image.size(), CV_8UC1, cv::Scalar(0));
