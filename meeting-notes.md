@@ -1,5 +1,14 @@
 ## Meeting Notes
+## 10 / 25
 
+2. Why does CIE LAB look like that 
+    - convert to CIELab space 
+    - so then do binning based on L
+    - then convert back to RBG ? just to see if things look good 
+3. What do I do about the connected components thing just in general being able to remove components 
+  - look into labels image
+
+# 10 / 13
 - removing blobs based on area is okay if we know the general width 
 - when i start tuning things do 200 x 200 images 
   - want to have "printable" resolution 
