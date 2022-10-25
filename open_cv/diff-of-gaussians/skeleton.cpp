@@ -14,14 +14,24 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
             throw "Not a valid image file.";
             return image;
         }   
+        if (image.type() != 0) {
+            throw "Image must be of type 0 (8UC1)";
+            return image;
+        }
     } else if (!img.empty()) {
         image = img;
+        if (image.type() != 0) {
+            throw "Image must be of type 0 (8UC1)";
+            return image;
+        }
     }
+    
     // convert to binary 
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
-    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
 
     // skeleton image and temp image 
+    cv::Mat copy;
+    image.copyTo(copy);
     cv::Mat skel(image.size(), CV_8UC1, cv::Scalar(0));
     cv::Mat temp(image.size(), CV_8UC1);
     cv::Mat eroded;
@@ -35,13 +45,13 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     bool done;		
     do
     {
-        cv::erode(image, eroded, element);
+        cv::erode(copy, eroded, element);
         cv::dilate(eroded, temp, element); // temp = open(image)
-        cv::subtract(image, temp, temp);
+        cv::subtract(copy, temp, temp);
         cv::bitwise_or(skel, temp, skel);
-        eroded.copyTo(image);
+        eroded.copyTo(copy);
         
-        done = (cv::countNonZero(image) == 0);
+        done = (cv::countNonZero(copy) == 0);
     } while (!done);
 
 
