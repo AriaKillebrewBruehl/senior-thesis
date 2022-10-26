@@ -1,8 +1,10 @@
 #include "threshold-edges.hpp"
 
 void isolate (cv::Mat& comp, int label) {
+    std::cout << "isolating on: " << label << std::endl;
     for (int i = 0; i < comp.rows; i++) {
         for (int j = 0; j < comp.cols; j++) {
+            std::cout << cv::Point(i, j) << std::endl;
             // if the pixel is not black or the color of the label set it to black
             if (comp.at<uchar>(cv::Point(i, j)) != 0 && comp.at<uchar>(cv::Point(i, j)) != label) {
                 comp.at<uchar>(cv::Point(i, j)) = 0;
@@ -20,22 +22,15 @@ bool meetsThreshold(cv::Mat img, int threshold) {
     return true;
 }
 
-void removeComponent(cv::Mat&labels, int x, int y, int w, int h,int label, std::string path) {
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-thresh-before" + std::to_string(i) + file_type;
-    cv::imwrite(output_file, labels);
-    // set 
+void removeComponent(cv::Mat* labels, int x, int y, int w, int h,int label) {
+    // set any pixels of the label color to black 
     for (int i = y; i < y + h; i++) {
         for (int j = x; j < x + w; j++) {
-            if (labels.at<uchar>(i, j) == label) {
-                labels.at<uchar>(i, j) = 0;
+            if ((*labels).at<uchar>(i, j) == label) {
+                (*labels).at<uchar>(i, j) = 0;
             }
         }
     }
-    // save image
-    file_type = path.substr(path.length()-4, 4);
-    output_file = path + "-thresh-after" + std::to_string(i) + file_type;
-    cv::imwrite(output_file, labels);
 }
 
 cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
@@ -68,7 +63,6 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     
     // convert to binary
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
-    std::cout << type2str(image.type()) << std::endl;
 
     // get components
     cv::Mat labels;
@@ -76,8 +70,9 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     cv::Mat centroids;
     int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 
     
-    // for each component 
-    for(int i=0; i<stats.rows; i++) {
+    // for each component except the background
+    for(int i=1; i<stats.rows; i++) {
+        std::cout << "starting component " << i << std::endl;
         int x = stats.at<int>(cv::Point(0, i));
         int y = stats.at<int>(cv::Point(1, i));
         int w = stats.at<int>(cv::Point(2, i));
@@ -85,31 +80,33 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
       
         // extract just the component from labeled image
         cv::Mat comp = labels(cv::Range(y, y+h), cv::Range(x,x+w));
-        std::cout << "hi" << std::endl;
         // isolate component
+        std::cout << "nonzero before isolating: " << cv::countNonZero(comp) << std::endl;
         isolate(comp, i);
-        std::cout << "hii" << std::endl;
+        std::cout << "nonzero after isolating: "  << cv::countNonZero(comp) << std::endl;
         // get component skeleton 
-        comp.convertTo(comp, CV_8UC1);
-        cv::Mat skel = skeleton("", comp);
-        std::cout << "hiii" << std::endl;
 
+        comp.convertTo(comp, CV_8UC1);
+        cv::threshold(comp, comp, 1, 255, cv::THRESH_BINARY);
+        std::string file_type = path.substr(path.length()-4, 4);
+        std::string output_file = path + "-thresh-skel-"+ std::to_string(i) + file_type;
+        cv::imwrite(output_file, comp);
+        cv::Mat skel = skeleton("", comp);
+        std::cout << "nonzero of skeleton: " << cv::countNonZero(skel) << std::endl;
         // check if skeleton meets threshold
         bool meets = meetsThreshold(skel, threshold);
-        std::cout << "hiiii" << std::endl;
         if (meets) {
             continue;
         } else {
-            // remove the component from the labeled image
-            removeComponent(labels, x, y, w, h, i);
-            std::cout << "hiiiii" << std::endl;
+            removeComponent(&labels, x, y, w, h, i);
         }
+        std::cout << "what?" << std::endl;
     }  
 
     // threshold labeled image 
     cv::Mat test;
     labels.convertTo(test, CV_32FC1);
-    cv::threshold(test, test, 1, 255, cv::THRESH_BINARY);
+    cv::threshold(test, test, 0, 255, cv::THRESH_BINARY);
     
     // save image
     if (path == "") {
@@ -119,7 +116,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     }
     std::string file_type = path.substr(path.length()-4, 4);
     std::string output_file = path + "-thresh" + file_type;
-    cv::imwrite(output_file, image);
+    cv::imwrite(output_file, test);
 
     return labels;
 }
@@ -131,7 +128,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            threshold(argv[i], image, 10000);
+            threshold(argv[i], image, 10);
         }
     }
 }
