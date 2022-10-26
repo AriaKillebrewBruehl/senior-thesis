@@ -1,7 +1,6 @@
 #include "threshold-edges.hpp"
 
 void isolate (cv::Mat& comp, int label) {
-    std::cout << "isolating on: " << label << std::endl;
     for (int i = 0; i < comp.rows; i++) {
         for (int j = 0; j < comp.cols; j++) {
             std::cout << cv::Point(i, j) << std::endl;
@@ -81,18 +80,13 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
         // extract just the component from labeled image
         cv::Mat comp = labels(cv::Range(y, y+h), cv::Range(x,x+w));
         // isolate component
-        std::cout << "nonzero before isolating: " << cv::countNonZero(comp) << std::endl;
         isolate(comp, i);
-        std::cout << "nonzero after isolating: "  << cv::countNonZero(comp) << std::endl;
         // get component skeleton 
 
         comp.convertTo(comp, CV_8UC1);
         cv::threshold(comp, comp, 1, 255, cv::THRESH_BINARY);
-        std::string file_type = path.substr(path.length()-4, 4);
-        std::string output_file = path + "-thresh-skel-"+ std::to_string(i) + file_type;
-        cv::imwrite(output_file, comp);
         cv::Mat skel = skeleton("", comp);
-        std::cout << "nonzero of skeleton: " << cv::countNonZero(skel) << std::endl;
+
         // check if skeleton meets threshold
         bool meets = meetsThreshold(skel, threshold);
         if (meets) {
