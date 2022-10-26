@@ -58,7 +58,6 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     cv::Mat stats;
     cv::Mat centroids;
     int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 
-    cv::Mat labelscp = labels;
     
     std::unordered_map<int, bool> remove; 
     // for each component except the background
@@ -130,7 +129,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            threshold(argv[i], image, 100);
+            threshold(argv[i], image, 50);
         }
     }
 }
