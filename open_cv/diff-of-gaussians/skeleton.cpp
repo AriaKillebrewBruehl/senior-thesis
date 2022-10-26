@@ -42,17 +42,23 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     //   []
     cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
     
-    bool done;		
-    do
-    {
-        cv::erode(copy, eroded, element);
-        cv::dilate(eroded, temp, element); // temp = open(image)
-        cv::subtract(copy, temp, temp);
-        cv::bitwise_or(skel, temp, skel);
-        eroded.copyTo(copy);
-        
-        done = (cv::countNonZero(copy) == 0);
-    } while (!done);
+    // if the image is not totally white
+    if (cv::countNonZero(copy) != (copy.rows * copy.cols)) {
+        bool done;	
+        do
+        {
+            cv::erode(copy, eroded, element);
+            cv::dilate(eroded, temp, element); // temp = open(image)
+            cv::subtract(copy, temp, temp);
+            cv::bitwise_or(skel, temp, skel);
+            eroded.copyTo(copy);
+            
+            done = (cv::countNonZero(copy) == 0);
+            // std::cout << "." << std::endl;
+        } while (!done);
+    } else {
+        skel = copy; 
+    }
 
 
     // save image
@@ -65,6 +71,7 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     std::string output_file = path + "-skel" + file_type;
     cv::imwrite(output_file, skel);
 
+    std::cout << "nonzero of skeleton in skel: " << cv::countNonZero(skel) << std::endl;
     return skel;
 }
 
