@@ -2,6 +2,94 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 10.26.2022
+
+**OKAY OKAY OKAY!!!!! I THINK I FIXED IT!!! I THINK ITS WORKING!!**
+
+Here is the final algorithm:
+
+```
+isolate(comp, i) {
+    comp.copyTo(isolated);
+    set any pixel that is not equal to i to black;
+    return isolated;
+}
+
+threshold {
+    read in image;
+
+    convert to binary;
+
+    cv::Mat labels;
+    cv::Mat stats;
+    cv::Mat centroids;
+    int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 
+
+    std::unordered_map<int, bool> remove; 
+
+    for each component except the background  {
+        comp = just the component;
+        isolated = isolate(comp, i); 
+        skel = skeleton(isolated);
+        remove[i] = !meetsThreshold(skel, theshhold);
+    }
+
+    for each pixel in the labeled image {
+        color = pixel;
+
+        if remove[color] {
+            pixel = 0;
+        }
+    }
+    
+}
+
+
+````
+
+## 10.25.2022
+###
+
+Questions before my meeting:
+
+1. What do you call something that is not AI/ML?
+2. Why does CIE LAB look like that 
+    - convert to CIELab space 
+    - so then do binning based on L
+    - then convert back to RBG ? just to see if things look good 
+3. What do I do about the connected components thing just in general being able to remove components 
+
+Okay I think I figured out how to do edge detection! 
+1. read in image
+2. convert to binary 
+3. get components
+4. for each component
+    1. extract what is in the bounding box for that component from the labeled image (you might end up with multiple components!)
+    2. loop over that extraction and if there is a pixel that is not black or the color of the current component make it black, this way we are getting rid of extra components that would have gotten extracted 
+    3. get the skeleton of what is left over 
+    4. check if it meets the threshold 
+    5. if it does not remove that component by looping over that section of the labeled image and setting any pixels of that color to black 
+5. threshold labeled image again to set any gray to white
+
+Hmmmm, it looks like we are getting stuck in an infinite loop??? It was because skeleton gets stuck if the input image is small and all white so I have fixed that. 
+
+I'm going to change things so that if a color needs to be removed I add it to a dictionary and then I'll loop over the whole image jsut once and check if the pixel color maps to -1. 
+
+# 10.24.2022 
+### *I have a lot of problems* 
+
+List of Problems:
+1. DoG looks weird with akb.png 
+    - maybe it's just not supposed to be used with something so small and square?
+    - okay I ran it with a bigger input file and it worked!!!!!!
+2. How do I remove the small edges that I want to remove? 
+3. ConnectedComponents doesn't quite do what I want it to do because it will count a square in a square as one thing
+4. CIE LAB looks weird 
+5. Binning is weird because ^ is weird 
+
+I think a lot of this has to do with what the type of the image is...
+
+
 # 10.20.2022
 ### 
 
@@ -46,7 +134,7 @@ So I will try to run the skeleton first and then get the components and see what
 Okay so I did that and now the skeleton of the big images matches the skelton of the components:
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-0.png" alt="drawing" width="100">
+<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-0.png" alt="drawing" width="200">
 <img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-3.png" alt="drawing" width="100">
 
 Fig.3 - Image skeleton and one of its components. 
