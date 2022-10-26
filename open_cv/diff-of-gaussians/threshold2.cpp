@@ -62,35 +62,21 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     std::unordered_map<int, bool> remove; 
     // for each component except the background
     for(int i=1; i<stats.rows; i++) {
-        std::cout << "stating component " << i << std::endl;
         int x = stats.at<int>(cv::Point(0, i));
         int y = stats.at<int>(cv::Point(1, i));
         int w = stats.at<int>(cv::Point(2, i));
         int h = stats.at<int>(cv::Point(3, i));
-        std::cout << x << " " << y << " " << w << " " << h << std::endl;
       
         // extract just the component from labeled image
         cv::Mat comp = labels(cv::Range(y, y+h), cv::Range(x,x+w));
-        std::cout << cv::countNonZero(comp) << std::endl;
         // isolate component
         cv::Mat isolated = isolate(comp, i);
         // get component skeleton 
         comp.convertTo(isolated, CV_8UC1);
         cv::threshold(isolated, isolated, 0, 255, cv::THRESH_BINARY);
-        std::cout << cv::countNonZero(isolated) << std::endl;
-        std::string file_type = path.substr(path.length()-4, 4);
-        std::string output_file = path + "-threshcomp" + std::to_string(i) + file_type;
-        cv::imwrite(output_file, isolated);
         cv::Mat skel = skeleton("", isolated);
 
-        // check if skeleton meets threshold
         remove[i] = !(meetsThreshold(skel, threshold));
-        // bool meets = meetsThreshold(skel, threshold);
-        // if (meets) {
-        //     remove[i] = false;
-        // } else {
-        //     remove[i] = true;
-        // }
     } 
 
     for (int i = 0; i < labels.rows; i++) {
