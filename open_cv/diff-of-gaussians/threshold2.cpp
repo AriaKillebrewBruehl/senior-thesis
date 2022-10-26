@@ -1,14 +1,17 @@
 #include "threshold-edges.hpp"
 
-void isolate (cv::Mat& comp, int label) {
+cv::Mat isolate (cv::Mat& comp, int label) {
+    cv::Mat isolated;
+    comp.copyTo(isolated);
     for (int i = 0; i < comp.rows; i++) {
         for (int j = 0; j < comp.cols; j++) {
             // if the pixel is not black or the color of the label set it to black
             if (comp.at<int>(cv::Point(j, i)) != 0 && comp.at<int>(cv::Point(j, i)) != label) {
-                comp.at<int>(cv::Point(j, i)) = 0;
+                isolated.at<int>(cv::Point(j, i)) = 0;
             }
         }
     }
+    return isolated;
 }
 bool meetsThreshold(cv::Mat img, int threshold) {
     if (img.empty()) {
@@ -60,27 +63,35 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     std::unordered_map<int, bool> remove; 
     // for each component except the background
     for(int i=1; i<stats.rows; i++) {
+        std::cout << "stating component " << i << std::endl;
         int x = stats.at<int>(cv::Point(0, i));
         int y = stats.at<int>(cv::Point(1, i));
         int w = stats.at<int>(cv::Point(2, i));
         int h = stats.at<int>(cv::Point(3, i));
+        std::cout << x << " " << y << " " << w << " " << h << std::endl;
       
         // extract just the component from labeled image
         cv::Mat comp = labels(cv::Range(y, y+h), cv::Range(x,x+w));
+        std::cout << cv::countNonZero(comp) << std::endl;
         // isolate component
-        isolate(comp, i);
+        cv::Mat isolated = isolate(comp, i);
         // get component skeleton 
-        comp.convertTo(comp, CV_8UC1);
-        cv::threshold(comp, comp, 0, 255, cv::THRESH_BINARY);
-        cv::Mat skel = skeleton("", comp);
+        comp.convertTo(isolated, CV_8UC1);
+        cv::threshold(isolated, isolated, 0, 255, cv::THRESH_BINARY);
+        std::cout << cv::countNonZero(isolated) << std::endl;
+        std::string file_type = path.substr(path.length()-4, 4);
+        std::string output_file = path + "-threshcomp" + std::to_string(i) + file_type;
+        cv::imwrite(output_file, isolated);
+        cv::Mat skel = skeleton("", isolated);
 
         // check if skeleton meets threshold
-        bool meets = meetsThreshold(skel, threshold);
-        if (meets) {
-            remove[i] = false;
-        } else {
-            remove[i] = true;
-        }
+        remove[i] = !(meetsThreshold(skel, threshold));
+        // bool meets = meetsThreshold(skel, threshold);
+        // if (meets) {
+        //     remove[i] = false;
+        // } else {
+        //     remove[i] = true;
+        // }
     } 
 
     for (int i = 0; i < labels.rows; i++) {
@@ -119,7 +130,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            threshold(argv[i], image, 3);
+            threshold(argv[i], image, 100);
         }
     }
 }
