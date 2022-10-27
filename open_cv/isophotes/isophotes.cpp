@@ -6,21 +6,17 @@ inline uchar reduceVal(const uchar val)
     return 255;
 }
 
-void processColors(cv::Mat& img)
-{
+void processColors(cv::Mat& img) {
     uchar* pixelPtr = img.data;
-    for (int i = 0; i < img.rows; i++)
-    {
-        for (int j = 0; j < img.cols; j++)
-        {
+    for (int i = 0; i < img.rows; i++) {
+        for (int j = 0; j < img.cols; j++) {
             const int pi = i*img.cols*3 + j*3;
             pixelPtr[pi + 0] = reduceVal(pixelPtr[pi + 0]); // B
             pixelPtr[pi + 1] = reduceVal(pixelPtr[pi + 1]); // G
             pixelPtr[pi + 2] = reduceVal(pixelPtr[pi + 2]); // R
         }
     }
-}
-
+}  
 cv::Mat getIsophotes(std::string path, cv::Mat img) {
     // read in image
     cv::Mat image;
@@ -47,25 +43,42 @@ cv::Mat getIsophotes(std::string path, cv::Mat img) {
         //     return image;
         // }
     }
-
-    // convert image to CIE L*a*b
-    std::cout << type2str(image.type()) << std::endl;
-    std::cout << image.channels() << std::endl; 
-    std::cout << image.depth() << std::endl;
-    // cv::Mat cie(image.size(), image.type());
-    cv::cvtColor(image, image, cv::COLOR_BGR2Lab);
-
-    // save image
-    if (path == "") {
-        srand (time(NULL));
-        int rand = std::rand() % 1000;
-        path = "../images/" + std::to_string(rand) + ".png";
+    int MAX_KERNEL_LENGTH = 21;
+    cv::Mat src = image;
+    // bilateral filter 
+    for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 ) {
+        cv::Mat dest;
+        cv::bilateralFilter (src, dest, i, i*2, i/2 );
+        src = dest;
     }
     std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-cie" + file_type;
-    cv::imwrite(output_file, image);
+    std::string output_file = path + "-reduced-bifilt" + file_type;
+    cv::imwrite(output_file, src);
 
-    processColors(image);
+    // convert image to CIE L*a*b
+    // std::cout << type2str(image.type()) << std::endl;
+    // std::cout << image.channels() << std::endl; 
+    // std::cout << image.depth() << std::endl;
+    // cv::Mat cie(image.size(), image.type());
+    cv::cvtColor(src, src, cv::COLOR_BGR2Lab);
+
+    // luminance quantization 
+    processColors(src);
+
+    // convert back to RGB
+    cv::cvtColor(src, src, cv::COLOR_Lab2LBGR);
+
+    // // save image
+    // if (path == "") {
+    //     srand (time(NULL));
+    //     int rand = std::rand() % 1000;
+    //     path = "../images/" + std::to_string(rand) + ".png";
+    // }
+    // std::string file_type = path.substr(path.length()-4, 4);
+    // std::string output_file = path + "-cie" + file_type;
+    // cv::imwrite(output_file, image);
+
+    // processColors(image);
 
 
     // save image
@@ -74,9 +87,10 @@ cv::Mat getIsophotes(std::string path, cv::Mat img) {
         int rand = std::rand() % 1000;
         path = "../images/" + std::to_string(rand) + ".png";
     }
+    file_type = path.substr(path.length()-4, 4);
     output_file = path + "-reduced" + file_type;
-    cv::imwrite(output_file, image);
-    return image;
+    cv::imwrite(output_file, src);
+    return src;
 }
 
 int main(int argc, char** argv) {
