@@ -24,13 +24,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(DoG DoG.cpp DoG.hpp)
-add_executable(edge-extraction extract-edges.cpp DoG.cpp threshold-edges.cpp skeleton.cpp)
-add_executable(skeleton skeleton.cpp)
-add_executable(thresh threshold-edges.cpp skeleton.cpp)
+add_executable(iso isophotes.cpp)
 
 # tell it to link the executable target against OpenCV
-target_link_libraries(DoG ${OpenCV_LIBS})
-target_link_libraries(edge-extraction ${OpenCV_LIBS})
-target_link_libraries(skeleton ${OpenCV_LIBS})
-target_link_libraries(thresh ${OpenCV_LIBS})
+target_link_libraries(iso ${OpenCV_LIBS})
