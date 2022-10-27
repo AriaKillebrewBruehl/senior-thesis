@@ -61,17 +61,17 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     }
 
 
-    // save image
-    if (path == "") {
-        srand (time(NULL));
-        int rand = std::rand() % 1000;
-        path = "../images/" + std::to_string(rand) + ".png";
-    }
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-skel" + file_type;
-    cv::imwrite(output_file, skel);
+    // // save image
+    // if (path == "") {
+    //     srand (time(NULL));
+    //     int rand = std::rand() % 1000;
+    //     path = "../images/" + std::to_string(rand) + ".png";
+    // }
+    // std::string file_type = path.substr(path.length()-4, 4);
+    // std::string output_file = path + "-skel" + file_type;
+    // cv::imwrite(output_file, skel);
 
-    std::cout << "nonzero of skeleton in skel: " << cv::countNonZero(skel) << std::endl;
+    // std::cout << "nonzero of skeleton in skel: " << cv::countNonZero(skel) << std::endl;
     return skel;
 }
 
