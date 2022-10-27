@@ -2,6 +2,16 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 10.27.2022 
+
+**Isophote time!** 
+
+Isophotes look pretty good! There are a few things that I fixed in order to fix things: 
+1. Convert image back to RGB before writing it out, this made colors look good 
+2. Perform a bilateral filter before running CIELab and quantization, this makes it so the segments are smoother. 
+
+
+
 ## 10.26.2022
 
 **OKAY OKAY OKAY!!!!! I THINK I FIXED IT!!! I THINK ITS WORKING!!**
@@ -109,8 +119,8 @@ is the skeleton of my initials:
 
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png" alt="drawing" width="200">
-<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-0.png-skel.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/akb.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/akb.png-thresh-0.png-skel.png" alt="drawing" width="200">
 
 Fig.1 - Input image and its skeleton. 
 <br>
@@ -120,8 +130,8 @@ Here are the connected components and their skeletons:
 
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-1.png" alt="drawing" width="100">
-<img src="open_cv/diff-of-gaussians/images/akb.png-thresh-1.png-skel.png" alt="drawing" width="100">
+<img src="./blog-images/edge-detection/akb.png-thresh-1.png" alt="drawing" width="100">
+<img src="./blog-images/edge-detection/akb.png-thresh-1.png-skel.png" alt="drawing" width="100">
 
 Fig.2 - A connected component and its skeleton. 
 <br>
@@ -134,8 +144,8 @@ So I will try to run the skeleton first and then get the components and see what
 Okay so I did that and now the skeleton of the big images matches the skelton of the components:
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-0.png" alt="drawing" width="200">
-<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-3.png" alt="drawing" width="100">
+<img src="./blog-images/edge-detection/akb.png-skelthresh-0.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/akb.png-skelthresh-3.png" alt="drawing" width="100">
 
 Fig.3 - Image skeleton and one of its components. 
 <br>
@@ -145,8 +155,8 @@ But the issue is that I am getting back 4 components, each of the letters and th
 
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-1.png" alt="drawing" width="100">
-<img src="open_cv/diff-of-gaussians/images/akb.png-skelthresh-4.png" alt="drawing" width="100">
+<img src="./blog-images/edge-detection/akb.png-skelthresh-1.png" alt="drawing" width="100">
+<img src="./blog-images/edge-detection/akb.png-skelthresh-4.png" alt="drawing" width="100">
 
 Fig.4 - The full "k" component and a component that is just the "k"'s leg. 
 <br>
@@ -180,12 +190,12 @@ doing repeated opening would work? That does **not** work it just makes things l
 
 <p align = "center">
 
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png" alt="drawing" width="100"/>
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-0.png" alt="drawing" width="100"/>
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-1.png" alt="drawing" width="100"/>
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-2.png" alt="drawing" width="100"/>
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-2.png" alt="drawing" width="100"/>
-<img src="open_cv/diff-of-gaussians/images/cool_lines.png-morphed-4.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png-morphed-0.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png-morphed-1.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png-morphed-2.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png-morphed-3.png" alt="drawing" width="100"/>
+<img src="./blog-images/edge-detection/cool_lines.png-morphed-4.png" alt="drawing" width="100"/>
 
 
 Fig.1 - Input image, output after 1, 2, 3, 4, 5 iterations of opening. 
@@ -224,16 +234,16 @@ okay but when I looked at the image it was clearly not correct and using a color
 
 <p align = "center">
 
-<img src="./blog-images/zoomed-in-input.png" alt="drawing" width="100"/>
+<img src="./blog-images/jfa/zoomed-in-input.png" alt="drawing" width="100"/>
 <br>
 Fig.1 - Input image
 <br>
 
-<img src="./blog-images/zoomed-in-bad.png" alt="drawing" width="100"/>
+<img src="./blog-images/jfa/zoomed-in-bad.png" alt="drawing" width="100"/>
 <br>
 Fig.2 - Weird jfa 
 <br>
-<img src="./blog-images/zoomed-in-good.png" alt="drawing" width="100"/>
+<img src="./blog-images/jfa/zoomed-in-good.png" alt="drawing" width="100"/>
 <br>
 Fig.3 - Correct jfa
 </p>
@@ -273,13 +283,13 @@ that it works!
 
 For example, here is a drawing of my roommates cat:
 
-![tess](./hello-python/jmp-flood/images/tess-jmp-flood.png)
+![tess](./blog-images/jfa/tess-jmp-flood.png)
 </p>
 <p align = "center">
 Fig.1 - My roommates cat, Tess
 </p>
 
-![tess](./hello-python/jmp-flood/images/tess-jmp-flood.png.-jump-flood.png)
+![tess](./blog-images/jfa/tess-jmp-flood.png.-jump-flood.png)
 </p>
 <p align = "center">
 Fig.2 - My roommates cat, Tess after being jump flooded
