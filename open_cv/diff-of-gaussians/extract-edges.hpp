@@ -7,6 +7,7 @@
 
 #include "DoG.hpp"
 #include "threshold-edges.hpp"
+#include "type2str.cpp"
 
 cv::Mat extractEdges(std::string path, cv::Mat img);
 
