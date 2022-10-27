@@ -12,31 +12,44 @@ bool meetsThreshold(cv::Mat img, int threshold) {
 
 cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     // read in image
+    // image must be of type 8UC1
+
     cv::Mat image;
     if (img.empty() && path == "") {
         throw "Must pass in either file path, opencv image, or both";
         return image;
     }
     if (img.empty() && path != "") {
-        // read image
+        // read in image unchanged
         image = cv::imread(path, 0);
         if (image.empty()) {
             throw "Not a valid image file.";
             return image;
         }
+        if (image.type() != 0) {
+            throw "Image must be of type 0 (8UC1)";
+            return image;
+        }
     } else if (!img.empty()) {
         image = img;
+        if (image.type() != 0) {
+            throw "Image must be of type 0 (8UC1)";
+            return image;
+        }
     }
+    
     // convert to binary and get skeleton 
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
-    cv::Mat empty;
-    cv::Mat skel = skeleton(path, empty);
+    cv::Mat skel = skeleton(path, image);
 
     // get the components of skeleton
     cv::Mat labels;
     cv::Mat stats;
     cv::Mat centroids;
     int numComps =  cv::connectedComponentsWithStats(skel, labels, stats, centroids); 	
+    std::string file_type = path.substr(path.length()-4, 4);
+    std::string output_file = path + "-thresh-labels" + file_type;
+    cv::imwrite(output_file, labels);
     
     for(int i=0; i<stats.rows; i++) {
         int x = stats.at<int>(cv::Point(0, i));
@@ -52,12 +65,18 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
         if (meets) {
             continue;
         } else {
+            std::cout << "too small" << std::endl;
             // if the component does not meet the threshold, set each pixel to black 
             for (int i = y; i < y + h; i++) {
                 for (int j = x; j < x + w; j++) {
-                    image.at<uchar>(i, j) = 0;
-                    image.at<uchar>(i, j) = 0;
-                    image.at<uchar>(i, j) = 0;
+                    // std::cout << int(image.at<uchar>(i, j)) << std::endl;
+                    if (image.at<uchar>(i, j) == 255) {
+                        // mark short lines as gray 
+                        image.at<uchar>(i, j) = 0;
+                    }
+                    // image.at<uchar>(i, j) = 0;
+                    // image.at<uchar>(i, j) = 0;
+                    // image.at<uchar>(i, j) = 0;
                 }
             }
         }
@@ -69,8 +88,8 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
         int rand = std::rand() % 1000;
         path = "../images/" + std::to_string(rand) + ".png";
     }
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-thresh" + file_type;
+    file_type = path.substr(path.length()-4, 4);
+    output_file = path + "-thresh" + file_type;
     cv::imwrite(output_file, image);
 
     return image;
@@ -83,7 +102,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            threshold(argv[i], image, 50);
+            threshold(argv[i], image, 10000);
         }
     }
 }
