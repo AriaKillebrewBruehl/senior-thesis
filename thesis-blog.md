@@ -10,7 +10,14 @@ Isophotes look pretty good! There are a few things that I fixed in order to fix 
 1. Convert image back to RGB before writing it out, this made colors look good 
 2. Perform a bilateral filter before running CIELab and quantization, this makes it so the segments are smoother. 
 
+<p align = "center">
 
+<img src="./blog-images/isophotes/beyonce.png" alt="drawing" width="200">
+<img src="./blog-images/isophotes/beyonce.png-reduced3.png" alt="drawing" width="200">
+
+Fig.1 - Beyonce before and after bilateral filtering + CIELab luminance quantization. 
+<br>
+</p>
 
 
 
