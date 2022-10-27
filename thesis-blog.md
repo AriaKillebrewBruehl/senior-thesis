@@ -12,50 +12,50 @@ Isophotes look pretty good! There are a few things that I fixed in order to fix 
 
 
 
+
+
 ## 10.26.2022
 
 **OKAY OKAY OKAY!!!!! I THINK I FIXED IT!!! I THINK ITS WORKING!!**
 
 Here is the final algorithm:
 
-```
-isolate(comp, i) {
-    comp.copyTo(isolated);
-    set any pixel that is not equal to i to black;
-    return isolated;
-}
 
-threshold {
-    read in image;
-
-    convert to binary;
-
-    cv::Mat labels;
-    cv::Mat stats;
-    cv::Mat centroids;
-    int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 
-
-    std::unordered_map<int, bool> remove; 
-
-    for each component except the background  {
-        comp = just the component;
-        isolated = isolate(comp, i); 
-        skel = skeleton(isolated);
-        remove[i] = !meetsThreshold(skel, theshhold);
+    isolate(comp, i) {
+        comp.copyTo(isolated);
+        set any pixel that is not equal to i to black;
+        return isolated;
     }
 
-    for each pixel in the labeled image {
-        color = pixel;
+    threshold {
+        read in image;
 
-        if remove[color] {
-            pixel = 0;
+        convert to binary;
+
+        cv::Mat labels;
+        cv::Mat stats;
+        cv::Mat centroids;
+        int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids); 
+
+        std::unordered_map<int, bool> remove; 
+
+        for each component except the background  {
+            comp = just the component;
+            isolated = isolate(comp, i); 
+            skel = skeleton(isolated);
+            remove[i] = !meetsThreshold(skel, theshhold);
         }
+
+        for each pixel in the labeled image {
+            color = pixel;
+
+            if remove[color] {
+                pixel = 0;
+            }
+        }
+        
     }
-    
-}
 
-
-````
 
 ## 10.25.2022
 ###
