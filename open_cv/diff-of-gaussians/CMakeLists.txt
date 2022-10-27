@@ -25,9 +25,9 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
 add_executable(DoG DoG.cpp DoG.hpp)
-add_executable(edge-extraction extract-edges.cpp)
+add_executable(edge-extraction extract-edges.cpp DoG.cpp threshold2.cpp skeleton.cpp)
 add_executable(skeleton skeleton.cpp)
-add_executable(thresh threshold-edges.cpp skeleton.cpp)
+add_executable(thresh threshold2.cpp skeleton.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(DoG ${OpenCV_LIBS})
