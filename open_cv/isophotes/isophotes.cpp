@@ -11,13 +11,13 @@ void processColors(cv::Mat& img) {
     for (int i = 0; i < img.rows; i++) {
         for (int j = 0; j < img.cols; j++) {
             const int pi = i*img.cols*3 + j*3;
-            pixelPtr[pi + 0] = reduceVal(pixelPtr[pi + 0]); // B
-            pixelPtr[pi + 1] = reduceVal(pixelPtr[pi + 1]); // G
-            pixelPtr[pi + 2] = reduceVal(pixelPtr[pi + 2]); // R
+            pixelPtr[pi + 0] = reduceVal(pixelPtr[pi + 0]); // L
+            // pixelPtr[pi + 1] = reduceVal(pixelPtr[pi + 1]); // a
+            // pixelPtr[pi + 2] = reduceVal(pixelPtr[pi + 2]); // b
         }
     }
 }  
-cv::Mat getIsophotes(std::string path, cv::Mat img) {
+cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
     if (img.empty() && path == "") {
@@ -43,7 +43,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img) {
         //     return image;
         // }
     }
-    int MAX_KERNEL_LENGTH = 21;
+    int MAX_KERNEL_LENGTH = 15;
     cv::Mat src = image;
     // bilateral filter 
     for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 ) {
@@ -51,45 +51,20 @@ cv::Mat getIsophotes(std::string path, cv::Mat img) {
         cv::bilateralFilter (src, dest, i, i*2, i/2 );
         src = dest;
     }
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-reduced-bifilt" + file_type;
-    cv::imwrite(output_file, src);
 
     // convert image to CIE L*a*b
-    // std::cout << type2str(image.type()) << std::endl;
-    // std::cout << image.channels() << std::endl; 
-    // std::cout << image.depth() << std::endl;
-    // cv::Mat cie(image.size(), image.type());
-    cv::cvtColor(src, src, cv::COLOR_BGR2Lab);
+    cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
 
     // luminance quantization 
     processColors(src);
 
     // convert back to RGB
-    cv::cvtColor(src, src, cv::COLOR_Lab2LBGR);
+    cv::cvtColor(src, src, cv::COLOR_Lab2LRGB);
 
-    // // save image
-    // if (path == "") {
-    //     srand (time(NULL));
-    //     int rand = std::rand() % 1000;
-    //     path = "../images/" + std::to_string(rand) + ".png";
-    // }
-    // std::string file_type = path.substr(path.length()-4, 4);
-    // std::string output_file = path + "-cie" + file_type;
-    // cv::imwrite(output_file, image);
-
-    // processColors(image);
-
-
-    // save image
-    if (path == "") {
-        srand (time(NULL));
-        int rand = std::rand() % 1000;
-        path = "../images/" + std::to_string(rand) + ".png";
+    if (saving) {
+        save(src, path, "-isos");
     }
-    file_type = path.substr(path.length()-4, 4);
-    output_file = path + "-reduced" + file_type;
-    cv::imwrite(output_file, src);
+    
     return src;
 }
 
@@ -99,7 +74,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            getIsophotes(argv[i],image);
+            getIsophotes(argv[i],image, true);
         }
     }
 }
