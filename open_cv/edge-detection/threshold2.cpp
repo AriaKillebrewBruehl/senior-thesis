@@ -23,7 +23,7 @@ bool meetsThreshold(cv::Mat img, int threshold) {
     return true;
 }
 
-cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
+cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     // read in image
     // image must be of type 8UC1
     cv::Mat image;
@@ -95,15 +95,9 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
         }
     }
     
-    // save image
-    if (path == "") {
-        srand (time(NULL));
-        int rand = std::rand() % 1000;
-        path = "../images/" + std::to_string(rand) + ".png";
+    if (saving) {
+        save(labels, path, "-thresh");
     }
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-thresh" + file_type;
-    cv::imwrite(output_file, labels);
 
     return labels;
 }
@@ -115,7 +109,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
 //     } else {
 //         for (int i = 1; i < argc; i++) {
 //             cv::Mat image;
-//             threshold(argv[i], image, 200);
+//             threshold(argv[i], image, 100);
 //         }
 //     }
 // }
