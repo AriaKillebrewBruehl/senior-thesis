@@ -1,6 +1,6 @@
 #include "DoG.hpp"
 
-cv::Mat DoG(std::string path, cv::Mat img) {
+cv::Mat DoG(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
     if (img.empty() && path == "") {
@@ -41,14 +41,9 @@ cv::Mat DoG(std::string path, cv::Mat img) {
     double thresh = cv::threshold(DoG, image_th, 10, 255, cv::THRESH_BINARY);
 
     // save image
-    if (path == "") {
-        srand (time(NULL));
-        int rand = std::rand() % 1000;
-        path = "../images/" + std::to_string(rand) + ".png";
+    if (saving) {
+        save(image_th, path, "-DoG");
     }
-    file_type = path.substr(path.length()-4, 4);
-    output_file = path + "-DoG" + file_type;
-    cv::imwrite(output_file, image_th);
 
     return image_th;
 }
