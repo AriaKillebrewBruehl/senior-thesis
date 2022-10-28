@@ -2,6 +2,37 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 10.28.2022 
+
+**Closing Gaps in Lines**
+
+One of the issues I have notices with the thresholding faces is that there are actually very few lines that meet
+a given threshold. If the threshold is 200 there are maybe 2 or 3 lines which leads to output that doesn't really 
+look like a face at all. This is a big issue with delicate features like eyes, noses, and lips. 
+In order to fix this I need to close all these little gaps in lines that are generated after running DoG. 
+
+<p align = "center">
+
+<img src="./blog-images/edge-detection/fabio-eyes.png" alt="drawing" width="200">
+
+Fig.1 - Fabios eyes after DoG. 
+<br>
+</p>
+
+I think I found a way to do this using [contours](https://answers.opencv.org/question/53548/gap-filling-contours-lines/). 
+
+Also, there is an issue with DoG being super finicky. It works pretty good for Fabio but not that great for Cameron. 
+
+<p align = "center">
+
+<img src="./blog-images/edge-detection/fabio.png-DoG.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/cameron.png-DoG.png" alt="drawing" width="200">
+Fig.1 - Fabio versus Cameron with DoG. 
+<br>
+</p>
+
+
+
 ## 10.27.2022 
 
 **Isophote time!** 
@@ -18,8 +49,6 @@ Isophotes look pretty good! There are a few things that I fixed in order to fix 
 Fig.1 - Beyonce before and after bilateral filtering + CIELab luminance quantization. 
 <br>
 </p>
-
-
 
 ## 10.26.2022
 
@@ -63,6 +92,14 @@ Here is the final algorithm:
         
     }
 
+<p align = "center">
+
+<img src="./blog-images/edge-detection/containment-lines.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/containment-lines.png-thresh.png" alt="drawing" width="200">
+
+Fig.1 - Lines before and after removing edges of length less than 50 pix. 
+<br>
+</p>
 
 ## 10.25.2022
 ###
