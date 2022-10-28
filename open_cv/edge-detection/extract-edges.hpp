@@ -9,5 +9,5 @@
 #include "threshold-edges.hpp"
 #include "type2str.cpp"
 
-cv::Mat extractEdges(std::string path, cv::Mat img);
+cv::Mat extractEdges(std::string path, cv::Mat img, bool saving);
 
