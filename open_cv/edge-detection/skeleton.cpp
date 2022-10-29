@@ -1,30 +1,33 @@
 #include "skeleton.hpp"
 
-cv::Mat skeleton(std::string path, cv::Mat img) {
+cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
-    if (img.empty() && path == "") {
-        throw "Must pass in either file path, opencv image, or both";
-        return image;
-    }
-    if (img.empty() && path != "") {
-        // read image
-        image = cv::imread(path, 1);
-        if (image.empty()) {
-            throw "Not a valid image file.";
-            return image;
-        }   
-        if (image.type() != 0) {
-            throw "Image must be of type 0 (8UC1)";
-            return image;
-        }
-    } else if (!img.empty()) {
-        image = img;
-        if (image.type() != 0) {
-            throw "Image must be of type 0 (8UC1)";
-            return image;
-        }
-    }
+    image = read(path, img);
+    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+
+    // if (img.empty() && path == "") {
+    //     throw "Must pass in either file path, opencv image, or both";
+    //     return image;
+    // }
+    // if (img.empty() && path != "") {
+    //     // read image
+    //     image = cv::imread(path, 1);
+    //     if (image.empty()) {
+    //         throw "Not a valid image file.";
+    //         return image;
+    //     }   
+    //     if (image.type() != 0) {
+    //         throw "Image must be of type 0 (8UC1)";
+    //         return image;
+    //     }
+    // } else if (!img.empty()) {
+    //     image = img;
+    //     if (image.type() != 0) {
+    //         throw "Image must be of type 0 (8UC1)";
+    //         return image;
+    //     }
+    // }
     
     // convert to binary 
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
@@ -60,7 +63,6 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
         skel = copy; 
     }
 
-
     // // save image
     // if (path == "") {
     //     srand (time(NULL));
@@ -70,6 +72,10 @@ cv::Mat skeleton(std::string path, cv::Mat img) {
     // std::string file_type = path.substr(path.length()-4, 4);
     // std::string output_file = path + "-skel" + file_type;
     // cv::imwrite(output_file, skel);
+
+    if (saving) {
+        save(image, path, "-skel");
+    }
 
     // std::cout << "nonzero of skeleton in skel: " << cv::countNonZero(skel) << std::endl;
     return skel;
