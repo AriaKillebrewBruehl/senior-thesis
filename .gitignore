@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+open-cv/*/images/
 build/
 develop-eggs/
 dist/
