@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <opencv2/opencv.hpp>
+#include "jfa.hpp"
 
 struct hash_pair {
     template <class T1, class T2>
@@ -17,11 +14,9 @@ struct hash_pair {
     }
 };
 
-using pixel_type = std::pair<int, int>;
-using seed_map = std::unordered_map<pixel_type, pixel_type, hash_pair>;  
 
-seed_map
-get_seeds(cv::Mat img) {
+
+seed_map get_seeds(cv::Mat img) {
     // seeds[(i, j)] gives the seed pixel for (i, j)
     seed_map seeds;
     // default seed for undefined pixels
@@ -44,15 +39,10 @@ get_seeds(cv::Mat img) {
     return seeds;
 }
 
-int 
-jmp_flood(std::string img) {
+cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     // read image
-    image = cv::imread(img);
-    if (img.empty()) {
-        throw "Not a valid image file";
-        return -1;
-    }
+    image = read(path, img);
 
     if (image.rows != image.cols) {
         std::string resz;
@@ -68,7 +58,7 @@ jmp_flood(std::string img) {
             }
         } else {
             throw "Input image must be an N x N square.";
-            return -1;
+            return image;
         }
     }
     seed_map seeds = get_seeds(image);
@@ -152,11 +142,12 @@ jmp_flood(std::string img) {
         }
         k *= 2;
     }
+
     // save image
-    std::string file_type = img.substr(img.length()-4, 4);
-    std::string output_file = img + "-jfa" + file_type;
-    cv::imwrite(output_file, image);
-    return 0;
+    if (saving) {
+        save(image, path, "-jfa");
+    }
+    return image;
 }
 
 int main(int argc, char** argv) {
@@ -164,7 +155,8 @@ int main(int argc, char** argv) {
          std::cerr << "Must pass in image to run jfa on." << std::endl;
     } else {
         for (int i = 1; i < argc; i++) {
-            jmp_flood(argv[i]);
+            cv::Mat image;
+            jmp_flood(argv[i], image, true);
         }
     }
 }
