@@ -3,28 +3,11 @@
 cv::Mat DoG(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
-    if (img.empty() && path == "") {
-        throw "Must pass in either file path, opencv image, or both";
-        return image;
-    }
-    if (img.empty() && path != "") {
-        // read image
-        image = cv::imread(path, 1);
-        if (image.empty()) {
-            throw "Not a valid image file.";
-            return image;
-        }
-    } else if (!img.empty()) {
-        image = img;
-    } 
+    image = read(path, img);
 
     // convert image to grayscale 
     cv::Mat gray_mat(image.size(), CV_8U);
     cv::cvtColor(image, gray_mat, cv::COLOR_BGR2GRAY);
-
-    std::string file_type = path.substr(path.length()-4, 4);
-    std::string output_file = path + "-DOG-grayscale" + file_type;
-    cv::imwrite(output_file, gray_mat);
 
     cv::Mat low_sigma;
     cv::Mat high_sigma;
@@ -48,15 +31,14 @@ cv::Mat DoG(std::string path, cv::Mat img, bool saving) {
     return image_th;
 }
 
-
-// int main(int argc, char** argv) {
-//     if (argc < 2) {
-//          std::cerr << "Must pass in image to run DoG on." << std::endl;
-//     } else {
-//         for (int i = 1; i < argc; i++) {
-//             cv::Mat image;
-//             // image = cv::imread(argv[i], 1);
-//             DoG(argv[i], image);
-//         }
-//     }
-// }
+int main(int argc, char** argv) {
+    if (argc < 2) {
+         std::cerr << "Must pass in image to run DoG on." << std::endl;
+    } else {
+        for (int i = 1; i < argc; i++) {
+            cv::Mat image;
+            // image = cv::imread(argv[i], 1);
+            DoG(argv[i], image, true);
+        }
+    }
+}
