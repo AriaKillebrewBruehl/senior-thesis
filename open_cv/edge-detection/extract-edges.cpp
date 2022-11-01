@@ -3,20 +3,22 @@
 cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
-    if (img.empty() && path == "") {
-        throw "Must pass in either file path, opencv image, or both";
-        return image;
-    }
-    if (img.empty() && path != "") {
-        // read image as grayscale
-        image = cv::imread(path, 1);
-        if (image.empty()) {
-            throw "Not a valid image file.";
-            return image;
-        }
-    } else if (!img.empty()) {
-        image = img;
-    }
+    image = read(path, img);
+    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+    // if (img.empty() && path == "") {
+    //     throw "Must pass in either file path, opencv image, or both";
+    //     return image;
+    // }
+    // if (img.empty() && path != "") {
+    //     // read image as grayscale
+    //     image = cv::imread(path, 1);
+    //     if (image.empty()) {
+    //         throw "Not a valid image file.";
+    //         return image;
+    //     }
+    // } else if (!img.empty()) {
+    //     image = img;
+    // }
 
     // run DoG
     cv::Mat dog = DoG(path, image, false);
