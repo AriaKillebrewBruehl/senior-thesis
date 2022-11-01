@@ -2,6 +2,41 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 10.31.2022
+**Isophote Extraction** 
+
+Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm 
+
+    image = read(img);
+
+    for (i < MAX_KERNEL_LENGTH) {
+        apply bilateral filter to image;
+    }
+
+    image = convert-to-CIELab;
+
+    // luminance quatization and remove a and b 
+    // now color in image represents luminance
+    processColors(image);
+
+    image = grayscale(image);
+    image = threshold(image);
+
+    return image;
+
+
+This will give back a binary image with only the isophotes. 
+
+<p align = "center">
+
+<img src="./blog-images/isophotes/beyonce.png" alt="drawing" width="200">
+<img src="./blog-images/isophotes/beyonce.png-isos-onlyL.png" alt="drawing" width="200">
+<img src="./blog-images/isophotes/beyonce.png-isos.png" alt="drawing" width="200">
+
+Fig.1 - Beyonce! Fig.2 - Beyonce where color corresponds to luminance. Fig.3 - Beyonce's isophotes (kinda spooky for halloween). 
+<br>
+</p>
+
 ## 10.28.2022 
 
 **Closing Gaps in Lines**
@@ -31,6 +66,11 @@ Fig.1 - Fabio versus Cameron with DoG.
 <br>
 </p>
 
+Jotting down a quick idea:
+
+It seems like running edge extraction of the bilaterally filtered image gives good isophotes, but we aren't extracting them. 
+What if to figure out what is an isophote or not you get the edges of the regular image, and those of the filtered image and 
+then just do iso - reg to get just the isophotes? That way we can distinguish them.
 
 
 ## 10.27.2022 
