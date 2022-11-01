@@ -39,8 +39,9 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold) {
     }
     
     // convert to binary and get skeleton 
+    image.convertTo(image, CV_8UC1);
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
-    cv::Mat skel = skeleton(path, image);
+    cv::Mat skel = skeleton(path, image, false);
 
     // get the components of skeleton
     cv::Mat labels;
@@ -102,7 +103,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            threshold(argv[i], image, 10000);
+            threshold(argv[i], image, 20, true);
         }
     }
 }
