@@ -24,7 +24,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(iso isophotes.cpp)
+add_executable(iso isophotes.cpp read-save.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(iso ${OpenCV_LIBS})
