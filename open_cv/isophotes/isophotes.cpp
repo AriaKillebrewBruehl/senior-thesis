@@ -6,15 +6,30 @@ inline uchar reduceVal(const uchar val)
     return 255;
 }
 
+// reduce values on L and remove a and b 
 void processColors(cv::Mat& img) {
     uchar* pixelPtr = img.data;
     for (int i = 0; i < img.rows; i++) {
         for (int j = 0; j < img.cols; j++) {
             const int pi = i*img.cols*3 + j*3;
             pixelPtr[pi + 0] = reduceVal(pixelPtr[pi + 0]); // L
+            pixelPtr[pi + 1] = 0; // a
+            pixelPtr[pi + 2] = 0; // b
         }
     }
-}  
+} 
+
+void onlyL(cv::Mat& img) {
+    uchar* pixelPtr = img.data;
+    for (int i = 0; i < img.rows; i++) {
+        for (int j = 0; j < img.cols; j++) {
+            const int pi = i*img.cols*3 + j*3;
+            pixelPtr[pi + 1] = 0; // a
+            pixelPtr[pi + 2] = 0; // b
+        }
+    }
+} 
+
 cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image = read(path, img);
@@ -34,17 +49,19 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // luminance quantization 
     processColors(src);
 
-    // 
-
-
-    // convert back to RGB
-    cv::cvtColor(src, src, cv::COLOR_Lab2LRGB);
+    // convert image to 4 channels
+    cv::Mat threshed(src.size(), CV_MAKE_TYPE(src.depth(), 4));
+    int from_to[] = { 0,0, 1,1, 2,2, 2,3 };
+    cv::mixChannels(&src,1,&threshed,1,from_to,4);
+    // convert to grayscale and threshold image
+    cv::cvtColor(threshed, threshed, cv::COLOR_RGB2GRAY);
+    cv::threshold(threshed, threshed, 64, 255, cv::THRESH_BINARY);
 
     if (saving) {
-        save(src, path, "-isos");
+        save(threshed, path, "-isos");
     }
     
-    return src;
+    return threshed;
 }
 
 int main(int argc, char** argv) {
