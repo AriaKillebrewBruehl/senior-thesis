@@ -1,5 +1,3 @@
-#pragma once 
-
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -8,6 +6,7 @@
 #include "DoG.hpp"
 #include "threshold-edges.hpp"
 #include "type2str.cpp"
+#include "read-save.hpp"
 
 cv::Mat extractEdges(std::string path, cv::Mat img, bool saving);
 
