@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
 #include <opencv2/opencv.hpp>
-#include "save.cpp"
+#include "read-save.hpp"
 
 cv::Mat DoG(std::string path, cv::Mat img, bool saving);
