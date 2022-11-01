@@ -52,7 +52,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
         // get component skeleton 
         isolated.convertTo(isolated, CV_8UC1);
         cv::threshold(isolated, isolated, 0, 255, cv::THRESH_BINARY);
-        cv::Mat skel = skeleton("", isolated);
+        cv::Mat skel = skeleton("", isolated, false);
 
         remove[i] = !(meetsThreshold(skel, threshold));
     } 
@@ -79,7 +79,6 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
 
     return labels;
 }
-
 
 int main(int argc, char** argv) {
     if (argc < 2) {
