@@ -28,4 +28,5 @@ add_executable(jfa jfa.cpp read-save.cpp)
 add_executable(dis-map distance-map.cpp jfa.cpp read-save.cpp)
 
 # tell it to link the executable target against OpenCV
-target_link_libraries(jfa ${OpenCV_LIBS} )
+target_link_libraries(jfa ${OpenCV_LIBS})
+target_link_libraries(dis-map ${OpenCV_LIBS})
