@@ -23,30 +23,24 @@ seed_map get_seeds(cv::Mat img) {
     return seeds;
 }
 
-seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
-    cv::Mat image;
-    seed_map seeds;
-    // read image
-    image = read(path, img);
-
+void resize(cv::Mat& image) {
     if (image.rows != image.cols) {
-        std::string resz;
-        std::cout << "Input image must be an N x N square." << std::endl;
-        std::cout << "Would you like to resize image? [y/n] ";
-        std::cin >> resz;
-        // resize image to square
-        if (resz == "y" || resz == "Y") {
-            if (image.rows < image.cols) {
-                cv::resize(image, image, cv::Size(image.rows, image.rows));
-            } else {
-                cv::resize(image, image, cv::Size(image.cols, image.cols));
-            }
+        if (image.rows < image.cols) {
+            cv::resize(image, image, cv::Size(image.rows, image.rows));
         } else {
-            throw "Input image must be an N x N square.";
-            return seeds;
+            cv::resize(image, image, cv::Size(image.cols, image.cols));
         }
     }
-    seeds = get_seeds(image);
+}
+
+seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
+    cv::Mat image;
+
+    // read image and resize
+    image = read(path, img);
+    resize(image);
+
+    seed_map seeds = get_seeds(image);
 
     int N = image.cols;
     int k = 1;
@@ -124,26 +118,10 @@ seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
 
 cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
-    // read image
+    // read image and resize
     image = read(path, img);
+    resize(image);
 
-    if (image.rows != image.cols) {
-        std::string resz;
-        std::cout << "Input image must be an N x N square." << std::endl;
-        std::cout << "Would you like to resize image? [y/n] ";
-        std::cin >> resz;
-        // resize image to square
-        if (resz == "y" || resz == "Y") {
-            if (image.rows < image.cols) {
-                cv::resize(image, image, cv::Size(image.rows, image.rows));
-            } else {
-                cv::resize(image, image, cv::Size(image.cols, image.cols));
-            }
-        } else {
-            throw "Input image must be an N x N square.";
-            return image;
-        }
-    }
     seed_map seeds = get_seeds(image);
 
     int N = image.cols;
