@@ -23,7 +23,7 @@ seed_map get_seeds(cv::Mat img) {
     return seeds;
 }
 
-seed_map jmp_flood(std::string path, cv::Mat img, bool saving) {
+seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
     cv::Mat image;
     seed_map seeds;
     // read image
@@ -47,6 +47,104 @@ seed_map jmp_flood(std::string path, cv::Mat img, bool saving) {
         }
     }
     seeds = get_seeds(image);
+
+    int N = image.cols;
+    int k = 1;
+
+    while (N/k >= 1) {
+        // loop over image
+        for (int i = 0; i < image.rows; i++) {
+            for (int j = 0; j < image.cols; j++) {
+                pixel_type p(i, j);
+                // extract pixel rgb values
+                unsigned char pr = image.at<cv::Vec3b>(i, j)[0]; 
+                unsigned char pg = image.at<cv::Vec3b>(i, j)[1]; 
+                unsigned char pb = image.at<cv::Vec3b>(i, j)[2]; 
+
+                // loop over 9 neighbors 
+                std::vector<int> nbrs_i = {i - k, i, i + k};
+                for (int qi : nbrs_i) {
+                    // bounds check
+                    if (qi < 0 || qi > N - 1) {
+                        continue;
+                    }
+                    std::vector<int> nbrs_j = {j - k, j, j + k};
+                    for (int qj : nbrs_j) {
+                        // bounds check 
+                        if (qj < 0 || qj > N - 1) {
+                            continue;
+                        } 
+                        else if (i == qi && j == qj) {
+                            continue;
+                        }
+                        
+                        pixel_type q(qi, qj);
+
+                        unsigned char qr = image.at<cv::Vec3b>(qi, qj)[0]; 
+                        unsigned char qg = image.at<cv::Vec3b>(qi, qj)[1]; 
+                        unsigned char qb = image.at<cv::Vec3b>(qi, qj)[2]; 
+
+                        // if p is colored and q is not, continue
+                        if (((pr + pg + pb) != 0) && ((qr + qg + qb) == 0)) {
+                            continue;
+                        }
+                        // if both are not colored continue 
+                        else if (((pr + pg + pb) == 0) && ((qr + qg + qb) == 0)) {
+                            continue;
+                        }
+                        // p is undefined but q is not 
+                        else if (((pr + pg + pb) == 0) && ((qr + qg + qb) != 0)) {
+                            // update pixel map
+                            seeds[p] = seeds[q];
+                        }
+                        // both p and q are colored  
+                        else if (((pr + pg + pb) != 0) && ((qr + qg + qb) != 0)) {
+                            pixel_type p_seed = seeds[p];
+                            pixel_type q_seed = seeds[q];
+
+                            double dist_p_seed = std::hypot(p.first - p_seed.first, p.second - p_seed.second);
+                            double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
+                            // p is closer to q's seed than its own
+                            if (dist_p_seed > dist_q_seed) {
+                                // update pixel map
+                                seeds[p] = seeds[q];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        k *= 2;
+        std::cout << k << std::endl;
+    }
+
+    return seeds;
+}
+
+
+cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
+    cv::Mat image;
+    // read image
+    image = read(path, img);
+
+    if (image.rows != image.cols) {
+        std::string resz;
+        std::cout << "Input image must be an N x N square." << std::endl;
+        std::cout << "Would you like to resize image? [y/n] ";
+        std::cin >> resz;
+        // resize image to square
+        if (resz == "y" || resz == "Y") {
+            if (image.rows < image.cols) {
+                cv::resize(image, image, cv::Size(image.rows, image.rows));
+            } else {
+                cv::resize(image, image, cv::Size(image.cols, image.cols));
+            }
+        } else {
+            throw "Input image must be an N x N square.";
+            return image;
+        }
+    }
+    seed_map seeds = get_seeds(image);
 
     int N = image.cols;
     int k = 1;
@@ -130,7 +228,7 @@ seed_map jmp_flood(std::string path, cv::Mat img, bool saving) {
     if (saving) {
         save(image, path, "-jfa");
     }
-    return seeds;
+    return image;
 }
 
 int main(int argc, char** argv) {
