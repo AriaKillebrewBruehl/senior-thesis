@@ -23,8 +23,9 @@ seed_map get_seeds(cv::Mat img) {
     return seeds;
 }
 
-cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
+seed_map jmp_flood(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
+    seed_map seeds;
     // read image
     image = read(path, img);
 
@@ -42,10 +43,10 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
             }
         } else {
             throw "Input image must be an N x N square.";
-            return image;
+            return seeds;
         }
     }
-    seed_map seeds = get_seeds(image);
+    seeds = get_seeds(image);
 
     int N = image.cols;
     int k = 1;
@@ -129,7 +130,7 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     if (saving) {
         save(image, path, "-jfa");
     }
-    return image;
+    return seeds;
 }
 
 int main(int argc, char** argv) {
