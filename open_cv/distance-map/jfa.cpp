@@ -23,7 +23,7 @@ seed_map get_seeds(cv::Mat img) {
     return seeds;
 }
 
-void resize(cv::Mat& image) {
+void resz(cv::Mat& image) {
     if (image.rows != image.cols) {
         if (image.rows < image.cols) {
             cv::resize(image, image, cv::Size(image.rows, image.rows));
@@ -35,10 +35,9 @@ void resize(cv::Mat& image) {
 
 seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
     cv::Mat image;
-
     // read image and resize
     image = read(path, img);
-    resize(image);
+    resz(image);
 
     seed_map seeds = get_seeds(image);
 
@@ -88,6 +87,10 @@ seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
                         }
                         // p is undefined but q is not 
                         else if (((pr + pg + pb) == 0) && ((qr + qg + qb) != 0)) {
+                            // set p to be the color of its q
+                            image.at<cv::Vec3b>(i, j)[0] = qr;
+                            image.at<cv::Vec3b>(i, j)[1] = qg;
+                            image.at<cv::Vec3b>(i, j)[2] = qb;
                             // update pixel map
                             seeds[p] = seeds[q];
                         }
@@ -100,6 +103,10 @@ seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
                             double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
                             // p is closer to q's seed than its own
                             if (dist_p_seed > dist_q_seed) {
+                                // set p to be the color of q
+                                image.at<cv::Vec3b>(i, j)[0] = qr;
+                                image.at<cv::Vec3b>(i, j)[1] = qg;
+                                image.at<cv::Vec3b>(i, j)[2] = qb;
                                 // update pixel map
                                 seeds[p] = seeds[q];
                             }
@@ -114,12 +121,11 @@ seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
     return seeds;
 }
 
-
 cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     // read image and resize
     image = read(path, img);
-    resize(image);
+    resz(image);
 
     seed_map seeds = get_seeds(image);
 
@@ -207,15 +213,15 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     return image;
 }
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-         std::cerr << "Must pass in image to run jfa on." << std::endl;
-    } else {
-        for (int i = 1; i < argc; i++) {
-            cv::Mat image;
-            jmp_flood(argv[i], image, true);
-        }
-    }
-}
+// int main(int argc, char** argv) {
+//     if (argc < 2) {
+//          std::cerr << "Must pass in image to run jfa on." << std::endl;
+//     } else {
+//         for (int i = 1; i < argc; i++) {
+//             cv::Mat image;
+//             jmp_flood(argv[i], image, true);
+//         }
+//     }
+// }
 
 
