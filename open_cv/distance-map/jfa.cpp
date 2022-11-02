@@ -109,7 +109,6 @@ seed_map jmp_flood_seeds(std::string path, cv::Mat img) {
             }
         }
         k *= 2;
-        std::cout << k << std::endl;
     }
 
     return seeds;
@@ -199,7 +198,6 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
             }
         }
         k *= 2;
-        std::cout << k << std::endl;
     }
 
     // save image
