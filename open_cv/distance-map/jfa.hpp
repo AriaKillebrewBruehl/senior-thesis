@@ -22,5 +22,6 @@ using pixel_type = std::pair<int, int>;
 using seed_map = std::unordered_map<pixel_type, pixel_type, hash_pair>; 
 
 seed_map get_seeds(cv::Mat img);
+void resz(cv::Mat& image);
 cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving);
 seed_map jmp_flood_seeds(std::string path, cv::Mat img);
