@@ -1,6 +1,6 @@
 #include "distance-map.hpp"
 
-void distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, cv::Mat imgIsos, bool saving) {
+cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, cv::Mat imgIsos, bool saving) {
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
@@ -35,7 +35,7 @@ void distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, 
     if (saving) {
         save(distances, pathEdges, "-dists");
     }
-    return;
+    return distances;
 }
 
 int main(int argc, char** argv) {
