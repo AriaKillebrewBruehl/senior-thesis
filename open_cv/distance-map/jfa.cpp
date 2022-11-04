@@ -132,7 +132,7 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     int N = image.cols;
     int k = 1;
 
-    while (N/k >= 1) {
+   while (N/k >= 1) {
         // loop over image
         for (int i = 0; i < image.rows; i++) {
             for (int j = 0; j < image.cols; j++) {
@@ -223,5 +223,3 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
 //         }
 //     }
 // }
-
-
