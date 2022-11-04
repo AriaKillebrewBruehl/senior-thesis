@@ -24,6 +24,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
+add_executable(gs gray-scale.cpp)
 add_executable(DoG DoG.cpp read-save.cpp)
 add_executable(edge-extraction extract-edges.cpp DoG.cpp threshold2.cpp skeleton.cpp read-save.cpp)
 add_executable(skeleton skeleton.cpp read-save.cpp)
@@ -31,6 +32,7 @@ add_executable(close close-gaps.cpp read-save.cpp)
 add_executable(thresh threshold2.cpp skeleton.cpp read-save.cpp)
 
 # tell it to link the executable target against OpenCV
+target_link_libraries(gs ${OpenCV_LIBS})
 target_link_libraries(DoG ${OpenCV_LIBS})
 target_link_libraries(edge-extraction ${OpenCV_LIBS})
 target_link_libraries(skeleton ${OpenCV_LIBS})
