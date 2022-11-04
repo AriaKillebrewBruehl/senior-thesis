@@ -1,6 +1,6 @@
 #include "distance-map.hpp"
 
-cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, cv::Mat imgIsos, bool saving) {
+distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, cv::Mat imgIsos, bool saving) {
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
@@ -13,6 +13,7 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     seed_map isosJfa = jmp_flood_seeds("", isos);
 
     cv::Mat distances(edges.rows, edges.cols, CV_8UC3);
+    cv::Mat priorityBuffer(edges.rows, edges.cols, CV_8UC3);
 
     int edge_weight = 1;
     int isos_weight = 2;
@@ -28,10 +29,18 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
                 distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
                 distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
                 distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
+
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
             } else {
                 distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
                 distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
                 distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
+
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
             }
         }
     }
@@ -39,7 +48,12 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     if (saving) {
         save(distances, pathEdges, "-dists");
     }
-    return distances;
+
+    distMap dists;
+    dists.distances = distances;
+    dists.priorityBuffer = priorityBuffer;
+
+    return dists;
 }
 
 int main(int argc, char** argv) {
