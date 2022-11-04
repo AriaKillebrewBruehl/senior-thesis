@@ -25,9 +25,13 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
             float edge_dist = std::hypot(pix.first - edge_seed.first, pix.second - edge_seed.second) / edge_weight;
             float isos_dist = std::hypot(pix.first - isos_seed.first, pix.second - isos_seed.second) / isos_weight;
             if (isos_dist < edge_dist) {
-                distances.at<int>(i, j) = 20 * int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
             } else {
-                distances.at<int>(i, j) = 20 * int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
             }
         }
     }
