@@ -26,11 +26,14 @@ bool meetsThreshold(cv::Mat img, int threshold) {
 cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     // read in image and convert to grayscale 
     cv::Mat image = read(path, img);
-    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+
+    if (image.type() != 0) {
+        cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+    }
     
     // convert to binary
     cv::threshold(image, image, 127, 255, cv::THRESH_BINARY);
-
+    
     // get components
     cv::Mat labels;
     cv::Mat stats;
