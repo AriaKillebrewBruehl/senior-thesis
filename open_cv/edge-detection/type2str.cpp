@@ -1,6 +1,4 @@
-#include <string>
-#include <opencv2/opencv.hpp>
-
+#include "type2str.hpp"
 
 std::string type2str(int type) {
   std::string r;
