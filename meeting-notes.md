@@ -1,4 +1,15 @@
 ## Meeting Notes
+
+normalizing everytinh compute min dn max and rescale 
+
+using jfa for distance how do we do priority 
+
+do flood on isophote and edge you know what isophote / edge you are closest too 
+then for each pixel see if it is closer to its edge or its isophote based on the priority function 
+basically flood then find minimum 
+
+figure out how to do voronoi diagram in opencv 
+
 ## 10 / 25
 
 2. Why does CIE LAB look like that 
