@@ -6,7 +6,7 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     image = read(path, img);
 
     if (image.type() != 0) {
-        cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+        throw "Image must be single chanel grayscale."
     }
     
     // convert to binary 
@@ -37,7 +37,6 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
             eroded.copyTo(copy);
             
             done = (cv::countNonZero(copy) == 0);
-            // std::cout << "." << std::endl;
         } while (!done);
     } else {
         skel = copy; 
