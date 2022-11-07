@@ -24,9 +24,9 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(jfa jfa.cpp read-save.cpp)
-add_executable(dis-map distance-map.cpp jfa.cpp read-save.cpp)
-add_executable(o-map offset-map.cpp distance-map.cpp jfa.cpp read-save.cpp)
+add_executable(jfa jfa.cpp read-save.cpp type2str.cpp)
+add_executable(dis-map distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
+add_executable(o-map offset-map.cpp distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(jfa ${OpenCV_LIBS})
