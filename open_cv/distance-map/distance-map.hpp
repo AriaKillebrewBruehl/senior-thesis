@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
-#include "type2str.cpp"
+#include "type2str.hpp"
 #include "read-save.hpp"
 #include "jfa.hpp"
 
