@@ -1,37 +1,21 @@
-#include <iostream>
-#include <string>
-#include <opencv2/opencv.hpp>
-
+#include "gray-scale.hpp"
 using namespace cv;
 
-int grayscale(std::string img) {
+cv::Mat grayscale(std::string path, cv::Mat img, bool saving) {
     // opencv image matrix
     cv::Mat image;
-    // read image
-    image = cv::imread(img);
-    if (img.empty()) {
-        throw "Not a valid image file";
-        return -1;
-    }
-    // generate grayscale image
-    for (int i = 0; i < image.rows; i++) {
-        for(int j = 0; j < image.cols; j++) {
-            unsigned char r = image.at<cv::Vec3b>(i, j)[0];
-            unsigned char g = image.at<cv::Vec3b>(i, j)[1];
-            unsigned char b = image.at<cv::Vec3b>(i, j)[2];
+    image = read(path, img);
 
-            unsigned char avg = int((0.299*r + 0.587*g + 0.114*b));
-            
-            image.at<cv::Vec3b>(i, j)[0] = avg;
-            image.at<cv::Vec3b>(i, j)[1] = avg;
-            image.at<cv::Vec3b>(i, j)[2] = avg;
-        }
-    }
-    // save image
-    std::string output_file = img + "-gs.jpg";
-    cv::imwrite(output_file, image);
+    cv::Mat gs;
+    gs.create(image.rows, image.cols, CV_8UC1);
 
-    return 0;
+    cv::cvtColor(image, gs, cv::COLOR_BGR2GRAY);
+    std::cout << type2str(gs.type()) << std::endl;
+    if (saving) {
+        save(gs, path, "-gs");
+    }
+
+    return gs;
 }
 
 int main(int argc, char** argv) {
@@ -41,7 +25,8 @@ int main(int argc, char** argv) {
         // convert files to grayscale  
         for (int i = 1; i < argc; i++) {
             try {
-                grayscale(argv[i]);
+                cv::Mat image;
+                grayscale(argv[i], image, true);
             } catch (const char* msg){
                 std::cerr << msg << std::endl;
             }  
