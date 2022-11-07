@@ -28,7 +28,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     cv::Mat image = read(path, img);
 
     if (image.type() != 0) {
-        cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+       throw "Image must be single chanel grayscale image.";
     }
     
     // convert to binary
@@ -83,13 +83,13 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     return labels;
 }
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-         std::cerr << "Must pass in image to run DoG on." << std::endl;
-    } else {
-        for (int i = 1; i < argc; i++) {
-            cv::Mat image;
-            threshold(argv[i], image, 100, true);
-        }
-    }
-}
+// int main(int argc, char** argv) {
+//     if (argc < 2) {
+//          std::cerr << "Must pass in image to run DoG on." << std::endl;
+//     } else {
+//         for (int i = 1; i < argc; i++) {
+//             cv::Mat image;
+//             threshold(argv[i], image, 50, true);
+//         }
+//     }
+// }

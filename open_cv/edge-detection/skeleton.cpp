@@ -6,7 +6,7 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     image = read(path, img);
 
     if (image.type() != 0) {
-        throw "Image must be single chanel grayscale."
+        throw "Image must be single chanel grayscale.";
     }
     
     // convert to binary 
