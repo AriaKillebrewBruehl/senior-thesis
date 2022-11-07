@@ -5,30 +5,32 @@ cv::Mat DoG(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
 
-    // convert image to grayscale 
-    cv::Mat gray_mat(image.size(), CV_8U);
-    cv::cvtColor(image, gray_mat, cv::COLOR_BGR2GRAY);
+    if (image.type() != 0) {
+        throw "Image must be single chanel grayscale image.";
+        return image;
+    }
 
     cv::Mat low_sigma;
     cv::Mat high_sigma;
 
-    cv::GaussianBlur(gray_mat, low_sigma, cv::Size(3, 3), 0, 0);
-    cv::GaussianBlur(gray_mat, high_sigma, cv::Size(9, 9), 0, 0);
-    // cv::GaussianBlur(gray_mat, low_sigma, cv::Size(0, 0), 1.0, 0);
-    // cv::GaussianBlur(gray_mat, high_sigma, cv::Size(0, 0), 1.5, 0);
+    cv::GaussianBlur(image, low_sigma, cv::Size(3, 3), 0, 0);
+    cv::GaussianBlur(image, high_sigma, cv::Size(5, 5), 0, 0);
+    // cv::GaussianBlur(gray_mat, low_sigma, cv::Size(0, 0), 2.00, 0);
+    // cv::GaussianBlur(gray_mat, high_sigma, cv::Size(0, 0), 2.50, 0);
    
    
     cv::Mat DoG = low_sigma - high_sigma;
     // convert to bi-level image
-    cv::Mat image_th;
-    double thresh = cv::threshold(DoG, image_th, 10, 255, cv::THRESH_BINARY);
+    // cv::Mat image_th;
+    double thresh = cv::threshold(DoG, DoG, 0, 255, cv::THRESH_BINARY);
+    cv::bitwise_not(DoG, DoG);
 
     // save image
     if (saving) {
-        save(image_th, path, "-DoG");
+        save(DoG, path, "-DoG10");
     }
 
-    return image_th;
+    return DoG;
 }
 
 int main(int argc, char** argv) {
