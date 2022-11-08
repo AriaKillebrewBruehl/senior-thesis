@@ -24,9 +24,12 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(extract-iso extract-isophotes.cpp isophotes.cpp read-save.cpp type2str.cpp)
+#add_executable(extract-iso ../edge-detection/extract-edges.cpp extract-isophotes.cpp isophotes.cpp read-save.cpp type2str.cpp)
 add_executable(iso isophotes.cpp read-save.cpp type2str.cpp)
+add_executable(tests tests.cpp extract-isophotes.cpp isophotes.cpp ../edge-detection/extract-edges.cpp ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/threshold-edges.cpp ../edge-detection/skeleton.cpp read-save.cpp type2str.cpp)
+# add_executable(main main.cpp ../edge-detection/extract-edges.cpp extract-isophotes.cpp isophotes.cpp read-save.cpp type2str.cpp)
 
 # tell it to link the executable target against OpenCV
-target_link_libraries(extract-iso ${OpenCV_LIBS})
+#target_link_libraries(extract-iso ${OpenCV_LIBS})
 target_link_libraries(iso ${OpenCV_LIBS})
+target_link_libraries(tests ${OpenCV_LIBS})
