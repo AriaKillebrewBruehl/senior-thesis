@@ -7,7 +7,7 @@ cv::Mat read(std::string path, cv::Mat img) {
         return image;
     }
     if (img.empty() && path != "") {
-        image = cv::imread(path);
+        image = cv::imread(path, cv::IMREAD_UNCHANGED);
         if (image.empty()) {
             throw "Not a valid image file.";
             return image;
