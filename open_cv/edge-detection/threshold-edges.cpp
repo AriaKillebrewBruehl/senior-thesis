@@ -26,9 +26,24 @@ bool meetsThreshold(cv::Mat img, int threshold) {
 cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     // read in image and convert to grayscale 
     cv::Mat image = read(path, img);
+    try {
+        if (image.empty()) {
+            throw 0;
+        }
+    } catch (int i) {
+        std::cout << "ERROR: Could not read in image." << std::endl;
+        return image;
+    }
 
-    if (image.type() != 0) {
-       throw "Image must be single chanel grayscale image.";
+    try {
+        if (image.type() != 0) {
+            throw image.type();
+        }
+    } catch (int t) {
+        std::cout << "ERROR: Input image to threshold must be of type 8UC1." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
+        cv::Mat empty;
+        return empty;
     }
     
     // convert to binary
