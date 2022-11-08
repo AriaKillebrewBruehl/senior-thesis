@@ -55,8 +55,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
 
     // save image
     if (saving) {
-        std::cout << "hi" << std::endl;
-        save(morphed2, path, "-extracted!!!");
+        save(morphed2, path, "-extracted");
     }
 
     return morphed2;
