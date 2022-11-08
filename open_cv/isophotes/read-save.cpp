@@ -2,16 +2,25 @@
 
 cv::Mat read(std::string path, cv::Mat img) {
     cv::Mat image;
-    if (img.empty() && path == "") {
-        throw "Must pass in either file path, opencv image, or both";
+    try {
+         if (img.empty() && path == "") {
+            throw 0;
+         }
+    } catch (int i) {
+        std::cout << "ERROR: Must pass in either file path, opencv image, or both" << std::endl;
         return image;
     }
     if (img.empty() && path != "") {
         image = cv::imread(path, cv::IMREAD_UNCHANGED);
-        if (image.empty()) {
-            throw "Not a valid image file.";
+        try {
+            if (image.empty()) {
+                throw 0;
+            }
+        } catch (int i) {
+            std::cout << "ERROR: Could not read image from provided input path." << std::endl;
             return image;
         }
+        
     } else if (!img.empty()) {
         image = img;
     }
