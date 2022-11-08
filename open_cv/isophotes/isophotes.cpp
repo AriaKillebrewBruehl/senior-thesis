@@ -33,6 +33,10 @@ void onlyL(cv::Mat& img) {
 cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image = read(path, img);
+    if (image.type() != 16) {
+        throw "Input image must be of type 8UC3.";
+        return image;
+    }
     
     int MAX_KERNEL_LENGTH = 15;
     cv::Mat src = image;
@@ -41,8 +45,8 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
         cv::Mat dest;
         cv::bilateralFilter (src, dest, i, i*2, i/2 );
         src = dest;
-    }
-
+    }  
+    
     // convert image to CIE L*a*b
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
 
@@ -58,19 +62,19 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     cv::threshold(threshed, threshed, 64, 255, cv::THRESH_BINARY);
 
     if (saving) {
-        save(threshed, path, "-isos");
+        save(threshed, path, "-isos*");
     }
     
     return threshed;
 }
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-         std::cerr << "Must pass in image to run DoG on." << std::endl;
-    } else {
-        for (int i = 1; i < argc; i++) {
-            cv::Mat image;
-            getIsophotes(argv[i],image, true);
-        }
-    }
-}
+// int main(int argc, char** argv) {
+//     if (argc < 2) {
+//          std::cerr << "Must pass in image to run DoG on." << std::endl;
+//     } else {
+//         for (int i = 1; i < argc; i++) {
+//             cv::Mat image;
+//             getIsophotes(argv[i],image, true);
+//         }
+//     }
+// }
