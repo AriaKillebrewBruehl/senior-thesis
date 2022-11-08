@@ -4,9 +4,24 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     // read in image
     cv::Mat image;
     image = read(path, img);
+    try {
+        if (image.empty()) {
+            throw 0;
+        }
+    } catch (int i) {
+        std::cout << "ERROR: Could not read in image." << std::endl;
+        return image;
+    }
 
-    if (image.type() != 0) {
-        throw "Image must be single chanel grayscale.";
+    try {
+        if (image.type() != 0) {
+            throw image.type();
+        }
+    } catch (int t) {
+        std::cout << "ERROR: Input image to skeleton must be of type 8UC1." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
+        cv::Mat empty;
+        return empty;
     }
     
     // convert to binary 
