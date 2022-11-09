@@ -30,8 +30,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     seed_map edgeJfa = jmp_flood_seeds("", edges);
     seed_map isosJfa = jmp_flood_seeds("", isos);
 
-    cv::Mat distances(edges.rows, edges.cols, CV_8UC3);
-    cv::Mat priorityBuffer(edges.rows, edges.cols, CV_8UC3);
+    cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC3);
+    cv::Mat priorityBuffer = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC3);
 
     int edge_weight = 1;
     int isos_weight = 2;
@@ -64,7 +64,7 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     }
     // save image
     if (saving) {
-        save(distances, pathEdges, "-dists");
+        save(distances, pathEdges, "-dists!!!");
         save(priorityBuffer, pathEdges, "-priorities");
     }
 
