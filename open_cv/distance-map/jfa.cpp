@@ -125,6 +125,14 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     // read image and resize
     image = read(path, img);
+     try {
+        if (image.empty()) {
+            throw 0;
+        }
+    } catch (int i) {
+        std::cout << "ERROR: Could not read in image in jmp_flood." << std::endl;
+        return image;
+    }
     resz(image);
 
     seed_map seeds = get_seeds(image);

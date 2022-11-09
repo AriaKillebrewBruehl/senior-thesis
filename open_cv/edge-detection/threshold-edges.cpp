@@ -31,7 +31,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
             throw 0;
         }
     } catch (int i) {
-        std::cout << "ERROR: Could not read in image." << std::endl;
+        std::cout << "ERROR: Could not read in image in threshold." << std::endl;
         return image;
     }
 

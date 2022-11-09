@@ -4,9 +4,27 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
+     try {
+        if (edges.empty()) {
+            throw 0;
+        }
+    } catch (int i) {
+        std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
+        distMap dMap;
+        return dMap;
+    }
     resz(edges);
     cv::Mat isos;
     isos = read(pathIsos, imgIsos);
+     try {
+        if (isos.empty()) {
+            throw 0;
+        }
+    } catch (int i) {
+        std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
+        distMap dMap;
+        return dMap;
+    }
     resz(isos);
     
     seed_map edgeJfa = jmp_flood_seeds("", edges);
