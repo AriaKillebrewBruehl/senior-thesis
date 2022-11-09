@@ -24,7 +24,6 @@ cv::Mat read(std::string path, cv::Mat img) {
     } else if (!img.empty()) {
         image = img;
     }
-
     return image;
 }
 
