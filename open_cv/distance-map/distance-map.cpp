@@ -13,6 +13,16 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
         distMap dMap;
         return dMap;
     }
+    try {
+        if (edges.type() != 0) {
+            throw edges.type();
+        }
+    } catch (int t) {
+        std::cout << "ERROR: Input image to distanceMap must be of type 8UC1." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
+         distMap dMap;
+        return dMap;
+    }
     resz(edges);
     cv::Mat isos;
     isos = read(pathIsos, imgIsos);
@@ -22,6 +32,16 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
         }
     } catch (int i) {
         std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
+        distMap dMap;
+        return dMap;
+    }
+     try {
+        if (isos.type() != 0) {
+            throw edges.type();
+        }
+    } catch (int t) {
+        std::cout << "ERROR: Input image to distanceMap must be of type 8UC1." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
         distMap dMap;
         return dMap;
     }
