@@ -4,4 +4,4 @@
 #include "read-save.hpp"
 #include "type2str.hpp"
 
-cv::Mat grayscale(std::string path);
+cv::Mat grayscale(std::string path, cv::Mat img, bool saving) ;
