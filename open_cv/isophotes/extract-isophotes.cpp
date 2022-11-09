@@ -8,7 +8,7 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
             throw 0;
         }
     } catch (int i) {
-        std::cout << "ERROR: Could not read in image." << std::endl;
+        std::cout << "ERROR: Could not read in image in extractIsophotes." << std::endl;
         return image;
     }
 
@@ -17,7 +17,7 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
             throw image.type();
         }
     } catch (int t) {
-        std::cout << "Input image must be of type 8UC3." << std::endl;
+        std::cout << "Input image in extractIsophotes must be of type 8UC3." << std::endl;
         std::cout << "Provided image was of type " << type2str(t) << "." << std::endl;
         cv::Mat empty;
         return empty;
