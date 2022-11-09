@@ -18,7 +18,6 @@ cv::Mat grayscale(std::string path, cv::Mat img, bool saving) {
     gs.create(image.rows, image.cols, CV_8UC1);
 
     cv::cvtColor(image, gs, cv::COLOR_BGR2GRAY);
-    std::cout << type2str(gs.type()) << std::endl;
     if (saving) {
         save(gs, path, "-gs");
     }
