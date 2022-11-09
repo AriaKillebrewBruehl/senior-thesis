@@ -30,8 +30,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     seed_map edgeJfa = jmp_flood_seeds("", edges);
     seed_map isosJfa = jmp_flood_seeds("", isos);
 
-    cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC3);
-    cv::Mat priorityBuffer = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC3);
+    cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC1);
+    cv::Mat priorityBuffer = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC1);
 
     int edge_weight = 1;
     int isos_weight = 2;
@@ -44,21 +44,25 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
             float edge_dist = std::hypot(pix.first - edge_seed.first, pix.second - edge_seed.second) / edge_weight;
             float isos_dist = std::hypot(pix.first - isos_seed.first, pix.second - isos_seed.second) / isos_weight;
             if (isos_dist < edge_dist) {
-                distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
-                distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
-                distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
+                distances.at<uchar>(i, j) = uchar(isos_dist);
+                // distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
+                // distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
+                // distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
 
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<uchar>(i, j) = uchar(isos_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
             } else {
-                distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
-                distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
-                distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
+                distances.at<uchar>(i, j) = uchar(edge_dist);
+                // distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
+                // distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
+                // distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
 
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
-                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<uchar>(i, j) = uchar(edge_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
             }
         }
     }
