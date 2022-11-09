@@ -38,7 +38,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
             throw 0;
         }
     } catch (int i) {
-        std::cout << "ERROR: Could not read in image." << std::endl;
+        std::cout << "ERROR: Could not read in image in getIsophotes." << std::endl;
         return image;
     }
 
@@ -47,7 +47,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
             throw image.type();
         }
     } catch (int t) {
-        std::cout << "ERROR: Input image must be of type 8UC3." << std::endl;
+        std::cout << "ERROR: Input image in getIsophotes must be of type 8UC3." << std::endl;
         std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
         cv::Mat empty;
         return empty;
