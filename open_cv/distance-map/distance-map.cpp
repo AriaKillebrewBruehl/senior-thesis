@@ -13,15 +13,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
         distMap dMap;
         return dMap;
     }
-    try {
-        if (edges.type() != 0) {
-            throw edges.type();
-        }
-    } catch (int t) {
-        std::cout << "ERROR: Input image to distanceMap must be of type 8UC1." << std::endl;
-        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
-         distMap dMap;
-        return dMap;
+    if (edges.type() == 0) {
+        cv::cvtColor(edges, edges, cv::COLOR_GRAY2BGR);
     }
     resz(edges);
     cv::Mat isos;
@@ -35,15 +28,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
         distMap dMap;
         return dMap;
     }
-     try {
-        if (isos.type() != 0) {
-            throw edges.type();
-        }
-    } catch (int t) {
-        std::cout << "ERROR: Input image to distanceMap must be of type 8UC1." << std::endl;
-        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
-        distMap dMap;
-        return dMap;
+    if (isos.type() == 0) {
+        cv::cvtColor(isos, isos, cv::COLOR_GRAY2BGR);
     }
     resz(isos);
     
@@ -64,31 +50,37 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
             float edge_dist = std::hypot(pix.first - edge_seed.first, pix.second - edge_seed.second) / edge_weight;
             float isos_dist = std::hypot(pix.first - isos_seed.first, pix.second - isos_seed.second) / isos_weight;
             if (isos_dist < edge_dist) {
+                if (isos_dist > 255) {
+                    isos_dist = 255;
+                }
                 distances.at<uchar>(i, j) = uchar(isos_dist);
-                // distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
-                // distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
-                // distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[0] = int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[1] = int(isos_dist);
+                distances.at<cv::Vec3b>(i, j)[2] = int(isos_dist);
 
                 priorityBuffer.at<uchar>(i, j) = uchar(isos_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(isos_weight);
             } else {
+                if (edge_dist > 255) {
+                    edge_dist = 255;
+                }
                 distances.at<uchar>(i, j) = uchar(edge_dist);
-                // distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
-                // distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
-                // distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[0] = int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[1] = int(edge_dist);
+                distances.at<cv::Vec3b>(i, j)[2] = int(edge_dist);
 
                 priorityBuffer.at<uchar>(i, j) = uchar(edge_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
-                // priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
+                priorityBuffer.at<cv::Vec3b>(i, j)[0] = int(edge_weight);
             }
         }
     }
     // save image
     if (saving) {
-        save(distances, pathEdges, "-dists!!!");
+        save(distances, pathEdges, "-dists?");
         save(priorityBuffer, pathEdges, "-priorities");
     }
 
