@@ -24,8 +24,8 @@ cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
     }
 
     // run DoG
-    // cv::Mat dog = DoG(path, image, false);
-    cv::Mat canny = cannyFilter(path, image, false);
+    cv::Mat dog = DoG(path, image, false);
+    // cv::Mat canny = cannyFilter(path, image, false);
 
     // cv::Mat morphed;
     cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
@@ -43,8 +43,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
 
 
     // extract edges via threshold
-    cv::Mat extracted = threshold("", canny, 50, false);
-    std::cout << type2str(extracted.type()) << std::endl;
+    cv::Mat extracted = threshold("", dog, 1000, false);
 
     // morphological operations
     cv::Mat morphed2;

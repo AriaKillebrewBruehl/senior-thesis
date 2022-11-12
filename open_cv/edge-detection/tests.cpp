@@ -6,7 +6,8 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            extractEdges(argv[i],image, true);
+            extractEdges(argv[i], image, true);
+            // grayscale(argv[i], image, true);
         }
     }
 }

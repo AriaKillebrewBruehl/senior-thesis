@@ -7,22 +7,24 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, std::string pathPrior
     cv::Mat priorities;
     priorities = read(pathPriorities, imgPriorities);
 
-    cv::Mat offsetMap(dists.rows, dists.cols, CV_8UC3, cv::Scalar(255));
-
+    cv::Mat offsetMap = cv::Mat::zeros(dists.rows, dists.cols, CV_8UC3);
+    save(offsetMap, pathDists, "-o-map-orig");
     int l = 6;
-    int w0 = 1;
+    int w0 = 1; // width of the offset line
     int id0 = 0;
     int Rmin = ((l - w0) * id0) - int(w0/2);
     int Rmax = ((l - w0) * id0) + int(w0/2);
     for (int i = 0; i < offsetMap.rows; i++) {
         for (int j = 0; j < offsetMap.cols; j++) {
             int df = int(dists.at<cv::Vec3b>(i, j)[0]);
+            std::cout << "df: " << df << std::endl;
             int pf = int(priorities.at<cv::Vec3b>(i, j)[0]);
-
+            std::cout << "pf: " << pf << std::endl;
+            std::cout << "df * pf: " << df * pf << std::endl;
             if (df * pf >= Rmin && df * pf <= Rmax) {
-                offsetMap.at<cv::Vec3b>(i, j)[0] = 0;
-                offsetMap.at<cv::Vec3b>(i, j)[1] = 0;
-                offsetMap.at<cv::Vec3b>(i, j)[2] = 0;
+                offsetMap.at<cv::Vec3b>(i, j)[0] = 255;
+                offsetMap.at<cv::Vec3b>(i, j)[1] = 255;
+                offsetMap.at<cv::Vec3b>(i, j)[2] = 255;
             }
         }
     }

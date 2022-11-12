@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 #include "../distance-map/distance-map.hpp"
 #include "../edge-detection/extract-edges.hpp"
+#include "../edge-detection/gray-scale.hpp"
 #include "../isophotes/extract-isophotes.hpp"
 #include "read-save.hpp"
 #include "type2str.hpp"

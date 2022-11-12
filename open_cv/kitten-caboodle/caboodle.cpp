@@ -12,16 +12,33 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
         std::cout << "ERROR: Could not read in image in caboodle." << std::endl;
         return image;
     }
-    std::cout << type2str(image.type()) << std::endl;
+
+    try {
+        if (image.type() != 16) {
+            throw image.type();
+        }
+    } catch (int t) {
+        std::cout << "ERROR: Input image in caboodle must be of type 8UC3." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
+        cv::Mat empty;
+        return empty;
+    }
+
+    // step 0: extract grayscale version of image
+    cv::Mat gray = grayscale("", image, false);
+    std::cout << "converted image to grayscale" << std::endl;
+
     // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges("", image, false);
+    cv::Mat edges = extractEdges("", gray, true);
+    std::cout << "extracted edges from image" << std::endl;
 
     // step 2: extract the isophotes of the image
-    cv::Mat isophotes = extractIsophotes("", image, false);
+    cv::Mat isophotes = extractIsophotes("", image, true);
+    std::cout << "extracted isophotes from image" << std::endl;
 
     // step 3: distance map
     distMap map = distanceMap("", edges, "", isophotes, false);
-
+    std::cout << "extracted distance map from image" << std::endl;
     cv::Mat distances = map.distances;
 
     if (saving) {

@@ -37,7 +37,7 @@ cv::Mat DoG(std::string path, cv::Mat img, bool saving) {
     // convert to bi-level image
     // cv::Mat image_th;
     double thresh = cv::threshold(DoG, DoG, 0, 255, cv::THRESH_BINARY);
-    cv::bitwise_not(DoG, DoG);
+    // cv::bitwise_not(DoG, DoG);
 
     // save image
     if (saving) {
