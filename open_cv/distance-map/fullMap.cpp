@@ -31,6 +31,19 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
     }
     resz(isos);
 
-    
-    
+    distMap dMap = distanceMap("", edges, "", isos, false);
+    cv::Mat distances = dMap.distances;
+    cv::Mat priorities = dMap.priorityBuffer;
+
+    cv::Mat oMap = offsetMap("", distances, "", priorities, false);
+
+    cv::Mat edgesIsos = combine("", edges, "", isos, false);
+    cv::bitwise_not(edgesIsos, edgesIsos);
+
+    cv::Mat final = combine("", edgesIsos, "", oMap, false);
+
+    if (saving) {
+        save(final, pathEdges, "-fullMap");
+    }
+    return final;
 }
