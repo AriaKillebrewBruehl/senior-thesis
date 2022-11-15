@@ -28,7 +28,7 @@ add_executable(combine combine.cpp read-save.cpp type2str.cpp)
 add_executable(jfa jfa.cpp read-save.cpp type2str.cpp)
 add_executable(dis-map distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
 add_executable(o-map offset-map.cpp distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
-add_executable(tests tests.cpp distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
+add_executable(tests tests.cpp offset-map.cpp distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(combine ${OpenCV_LIBS})
