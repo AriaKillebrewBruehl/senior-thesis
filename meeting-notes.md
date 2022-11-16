@@ -1,5 +1,53 @@
 ## Meeting Notes
 
+# 11 / 15 
+
+We have wide feature lines and a distance away from said feature line. 
+
+- label all offsets that are the same distance away with the same id
+  - so on the line is id offset 0, the id offset 1 
+
+- each line has its w0 thickness
+
+- for jfa check approximations and for a bug 
+  - go back to jfa and do basic lines to try and find off cases 
+
+## 11 / 10 
+
+- for distance map do sin(w * d) and as w changes the waves are larger of the lines are farther spaced apart 
+
+- walk in a certain direction and regularly space lines and a regular frequency 
+- we already know the distance so we just apply dividing up the distance by a certain interval 
+
+# writing 
+- can alternate between going deep and then stepping back 
+- talk ab why ppl have studied it 
+- definitions that talk ab technique and the thinking 
+- present specific technique 
+- then a different one 
+- then speculate about the goal is 
+
+- standard stuff that can be found can either be elaborated on or just point to a reference 
+
+- give enough info in the beginning to be able to talk about what you want to talk about later 
+
+- this can be an opportunity to really talk about all the things that i have learned 
+
+
+I. the problem (WSJ), context (NPR), addressing DL (this thesis shows an approach that relies on traditional image processing techniques that augments them for hedcuts, it's also possible to apply DL but we won't do that), outline the document
+
+II. back ground for these results to support III, here is what a flood is, this is what people do 
+  - color space
+  - DoG
+  - floods
+  - opencv 
+
+III. my approach and results 
+
+IV. assesement of approach and suggestions or tweaks
+  - these are the other ideas that i have now that i have done the thing
+
+# 11 / 01 
 normalizing everytinh compute min dn max and rescale 
 
 using jfa for distance how do we do priority 
