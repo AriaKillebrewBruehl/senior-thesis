@@ -2,6 +2,14 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 11.01.2022
+**Distance Maps** 
+
+Okay according to wikipedia jfa is good enough for Voronoi diagrams so that is what I shall do. However, I am worried that
+my JFA that I already have is not quite good enough so I shall do some research about implementing this with specifically opencv. 
+
+Okay so basically jfa is super super slow if the image is larger. 
+
 ## 10.31.2022
 **Isophote Extraction** 
 
@@ -25,7 +33,7 @@ Okay I came up with a pretty good way to doing isophote extraction. Here is the 
     return image;
 
 
-This will give back a binary image with only the isophotes. 
+This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
 
 <p align = "center">
 
@@ -36,6 +44,17 @@ This will give back a binary image with only the isophotes.
 Fig.1 - Beyonce! Fig.2 - Beyonce where color corresponds to luminance. Fig.3 - Beyonce's isophotes (kinda spooky for halloween). 
 <br>
 </p>
+
+So I think the only things I need to do for edge extraction are to fix the fact that the lines are disconnected with means that not
+a lot of them meet the threshold. 
+
+Since I don't really know how to fix that I will look into the Weighted Distance Map Generation. 
+
+Hmm here are some things I don't get about Distance Map Generation:
+1. "Edges have default priority" what does that mean? That they have priority one?
+2. How do we get the min over all the (x', y') on the isophote? Probably a connected components thing to find the isophote and 
+then use the centroid and go from there but that just seems so inefficient. 
+3. What is the deal with this parent priority buffer thing?
 
 ## 10.28.2022 
 
