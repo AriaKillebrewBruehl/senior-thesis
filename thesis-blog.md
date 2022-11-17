@@ -2,6 +2,39 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 11.17.2022
+**It's been a minute**
+
+Okay here are the main updates:
+
+Last week I did a lot of writing, I have a layout that I feel pretty confident about. My goal for the rest of the
+semester is to have a draft of my background chapter by the end of the semester. I think that is feasible, here is 
+what needs to be done for that:
+
+- [] clean up "representing images on a computer" based on the info in the big book (not the bible but that really thick computer graphics textbook)
+- [] write about color spaces
+- [] write canny edges detection  
+- [] write color conversion 
+- [] write DoG
+
+I also want to try to finish the implementation that I am currently working towards. That is kind of a big thing but I think it is feasible! Here is what needs to be done for that:
+
+- [] fix JFA
+- [] redo offset map algorithm 
+- figure out dot placement
+
+Recently I've been working on fixing the JFA. I fixed a small bug by changing the conditional for check if a pixel is set from the color to the seed it currenlty has in seed_map. But I am still getting weird things :(
+
+<p align = "center">
+
+<img src="./blog-images/distance-map/small-half-half-jfa.png" alt="drawing" width="200">
+<img src="./blog-images/distance-map/small-half-half-jfa2.png" alt="drawing" width="200">
+
+Fig.1 - Resolving a small bug :)
+<br>
+</p>
+
+
 ## 11.01.2022
 **Distance Maps** 
 
