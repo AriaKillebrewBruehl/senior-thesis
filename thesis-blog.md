@@ -27,8 +27,8 @@ Recently I've been working on fixing the JFA. I fixed a small bug by changing th
 
 <p align = "center">
 
-<img src="./blog-images/distance-map/small-half-half-jfa.png" alt="drawing" width="200">
-<img src="./blog-images/distance-map/small-half-half-jfa2.png" alt="drawing" width="200">
+<img src="./blog-images/distance-map/small-half-half.png-jfa.png" alt="drawing" width="200">
+<img src="./blog-images/distance-map/small-half-half.png-jfa2.png" alt="drawing" width="200">
 
 Fig.1 - Resolving a small bug :)
 <br>
