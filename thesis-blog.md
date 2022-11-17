@@ -11,17 +11,17 @@ Last week I did a lot of writing, I have a layout that I feel pretty confident a
 semester is to have a draft of my background chapter by the end of the semester. I think that is feasible, here is 
 what needs to be done for that:
 
-- [] clean up "representing images on a computer" based on the info in the big book (not the bible but that really thick computer graphics textbook)
-- [] write about color spaces
-- [] write canny edges detection  
-- [] write color conversion 
-- [] write DoG
+- [ ] clean up "representing images on a computer" based on the info in the big book (not the bible but that really thick computer graphics textbook)
+- [ ] write about color spaces
+- [ ] write canny edges detection  
+- [ ] write color conversion 
+- [ ] write DoG
 
 I also want to try to finish the implementation that I am currently working towards. That is kind of a big thing but I think it is feasible! Here is what needs to be done for that:
 
-- [] fix JFA
-- [] redo offset map algorithm 
-- figure out dot placement
+- [ ] fix JFA
+- [ ] redo offset map algorithm 
+- [ ] figure out dot placement
 
 Recently I've been working on fixing the JFA. I fixed a small bug by changing the conditional for check if a pixel is set from the color to the seed it currenlty has in seed_map. But I am still getting weird things :(
 
