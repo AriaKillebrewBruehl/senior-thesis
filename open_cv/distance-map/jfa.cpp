@@ -145,7 +145,6 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
    while (N/k >= 1) {
         std::cout << N/k << std::endl;
         // loop over image
-        // std::cout << "starting iteration " << k << std::endl;
         for (int i = 0; i < image.rows; i++) {
             for (int j = 0; j < image.cols; j++) {
                 pixel_type p(i, j);
