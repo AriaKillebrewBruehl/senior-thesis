@@ -1,10 +1,12 @@
 #include "jfa.hpp"
 
+pixel_type undef (-1, -1);
+
 seed_map get_seeds(cv::Mat img) {
     // seeds[(i, j)] gives the seed pixel for (i, j)
     seed_map seeds;
     // default seed for undefined pixels
-    pixel_type undef (-1, -1);
+    
     for (int i = 0; i < img.rows; i++) {
         for(int j = 0; j < img.cols; j++) {
             pixel_type pix(i, j);
@@ -141,15 +143,12 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
     int k = 1;
 
    while (N/k >= 1) {
+        std::cout << N/k << std::endl;
         // loop over image
+        // std::cout << "starting iteration " << k << std::endl;
         for (int i = 0; i < image.rows; i++) {
             for (int j = 0; j < image.cols; j++) {
                 pixel_type p(i, j);
-                // extract pixel rgb values
-                unsigned char pr = image.at<cv::Vec3b>(i, j)[0]; 
-                unsigned char pg = image.at<cv::Vec3b>(i, j)[1]; 
-                unsigned char pb = image.at<cv::Vec3b>(i, j)[2]; 
-
                 // loop over 9 neighbors 
                 std::vector<int> nbrs_i = {i - k, i, i + k};
                 for (int qi : nbrs_i) {
@@ -166,45 +165,43 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
                         else if (i == qi && j == qj) {
                             continue;
                         }
-                        
                         pixel_type q(qi, qj);
 
-                        unsigned char qr = image.at<cv::Vec3b>(qi, qj)[0]; 
-                        unsigned char qg = image.at<cv::Vec3b>(qi, qj)[1]; 
-                        unsigned char qb = image.at<cv::Vec3b>(qi, qj)[2]; 
-
-                        // if p is colored and q is not, continue
-                        if (((pr + pg + pb) != 0) && ((qr + qg + qb) == 0)) {
+                        // q has no seed
+                        if (seeds[q] == undef) {
                             continue;
                         }
-                        // if both are not colored continue 
-                        else if (((pr + pg + pb) == 0) && ((qr + qg + qb) == 0)) {
-                            continue;
-                        }
-                        // p is undefined but q is not 
-                        else if (((pr + pg + pb) == 0) && ((qr + qg + qb) != 0)) {
-                            // set p to be the color of its q
-                            image.at<cv::Vec3b>(i, j)[0] = qr;
-                            image.at<cv::Vec3b>(i, j)[1] = qg;
-                            image.at<cv::Vec3b>(i, j)[2] = qb;
-                            // update pixel map
-                            seeds[p] = seeds[q];
-                        }
-                        // both p and q are colored  
-                        else if (((pr + pg + pb) != 0) && ((qr + qg + qb) != 0)) {
-                            pixel_type p_seed = seeds[p];
-                            pixel_type q_seed = seeds[q];
-
-                            double dist_p_seed = std::hypot(p.first - p_seed.first, p.second - p_seed.second);
-                            double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
-                            // p is closer to q's seed than its own
-                            if (dist_p_seed > dist_q_seed) {
-                                // set p to be the color of q
+                        else {
+                            unsigned char qr = image.at<cv::Vec3b>(qi, qj)[0]; 
+                            unsigned char qg = image.at<cv::Vec3b>(qi, qj)[1]; 
+                            unsigned char qb = image.at<cv::Vec3b>(qi, qj)[2]; 
+                            // p is undefined, so set to q
+                            if (seeds[p] == undef) {
+                                // set p to be the color of its q
                                 image.at<cv::Vec3b>(i, j)[0] = qr;
                                 image.at<cv::Vec3b>(i, j)[1] = qg;
                                 image.at<cv::Vec3b>(i, j)[2] = qb;
                                 // update pixel map
                                 seeds[p] = seeds[q];
+                            }
+                            // both p and q are colored  
+                            else {
+                                pixel_type p_seed = seeds[p];
+                                pixel_type q_seed = seeds[q];
+                                if (p_seed == q_seed) {
+                                    continue;
+                                }
+                                double dist_p_seed = std::hypot(p.first - p_seed.first, p.second - p_seed.second);
+                                double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
+                                // p is closer to q's seed than its own
+                                if (dist_p_seed > dist_q_seed) {
+                                    // set p to be the color of q
+                                    image.at<cv::Vec3b>(i, j)[0] = qr;
+                                    image.at<cv::Vec3b>(i, j)[1] = qg;
+                                    image.at<cv::Vec3b>(i, j)[2] = qb;
+                                    // update pixel map
+                                    seeds[p] = seeds[q];
+                                }
                             }
                         }
                     }
@@ -216,7 +213,7 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
 
     // save image
     if (saving) {
-        save(image, path, "-jfa");
+        save(image, path, "-jfa2");
     }
     return image;
 }
