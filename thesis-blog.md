@@ -2,6 +2,20 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 11.20.2022 
+**What the heck is up with my JFA**
+
+I really have no idea what else is wrong with my JFA, the only thing that I can think to do to fix it is to run a bilateral filter in order to get rid of the noise. 
+
+<p align = "center">
+
+<img src="./blog-images/jfa/tess-jmp-flood.png-jfa.png" alt="drawing" width="200">
+<img src="./blog-images/jfa/tess-jmp-flood.png-jfa.png" alt="drawing" width="200">
+
+Fig.1 - More improvements
+<br>
+</p>
+
 ## 11.17.2022
 **It's been a minute**
 
