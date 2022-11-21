@@ -33,8 +33,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     }
     resz(isos);
     
-    seed_map edgeJfa = jmp_flood_seeds("", edges);
-    seed_map isosJfa = jmp_flood_seeds("", isos);
+    seed_map edgesSeeds = jmp_flood_seeds("", edges);
+    seed_map isosSeeds = jmp_flood_seeds("", isos);
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC1);
     cv::Mat priorityBuffer = cv::Mat::zeros(edges.rows, edges.cols, CV_8UC1);
@@ -44,8 +44,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     for (int i = 0; i < distances.rows; i++) {
         for (int j = 0; j < distances.cols; j++) {
             pixel_type pix(i, j);
-            pixel_type edge_seed = edgeJfa[pix];
-            pixel_type isos_seed = isosJfa[pix];
+            pixel_type edge_seed = edgesSeeds[pix];
+            pixel_type isos_seed = isosSeeds[pix];
     
             float edge_dist = std::hypot(pix.first - edge_seed.first, pix.second - edge_seed.second) / edge_weight;
             float isos_dist = std::hypot(pix.first - isos_seed.first, pix.second - isos_seed.second) / isos_weight;
