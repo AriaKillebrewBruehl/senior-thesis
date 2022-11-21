@@ -50,26 +50,20 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
             float edge_dist = std::hypot(pix.first - edge_seed.first, pix.second - edge_seed.second) / edge_weight;
             float isos_dist = std::hypot(pix.first - isos_seed.first, pix.second - isos_seed.second) / isos_weight;
             if (isos_dist < edge_dist) {
-                if (isos_dist > 255) {
-                    isos_dist = 255;
-                }
+                isos_dist = int(isos_dist) % 255;
                 distances.at<uchar>(i, j) = uchar(isos_dist);
-                
                 priorityBuffer.at<uchar>(i, j) = uchar(isos_weight);
             } else {
-                if (edge_dist > 255) {
-                    edge_dist = 255;
-                }
+                edge_dist = int(edge_dist) % 255;
                 distances.at<uchar>(i, j) = uchar(edge_dist);
-               
                 priorityBuffer.at<uchar>(i, j) = uchar(edge_weight);
             }
         }
     }
     // save image
     if (saving) {
-        save(distances, pathEdges, "-dists?");
-        save(priorityBuffer, pathEdges, "-priorities");
+        save(distances, pathEdges, "-dists-0");
+        save(priorityBuffer, pathEdges, "-priorities-0");
     }
 
     distMap dists;
