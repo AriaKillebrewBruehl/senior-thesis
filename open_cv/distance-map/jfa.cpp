@@ -1,6 +1,6 @@
 #include "jfa.hpp"
 
-pixel_type undef (-1, -1);
+pixel_type undef(-1, -1);
 
 seed_map get_seeds(cv::Mat img) {
     // seeds[(i, j)] gives the seed pixel for (i, j)
@@ -186,7 +186,18 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
                                 double dist_p_seed = std::hypot(p.first - p_seed.first, p.second - p_seed.second);
                                 double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
                                 // p is closer to q's seed than its own
-                                if (dist_p_seed > dist_q_seed) {
+                                if (abs(dist_p_seed - dist_q_seed) <= 0.5) {
+                                    int p_id = p_seed.first * image.rows + p_seed.second * image.cols;
+                                    int q_id = q_seed.first * image.rows + q_seed.second * image.cols;
+                                    if (q_id < p_id) {
+                                        // set p to be the color of q
+                                        image.at<cv::Vec3b>(i, j)[0] = qr;
+                                        image.at<cv::Vec3b>(i, j)[1] = qg;
+                                        image.at<cv::Vec3b>(i, j)[2] = qb;
+                                        // update pixel map
+                                        seeds[p] = seeds[q];
+                                    }
+                                } else if (dist_p_seed > dist_q_seed) {
                                     // set p to be the color of q
                                     image.at<cv::Vec3b>(i, j)[0] = qr;
                                     image.at<cv::Vec3b>(i, j)[1] = qg;
@@ -203,11 +214,16 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
         k *= 2;
     }
 
-    // cv::Mat dst;
-    // cv::bilateralFilter(image, dst, 2, 4, 1);
-    // save image
+    // int MAX_KERNEL_LENGTH = 20;
+    // cv::Mat src = image;
+    // // bilateral filter 
+    // for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 ) {
+    //     cv::Mat dest;
+    //     cv::bilateralFilter (src, dest, i, i*2, i/2 );
+    //     src = dest;
+    // } 
     if (saving) {
-        save(image, path, "-jfa2");
+        save(image, path, "-jfa8");
     }
     return image;
 }
