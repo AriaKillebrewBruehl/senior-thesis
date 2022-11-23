@@ -1,5 +1,16 @@
 ## Meeting Notes
 
+# 11/22 
+
+- maybe change how i decide what is a seed and what is not
+- create a separate map that has 0,1 initially to inidicate if something is a seed or now 
+- somehow try to capture the weirdness with a second type of undefined 
+- basically there is numeric instability that leads to weird things
+
+- picking pixel
+  - just randomly select 1/m pixel but not ones on the feature lines
+  - if distance between dots is d then if random value is less than 1 / d^2 then include it 
+
 # 11 / 15 
 
 We have wide feature lines and a distance away from said feature line. 
