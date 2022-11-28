@@ -1,7 +1,5 @@
 #include "jfa.hpp"
 
-pixel_type undef(-1, -1);
-
 seed_map get_seeds(cv::Mat img) {
     // seeds[(i, j)] gives the seed pixel for (i, j)
     seed_map seeds;
@@ -185,19 +183,7 @@ cv::Mat jmp_flood(std::string path, cv::Mat img, bool saving) {
                                 }
                                 double dist_p_seed = std::hypot(p.first - p_seed.first, p.second - p_seed.second);
                                 double dist_q_seed = std::hypot(p.first - q_seed.first, p.second - q_seed.second);
-                                // p is closer to q's seed than its own
-                                if (abs(dist_p_seed - dist_q_seed) <= 0.5) {
-                                    int p_id = p_seed.first * image.rows + p_seed.second * image.cols;
-                                    int q_id = q_seed.first * image.rows + q_seed.second * image.cols;
-                                    if (q_id < p_id) {
-                                        // set p to be the color of q
-                                        image.at<cv::Vec3b>(i, j)[0] = qr;
-                                        image.at<cv::Vec3b>(i, j)[1] = qg;
-                                        image.at<cv::Vec3b>(i, j)[2] = qb;
-                                        // update pixel map
-                                        seeds[p] = seeds[q];
-                                    }
-                                } else if (dist_p_seed > dist_q_seed) {
+                                if (dist_p_seed > dist_q_seed) {
                                     // set p to be the color of q
                                     image.at<cv::Vec3b>(i, j)[0] = qr;
                                     image.at<cv::Vec3b>(i, j)[1] = qg;
