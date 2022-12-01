@@ -20,7 +20,7 @@ int f(cv::Mat arr, int p) {
         return INT_MAX;
     } 
 
-    int value = arr.at<int>(p, 0);
+    int value = int(arr.at<uchar>(p, 0));
     // std::cout << "f(" << p << ") = ";
     if (value == 255) {
         // std::cout << "255" << std::endl;
@@ -69,6 +69,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     for (int i = 1; i < arr.rows; i++) {
         std::cout << std::endl;
         std::cout << "analyzing pixel " << i << std::endl;
+        std::cout << "arr(i) has value: " << int(arr.at<uchar>(i, 0)) << std::endl;
        
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
         
@@ -134,7 +135,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         }
         // distance between i and the horizontal position of the kth parabola 
         int a = abs(i-v[k]);
-        Df.at<int>(i, 0) = int(a + f(arr, v[k]));
+        Df.at<uchar>(i, 0) = uchar(a + f(arr, v[k]));
     }
 
     if (rotated) {
