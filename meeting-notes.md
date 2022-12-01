@@ -1,5 +1,8 @@
 ## Meeting Notes
 
+# 11/29
+- s gives where the parabolas centered at q and r cross 
+
 # 11/22 
 
 - maybe change how i decide what is a seed and what is not
