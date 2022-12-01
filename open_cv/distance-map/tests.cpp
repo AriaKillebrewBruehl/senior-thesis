@@ -6,9 +6,11 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i+=2) {
             cv::Mat image;
-            jmp_flood(argv[i], image, true);
+            sample(image, argv[i], true);
+
+            // jmp_flood2(argv[i], image, true);
             // fullMap(argv[i],image, argv[i + 1], image, true);
-            // offsetMap(argv[i],image, argv[i + 1], image, true);
+            // offsetMap(argv[i],image, true);
             // distanceMap(argv[i],image, argv[i + 1], image, true);
         }
     }
