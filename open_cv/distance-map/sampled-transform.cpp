@@ -67,9 +67,9 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
 
     // single column matrix so just loop over the rows
     for (int i = 1; i < arr.rows; i++) {
-        std::cout << std::endl;
-        std::cout << "analyzing pixel " << i << std::endl;
-        std::cout << "arr(i) has value: " << int(arr.at<uchar>(i, 0)) << std::endl;
+        // std::cout << std::endl;
+        // std::cout << "analyzing pixel " << i << std::endl;
+        // std::cout << "arr(i) has value: " << int(arr.at<uchar>(i, 0)) << std::endl;
        
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
         
@@ -77,54 +77,54 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         bool curr_inf = false;
         while (true) {
             int  r = v[k];
-            std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
-            std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
+            // std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
+            // std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
             if (f(arr, i) == INT_MAX) {
                 curr_inf = true;
                 break;
             }
             // intersection of parabola from i and r
             s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
-            std::cout << "s: " << s << std::endl;
-            std::cout << "z[k]: " << z[k] << " z[k+1]: " << z[k+1] << std::endl;
+            // std::cout << "s: " << s << std::endl;
+            // std::cout << "z[k]: " << z[k] << " z[k+1]: " << z[k+1] << std::endl;
             if (s > z[k]) {
                 break;
             }
             // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
-            std::cout << "removing parabola k" << std::endl;
+            // std::cout << "removing parabola k" << std::endl;
             k--;
         }
         if (curr_inf) {
-            std::cout << "current parabola has inifinte vertical" << std::endl;
+            // std::cout << "current parabola has inifinte vertical" << std::endl;
             continue;
         }
-        std::cout << "adding new parabola" << std::endl;
+        // std::cout << "adding new parabola" << std::endl;
         // otherwise modify lower envelope 
         // increase k
         k++;
-        std::cout << "increased k to: " << k << std::endl;
+        // std::cout << "increased k to: " << k << std::endl;
         // add i as the kth parabola
         v.push_back(i);
-        std::cout << "updated v, v[k] = " << v[k] << std::endl;
+        // std::cout << "updated v, v[k] = " << v[k] << std::endl;
         // make i is below the others starting at s
         z[k] = s;
         // and ending at infinity
         z.push_back(INT_MAX);
-         std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
-        std::cout << std::endl;
+        // std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
+        // std::cout << std::endl;
     }
 
-    std::cout << "final v has size " << v.size() << " v: " ;
-    for (int i: v) {
-        std::cout << i << ", ";
-    }
-    std::cout << std::endl;
+    //std::cout << "final v has size " << v.size() << " v: " ;
+    // for (int i: v) {
+    //     std::cout << i << ", ";
+    // }
+    // std::cout << std::endl;
     
-    std::cout << "final z: ";
-    for (int i: z) {
-        std::cout << i << ", ";
-    }
-    std::cout << std::endl;
+    // std::cout << "final z: ";
+    // for (int i: z) {
+    //     std::cout << i << ", ";
+    // }
+    // std::cout << std::endl;
 
 
     k = 0;
@@ -142,7 +142,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         cv::rotate(Df, Df, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
 
-    std::cout << "DF: " << Df << std::endl;
+    //std::cout << "DF: " << Df << std::endl;
     return Df;
 }
 
@@ -159,20 +159,20 @@ cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         return arr;
     }
 
-    for (int i = 0; i < arr.rows; i++) {
+    //for (int i = 0; i < arr.rows; i++) {
         for (int j = 0; j < arr.cols; j++) {
             // extract column and run one-dimensional distance transform 
             cv::Mat column = arr.col(j);
             cv::Mat transformed = DTOneDim(column, f);
             // replace column in original array
-            column.col(0).copyTo(arr.col(j));
+            transformed.col(0).copyTo(arr.col(j));
         }
-        // extract row and run one-dimensional distance transform 
-        cv::Mat row = arr.row(i);
-        cv::Mat transformed = DTOneDim(row, f);
-        // replace row in original array
-        row.row(0).copyTo(arr.row(i));
-    }
+        // // extract row and run one-dimensional distance transform 
+        // cv::Mat row = arr.row(i);
+        // cv::Mat transformed = DTOneDim(row, f);
+        // // replace row in original array
+        // row.row(0).copyTo(arr.row(i));
+    //}
 
     return arr;
 }
@@ -199,7 +199,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     }
 
     cv::Mat sampled;
-    sampled =  DTOneDim(image, f);
+    sampled =  DTTwoDim(image, f);
 
     /*for (int i = 0; i < sampled.rows; i++) {
         for (int j = 0; j < sampled.cols ; j++) {
