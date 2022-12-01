@@ -65,25 +65,27 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
 
     // single column matrix so just loop over the rows
     for (int i = 0; i < arr.rows; i++) {
-        std::cout << k << std::endl;
-        int value = arr.at<int>(i, 0);
+        std::cout << "analyzing pixel " << i << std::endl;
+       
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
         
-        bool done = false;
         int s;
-        while (!done) {
+        while (true) {
             int  r = v[k];
+            std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
+            std::cout << "f(i) = " << f(arr, i) << "f(v[k]) = " << f(arr, r) << std::endl;
             // intersection of parabola from i and r
             s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
-            // std::cout << "k: " << k << " s: " << s << " z[k]: " << z[k] << std::endl;
             std::cout << "s: " << s << std::endl;
+            std::cout << "z[k]: " << z[k] << " z[k+1]: " << z[k+1] << std::endl;
             if (s > z[k]) {
-                done = true;
+                break;
             }
             // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
+            std::cout << "removing parabola k" << std::endl;
             k--;
         }
-        
+        std::cout << "adding new parabola" << std::endl;
         // otherwise modify lower envelope 
         // increase k
         k++;
@@ -93,6 +95,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         z[k] = s;
         // and ending at infinity
         z[k+1] = INT_MAX;
+        std::cout << std::endl;
     }
 
 
