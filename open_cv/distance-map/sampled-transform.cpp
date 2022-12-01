@@ -57,6 +57,8 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     }
     assert(arr.cols == 1);
 
+    std::cout << arr << std::endl;
+
 
     cv::Mat Df = cv::Mat::zeros(arr.rows, arr.cols, CV_8UC1); // output matrix 
     int k = 0; // index of right-most parabola in lower envelope 
@@ -65,6 +67,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
 
     // single column matrix so just loop over the rows
     for (int i = 1; i < arr.rows; i++) {
+        std::cout << std::endl;
         std::cout << "analyzing pixel " << i << std::endl;
        
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
@@ -98,14 +101,29 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         // otherwise modify lower envelope 
         // increase k
         k++;
+        std::cout << "increased k to: " << k << std::endl;
         // add i as the kth parabola
-        v[k] = i;
+        v.push_back(i);
+        std::cout << "updated v, v[k] = " << v[k] << std::endl;
         // make i is below the others starting at s
         z[k] = s;
         // and ending at infinity
-        z[k+1] = INT_MAX;
+        z.push_back(INT_MAX);
+         std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
         std::cout << std::endl;
     }
+
+    std::cout << "final v has size " << v.size() << " v: " ;
+    for (int i: v) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "final z: ";
+    for (int i: z) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl;
 
 
     k = 0;
@@ -115,7 +133,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
             k++;
         }
         // distance between i and the horizontal position of the kth parabola 
-        int a = (i-v[k]);
+        int a = abs(i-v[k]);
         Df.at<int>(i, 0) = int(a + f(arr, v[k]));
     }
 
@@ -180,8 +198,15 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     }
 
     cv::Mat sampled;
-    // sampled =  DTTwoDim(image, f);
-    sampled = DTOneDim(image, f);
+    sampled =  DTOneDim(image, f);
+
+    /*for (int i = 0; i < sampled.rows; i++) {
+        for (int j = 0; j < sampled.cols ; j++) {
+            std::cout << sampled.at<int>(0, j);
+        }
+        std::cout << std::endl;
+     }*/
+    // sampled = DTOneDim(image, f);
     if (saving) {
         save(sampled, path, "-sampled");
     }
