@@ -31,7 +31,7 @@ int f(cv::Mat arr, int p) {
     return INT_MAX;
 }
 
-cv::Mat DTOneDim(cv::Mat arr, std::function<int(int)> f) {
+cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     try {
         if (arr.empty()) {
             throw 0;
@@ -60,12 +60,11 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(int)> f) {
 
     cv::Mat Df = cv::Mat::zeros(arr.rows, arr.cols, CV_8UC1); // output matrix 
     int k = 0; // index of right-most parabola in lower envelope 
-    std::vector<int> v{0};
-    std::vector<int> z{INT_MIN, INT_MAX}; // locations of boundaries between parabolas 
+    std::vector<int> v{0}; // v[i] gives the horizontal position of the ith parabola aka our position in our single column matrix 
+    std::vector<int> z{INT_MIN, INT_MAX}; // range in which the ith parabola of the lower envelope is below the others is given by z[i] and z[i+1]
 
     // single column matrix so just loop over the rows
     for (int i = 0; i < arr.rows; i++) {
-        
         std::cout << k << std::endl;
         int value = arr.at<int>(i, 0);
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
@@ -73,29 +72,39 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(int)> f) {
         bool done = false;
         int s;
         while (!done) {
-            s = ((f(arr, i) + (i*i)) - (f(arr, v[k]) + (v[k]*v[k]))) / (2 * i - 2 * v[k]);
+            int  r = v[k];
+            // intersection of parabola from i and r
+            s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
             // std::cout << "k: " << k << " s: " << s << " z[k]: " << z[k] << std::endl;
             std::cout << "s: " << s << std::endl;
             if (s > z[k]) {
                 done = true;
             }
+            // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
             k--;
-            }
+        }
         
-            k++;
-            v[k] = i;
-            z[k] = s;
-            z[k+1] = INT_MAX;
+        // otherwise modify lower envelope 
+        // increase k
+        k++;
+        // add i as the kth parabola
+        v[k] = i;
+        // make i is below the others starting at s
+        z[k] = s;
+        // and ending at infinity
+        z[k+1] = INT_MAX;
     }
 
 
     k = 0;
     for (int i = 0; i < arr.rows; i++) {
+        // while the range that the kth parabola covers is less than i increase i 
         while (z[k+1] < i) {
             k++;
         }
+        // distance between i and the horizontal position of the kth parabola 
         int a = (i-v[k]);
-        Df.at<int>(i, 0) = int(a * a + f(v[k]));
+        Df.at<int>(i, 0) = int(a * a + f(arr, v[k]));
     }
 
     if (rotated) {
@@ -109,7 +118,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(int)> f) {
 // Thus a two-dimensional distance transform can be computed by first computing
 // one-dimensional distance transforms along each column of the grid, and then 
 // computing one-dimensional distance transforms along each row of the result.
-cv::Mat DTTwoDim(cv::Mat arr, std::function<int(int)> f) {
+cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     try {
         if (arr.empty()) {
             throw 0;
