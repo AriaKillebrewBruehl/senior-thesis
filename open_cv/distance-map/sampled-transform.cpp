@@ -54,10 +54,11 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     if (arr.cols != 1) {
         // rotate matrix 90 degrees to create a single column matrix 
         cv::rotate(arr, arr, cv::ROTATE_90_CLOCKWISE);
+        rotated = true;
     }
     assert(arr.cols == 1);
 
-    std::cout << arr << std::endl;
+    // std::cout << arr << std::endl;
 
 
     cv::Mat Df = cv::Mat::zeros(arr.rows, arr.cols, CV_8UC1); // output matrix 
@@ -159,20 +160,20 @@ cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         return arr;
     }
 
-    //for (int i = 0; i < arr.rows; i++) {
-        for (int j = 0; j < arr.cols; j++) {
-            // extract column and run one-dimensional distance transform 
-            cv::Mat column = arr.col(j);
-            cv::Mat transformed = DTOneDim(column, f);
-            // replace column in original array
-            transformed.col(0).copyTo(arr.col(j));
-        }
-        // // extract row and run one-dimensional distance transform 
-        // cv::Mat row = arr.row(i);
-        // cv::Mat transformed = DTOneDim(row, f);
-        // // replace row in original array
-        // row.row(0).copyTo(arr.row(i));
-    //}
+    for (int i = 0; i < arr.rows; i++) {
+        // for (int j = 0; j < arr.cols; j++) {
+        //     // extract column and run one-dimensional distance transform 
+        //     cv::Mat column = arr.col(j);
+        //     cv::Mat transformed = DTOneDim(column, f);
+        //     // replace column in original array
+        //     transformed.col(0).copyTo(arr.col(j));
+        // }
+        // extract row and run one-dimensional distance transform 
+        cv::Mat row = arr.row(i);
+        cv::Mat transformed = DTOneDim(row, f);
+        // replace row in original array
+        transformed.row(0).copyTo(arr.row(i));
+    }
 
     return arr;
 }
@@ -199,7 +200,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     }
 
     cv::Mat sampled;
-    sampled =  DTTwoDim(image, f);
+    sampled =  DTOneDim(image, f);
 
     /*for (int i = 0; i < sampled.rows; i++) {
         for (int j = 0; j < sampled.cols ; j++) {
