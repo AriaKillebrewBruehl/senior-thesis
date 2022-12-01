@@ -64,16 +64,21 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     std::vector<int> z{INT_MIN, INT_MAX}; // range in which the ith parabola of the lower envelope is below the others is given by z[i] and z[i+1]
 
     // single column matrix so just loop over the rows
-    for (int i = 0; i < arr.rows; i++) {
+    for (int i = 1; i < arr.rows; i++) {
         std::cout << "analyzing pixel " << i << std::endl;
        
         // std::cout << "(" << i << ", " << j << ") = " << q << ", f(q) = " << f(q) << std::endl;
         
         int s;
+        bool curr_inf = false;
         while (true) {
             int  r = v[k];
             std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
-            std::cout << "f(i) = " << f(arr, i) << "f(v[k]) = " << f(arr, r) << std::endl;
+            std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
+            if (f(arr, i) == INT_MAX) {
+                curr_inf = true;
+                break;
+            }
             // intersection of parabola from i and r
             s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
             std::cout << "s: " << s << std::endl;
@@ -84,6 +89,10 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
             // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
             std::cout << "removing parabola k" << std::endl;
             k--;
+        }
+        if (curr_inf) {
+            std::cout << "current parabola has inifinte vertical" << std::endl;
+            continue;
         }
         std::cout << "adding new parabola" << std::endl;
         // otherwise modify lower envelope 
@@ -107,7 +116,7 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         }
         // distance between i and the horizontal position of the kth parabola 
         int a = (i-v[k]);
-        Df.at<int>(i, 0) = int(a * a + f(arr, v[k]));
+        Df.at<int>(i, 0) = int(a + f(arr, v[k]));
     }
 
     if (rotated) {
