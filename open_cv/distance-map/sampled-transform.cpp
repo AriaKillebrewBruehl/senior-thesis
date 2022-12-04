@@ -57,7 +57,6 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
 
     // std::cout << arr << std::endl;
 
-
     cv::Mat Df = cv::Mat::zeros(arr.rows, arr.cols, CV_8UC1); // output matrix 
     int k = 0; // index of right-most parabola in lower envelope 
     std::vector<int> v{0}; // v[i] gives the horizontal position of the ith parabola aka our position in our single column matrix 
@@ -109,7 +108,16 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         // std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
         // std::cout << std::endl;
     }
-
+    std::cout << " v: [";
+    for (int i : v) {
+        std::cout << i << ", ";
+    }
+    std::cout << "]" << std::endl;
+     std::cout << " z: [";
+    for (int i : z) {
+        std::cout << i << ", ";
+    }
+    std::cout << "]" << std::endl;
 
     k = 0;
     for (int i = 0; i < arr.rows; i++) {
@@ -118,11 +126,16 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
             k++;
         }
         // distance between i and the horizontal position of the kth parabola 
+        if (v.size() == 1) {
+            Df.at<uchar>(i, 0) = 255;
+            continue;
+        }
         int a = abs(i-v[k]);
         int value = (a + f(arr, v[k]));
-        if (i == 0) {
-            std::cout << "a: " << a << " k: " << k << " f(v[k]): " << f(arr, v[k]) << " value: " << value << std::endl;
-        }
+        // if (i == 0) {
+            // std::cout << "a: " << a << " k: " << k << " v[k]: " << v[k] << " f(v[k]): " << f(arr, v[k]) << " value: " << value << std::endl;
+            // std::cout << std::endl;
+        //}
         Df.at<uchar>(i, 0) = uchar(value);
     }
 
@@ -148,6 +161,9 @@ cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
     // for (int i = 0; i < arr.rows; i++) {
         for (int j = 0; j < arr.cols; j++) {
             // extract column and run one-dimensional distance transform 
+            // if (j != 2) {
+            //     continue;
+            // }
             cv::Mat column = arr.col(j);
             cv::Mat transformed = DTOneDim(column, f);
             // replace column in original array
