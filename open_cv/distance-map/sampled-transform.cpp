@@ -21,7 +21,7 @@ int f(cv::Mat arr, int p) {
     } 
 
     int value = int(arr.at<uchar>(p, 0));
-    if (value == 255) {
+    if (value == 0) {
         return 0;
     }
 
@@ -119,7 +119,11 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         }
         // distance between i and the horizontal position of the kth parabola 
         int a = abs(i-v[k]);
-        Df.at<uchar>(i, 0) = uchar((a + f(arr, v[k])));
+        int value = (a + f(arr, v[k]));
+        if (i == 0) {
+            std::cout << "a: " << a << " k: " << k << " f(v[k]): " << f(arr, v[k]) << " value: " << value << std::endl;
+        }
+        Df.at<uchar>(i, 0) = uchar(value);
     }
 
     if (rotated) {
@@ -172,18 +176,30 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
         std::cout << "ERROR: Could not read in image in sample." << std::endl;
         return image;
     }
+    try {
+        if (image.type() != 0) {
+           throw image.type();
+        } 
+    } catch (int i) {
+         if (i == 16) {
+                cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+                cv::threshold(image, image, 0, 255, cv::THRESH_BINARY);
+        } else {
+            std::cout << "ERROR: Input image must be single chanel in sample or 8bit 3 channel." << std::endl;
+            return image;
+        }
+    }
     if (image.type() != 0) {
         if (image.type() == 16) {
             cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
             cv::threshold(image, image, 0, 255, cv::THRESH_BINARY);
         }
+        
         // std::cout << "ERROR: Input image must be single chanel in offsetMap." << std::endl;
         return image;
     }
-
     cv::Mat sampled;
     sampled =  DTTwoDim(image, f);
-
     // for (int i = 0; i < sampled.rows; i++) {
     //     for (int j = 0; j < sampled.cols ; j++) {
     //         std::cout << int(sampled.at<uchar>(0, j)) << " ";
