@@ -28,7 +28,7 @@ int f(cv::Mat arr, int p) {
     return value;
 }
 
-cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
+cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f, int pass) {
     try {
         if (arr.empty()) {
             throw 0;
@@ -79,10 +79,12 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
             int  r = v[k];
             // std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
             // std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
+            // current pixel is neither a seed pixel nor assigned a value
             if (f(arr, i) == INT_MAX) {
                 curr_inf = true;
                 break;
             }
+            // we know at least one pixel in the array has been set
             one_set = true;
             // intersection of parabola from i and r
             s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
@@ -114,30 +116,67 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
         // std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
         // std::cout << std::endl;
     }
-    // std::cout << " v: [";
-    // for (int i : v) {
-    //     std::cout << i << ", ";
-    // }
-    // std::cout << "]" << std::endl;
-    //  std::cout << " z: [";
-    // for (int i : z) {
-    //     std::cout << i << ", ";
-    // }
-    // std::cout << "]" << std::endl;
+
+    std::cout << " v: [";
+    for (int i : v) {
+        std::cout << i << ", ";
+    }
+    std::cout << "]" << std::endl;
+     std::cout << " z: [";
+    for (int i : z) {
+        std::cout << i << ", ";
+    }
+    std::cout << "]" << std::endl;
+    std::cout << std::endl;
 
     k = 0;
     for (int i = 0; i < arr.rows; i++) {
         // while the range that the kth parabola covers is less than i increase i 
         while (z[k+1] < i) {
+            std::cout << "i: " << i << " k: " << k << " z[k+1]: " << z[k+1] << std::endl;
             k++;
         }
-        // distance between i and the horizontal position of the kth parabola 
+        // if there were no seed pixels in the array make everything 255
         if (v.size() == 1 && !one_set) {
             Df.at<uchar>(i, 0) = 255;
             continue;
         }
+        // distance between i and the horizontal position of the kth parabola 
         int a = abs(i-v[k]);
-        int value = (a + f(arr, v[k]));
+        int b = f(arr, v[k]);
+        int value0;
+        if (b != 0) {
+            value0 = int(sqrt((a*a) + (b*b)));
+        } else {
+            value0 = a + b;
+        }
+
+        // int value1;
+        // if (k != 0) {
+        //     int c = abs(i-v[k-1]);
+        //     int d = f(arr, v[k-1]);
+            
+        //     if (d != 0) {
+        //         value1 = int(sqrt(c*c) + (d*d));
+        //     } else {
+        //         value1 = c + d;
+        //     }
+        // } else {
+        //   value1 = value0;  
+        // }
+
+        // std::cout << "i: " << i << " value0: " << value0 << " value1: " << value1 << std::endl;
+        int value = value0;
+        // (value0 < value1) ? value = value0 : value = value1;
+
+        // if (i == z[k+1]) {
+        //     int r = v[k + 2];
+        //     if (r != INT_MAX) {
+        //         int  s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
+        //         z[k + 2] = s;
+        //     }
+        //     z.erase(z.begin()+k+1);   
+        // }
         // if (i == 0) {
             // std::cout << "a: " << a << " k: " << k << " v[k]: " << v[k] << " f(v[k]): " << f(arr, v[k]) << " value: " << value << std::endl;
             // std::cout << std::endl;
@@ -170,12 +209,22 @@ cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
             //     continue;
             // }
             cv::Mat column = arr.col(j);
-            cv::Mat transformed = DTOneDim(column, f);
+            cv::Mat transformed = DTOneDim(column, f, 0);
             // replace column in original array
             transformed.col(0).copyTo(arr.col(j));
         }
 
-     save(arr, "", "sampled-cols");
+
+    for (int i = 0; i < arr.rows; i++) {
+        for (int j = 0; j < arr.cols ; j++) {
+            std::cout << int(arr.at<uchar>(i, j)) << " ";
+        }
+        std::cout << std::endl;
+     }
+
+     std::cout << std::endl;
+
+    //  save(arr, "", "sampled-cols");
 
     for (int i = 0; i < arr.rows; i++) {
         
@@ -187,7 +236,7 @@ cv::Mat DTTwoDim(cv::Mat arr, std::function<int(cv::Mat, int)> f) {
      // }
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
-        cv::Mat transformed = DTOneDim(row, f);
+        cv::Mat transformed = DTOneDim(row, f, 1);
         // replace row in original array
         transformed.row(0).copyTo(arr.row(i));
         // save(arr, "", "sampled-rows");
@@ -240,7 +289,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
      }
   
     if (saving) {
-        save(sampled, path, "-sampled");
+        save(sampled, path, "-sampled-both");
     }
 
     return sampled;
