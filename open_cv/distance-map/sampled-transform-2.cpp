@@ -85,90 +85,102 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     // single column matrix so just loop over the rows
     for (int i = 1; i < arr.rows; i++) {
         // std::cout << std::endl;
-        std::cout << "analyzing pixel " << i << std::endl;
-        std::cout << "arr(i) has value: " << int(arr.at<int32_t>(i, 0)) << std::endl;
+        // std::cout << "analyzing pixel " << i << std::endl;
+        // std::cout << "arr(i) has value: " << int(arr.at<int32_t>(i, 0)) << std::endl;
         
         int s;
         bool curr_inf = false;
         while (true) {
             int  r = v[k];
-            std::cout << "comparing to " << k << "th parabola with horizontal position " << r << std::endl;
-            std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
+            // std::cout << "comparing to k = " << k << "th parabola with horizontal position " << r << std::endl;
+            // std::cout << "f(i) = " << f(arr, i) << " f(v[k]) = " << f(arr, r) << std::endl;
             // current pixel is neither a seed pixel nor assigned a value
             if (f(arr, i) == INT32_MAX) {
                 curr_inf = true;
+                // std::cout << "current pixel is infinite" << std::endl;
                 break;
             }
             // we know at least one pixel in the array has been set
             one_set = true;
             // intersection of parabola from i and r
             s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
-            std::cout << "s: " << s << std::endl;
-            std::cout << "z[k]: " << z[k] << " z[k+1]: " << z[k+1] << std::endl;
+            // std::cout << "s: " << s << std::endl;
+            // std::cout << "z[k]: " << z[k] << " z[k+1]: " << z[k+1] << std::endl;
             if (s > z[k]) {
+                // std::cout << "breaking" << std::endl;
                 break;
             }
             // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
-            std::cout << "removing parabola k" << std::endl;
+            // std::cout << "removing parabola k" << std::endl;
+            v.erase(v.begin() + k);
+            assert(!v.empty());
             k--;
         }
         // if the current parabola would be offset by infinity, don't add it and don't change the existing lower envelope
         if (curr_inf) {
             continue;
         }
-        std::cout << "adding new parabola" << std::endl;
+        // std::cout << "adding new parabola" << std::endl;
         // otherwise modify lower envelope 
         // increase k
         k++;
-        std::cout << "increased k to: " << k << std::endl;
+        // std::cout << "increased k to: " << k << std::endl;
         // add i as the kth parabola
+        // std::cout << "length of v before: " << v.size() << ", ";
         v.push_back(i);
-        std::cout << "updated v, v[k] = " << v[k] << std::endl;
+        // std::cout << "updated v, v[k] = " << v[k] << " length of v after: " << v.size() << std::endl;
         // make i is below the others starting at s
         z[k] = s;
         // and ending at infinity
         z.push_back(INT_MAX);
-        std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
-        std::cout << std::endl;
+        // std::cout << "updated z, z[k] = " << z[k] << " z[k + 1] = " << z[k+1] << std::endl;
+        // std::cout << std::endl;
     }
 
-    std::cout << " v: [";
-    for (int i : v) {
-        std::cout << i << ", ";
-    }
-    std::cout << "]" << std::endl;
-     std::cout << " z: [";
-    for (int i : z) {
-        std::cout << i << ", ";
-    }
-    std::cout << "]" << std::endl;
-    std::cout << std::endl;
+
+    // std::cout << " v: [";
+    // for (int i : v) {
+    //     std::cout << i << "/ f(" << i << ") = " << f(arr, i) << ",";
+    // }
+    // std::cout << "]" << std::endl;
+    // std::cout << " z: [";
+    // for (int i : z) {
+    //     std::cout << i << ", ";
+    // }
+    // std::cout << "]" << std::endl;
+    // std::cout << std::endl;
+    
+    
 
     k = 0;
     for (int i = 0; i < arr.rows; i++) {
         // while the range that the kth parabola covers is less than i increase i 
         while (z[k+1] < i) {
-           //  std::cout << "i: " << i << " k: " << k << " z[k+1]: " << z[k+1] << std::endl;
+            // std::cout << "i: " << i << " k: " << k << " z[k+1]: " << z[k+1] << std::endl;
             k++;
         }
-        // if there were no seed pixels in the array make everything 255
+        // if there were no seed pixels in the array make everything int_max
         if (v.size() == 1 && !one_set) {
-            final.at<int32_t>(i, 0) = INT_MAX;
+            final.at<int32_t>(i, 0) = INT32_MAX;
             continue;
         }
         // distance between i and the horizontal position of the kth parabola 
         int32_t a = abs(i-v[k]);
         int32_t b = f(arr, v[k]);
         int32_t value = a * a + b;
-
+        // if (i == arr.rows - 1) {
+        //     std::cout << "i: " << i << " k: " << k << " a: " << a << " b: " << b << " value: " << value << std::endl;
+        // }
+        
         final.at<int32_t>(i, 0) = (value);
+        // std::cout << "final.at<int32_t>(i, 0) = " << final.at<int32_t>(i, 0) << std::endl;
     }
 
     if (rotated) {
         cv::rotate(final, final, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
 
-    // std::cout << "DF: " << Df << std::endl;
+    // std::cout << "final: " << final << std::endl;
     assert(final.type() == 4);
     return final;
 }
@@ -193,6 +205,7 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     }
 
     for (int j = 0; j < arr.cols; j++) {
+        std::cout << std::endl << "row " << j << std::endl;
         // extract column and run one-dimensional distance transform 
         cv::Mat column = arr.col(j);
         assert(column.type() == 4);
@@ -200,12 +213,16 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         assert(column.type() == 4);
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
+
+        // for (int i = 0; i < transformed.rows; i++) {
+        //     std::cout << sqrt(transformed.at<int32_t>(i, 0)) << std::endl;
+        // }
     }
 
 
     // for (int i = 0; i < arr.rows; i++) {
     //     for (int j = 0; j < arr.cols ; j++) {
-    //         std::cout << int(arr.at<int32_t>(i, j)) << " ";
+    //         std::cout << round(sqrt(arr.at<int32_t>(i, j))) << " ";
     //     }
     //     std::cout << std::endl;
     //  }
@@ -214,15 +231,15 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
 
     //  save(arr, "", "sampled-cols");
 
-    // for (int i = 0; i < arr.rows; i++) {
-    //     // extract row and run one-dimensional distance transform 
-    //     cv::Mat row = arr.row(i);
-    //     assert(row.type() == 4);
-    //     cv::Mat transformed = OneD(row, f);
-    //     assert(row.type() == 4);
-    //     // replace row in original array
-    //     transformed.row(0).copyTo(arr.row(i));
-    // }
+    for (int i = 0; i < arr.rows; i++) {
+        // extract row and run one-dimensional distance transform 
+        cv::Mat row = arr.row(i);
+        assert(row.type() == 4);
+        cv::Mat transformed = OneD(row, f);
+        assert(row.type() == 4);
+        // replace row in original array
+        transformed.row(0).copyTo(arr.row(i));
+    }
 
     return arr;
 }
@@ -265,6 +282,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
             std::cout << "Input image has " << j << " chanels" << std::endl;
             return image;
         }
+
         try {
             image.convertTo(correct, CV_32SC1);
             if (correct.type()!= 4) {
@@ -282,11 +300,13 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     assert(correct.type() == 4);
     cv::Mat sampled;
     sampled =  TwoD(correct, f);
+    std::cout << std::endl << std::endl;
     for (int i = 0; i < sampled.rows; i++) {
         for (int j = 0; j < sampled.cols ; j++) {
-            sampled.at<int32_t>(i, j) = sqrt(sampled.at<int32_t>(i, j));
-            std::cout << int(sampled.at<uchar>(i, j)) << std::endl;
+            sampled.at<int32_t>(i, j) = round(sqrt(sampled.at<int32_t>(i, j)));
+            std::cout << sampled.at<int32_t>(i, j) << " ";
         }
+        std::cout << std::endl;
     }
 
   
