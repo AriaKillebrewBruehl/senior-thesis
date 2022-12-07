@@ -1,5 +1,11 @@
 ## Meeting Notes
 
+# 12/06
+
+big F is lookuptable for all the rows that we made by doing the thing over all of the columns 
+
+change everything to lookups tables 
+
 # 11/29
 - s gives where the parabolas centered at q and r cross 
 
