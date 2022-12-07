@@ -3,12 +3,12 @@
 // indicator function for membership in a set of seed pixels
 int32_t f(cv::Mat arr, int32_t p) {
     try {
-        if (arr.type() != 0) {
+        if (arr.type() != 4) {
             throw arr.type();
         }
     } catch (int t) {
         std::cout << "ERROR: matrix passed to f was of type " << t << ".\n";
-        std::cout << "Function f only accepts matrices of type 0." << std::endl;
+        std::cout << "Function f only accepts matrices of type 4." << std::endl;
         return UINT32_MAX;
     }
     try {
@@ -272,15 +272,18 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     } else {
         correct = image;
     }
-  
+    
+    assert(correct.type() == 4);
     cv::Mat sampled;
     sampled =  TwoD(correct, f);
     for (int i = 0; i < sampled.rows; i++) {
         for (int j = 0; j < sampled.cols ; j++) {
-            std::cout << int(sampled.at<uchar>(i, j)) << " ";
+            sampled.at<int32_t>(i, j) = sqrt(sampled.at<int32_t>(i, j));
+            // std::cout << int(sampled.at<uchar>(i, j)) << " ";
         }
-        std::cout << std::endl;
-     }
+        // std::cout << std::endl;
+    }
+
   
     if (saving) {
         save(sampled, path, "-sampled-both");
