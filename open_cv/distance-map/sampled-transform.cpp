@@ -144,30 +144,31 @@ cv::Mat DTOneDim(cv::Mat arr, std::function<int(cv::Mat, int)> f, int pass) {
         // distance between i and the horizontal position of the kth parabola 
         int a = abs(i-v[k]);
         int b = f(arr, v[k]);
-        int value0;
+        int value;
         if (b != 0) {
-            value0 = int(sqrt((a*a) + (b*b)));
+            // int value1;
+            // if (k != 0) {
+            //     int c = abs(i-v[k-1]);
+            //     int d = f(arr, v[k-1]);
+            //     if (d != 0) {
+            //         value1 = int(sqrt(c*c) + (d*d));
+            //     } else {
+            //         value1 = c + d;
+            //     }
+            // } else {
+                value = int(sqrt((a*a) + (b*b)));
+            // }
+            // (value0 < value1) ? value0 = value0 : value0 = value1;    
+                
         } else {
-            value0 = a + b;
+            value = a + b;
         }
 
-        // int value1;
-        // if (k != 0) {
-        //     int c = abs(i-v[k-1]);
-        //     int d = f(arr, v[k-1]);
-            
-        //     if (d != 0) {
-        //         value1 = int(sqrt(c*c) + (d*d));
-        //     } else {
-        //         value1 = c + d;
-        //     }
-        // } else {
-        //   value1 = value0;  
-        // }
+        
 
         // std::cout << "i: " << i << " value0: " << value0 << " value1: " << value1 << std::endl;
-        int value = value0;
-        // (value0 < value1) ? value = value0 : value = value1;
+        // int value;
+        
 
         // if (i == z[k+1]) {
         //     int r = v[k + 2];
