@@ -2,6 +2,18 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 12.09.2022
+
+Quick update on how I fixed the distance map thing. What I really needed to do was just implement the algorithm from the paper because, plot twist, it works. This involved changing a couple of things:
+1. the type of the matrix was `uchar`s but it should be `int32_t`
+2. the funciton `f` just returns the pixel value or `INT32_MAX` if the value would be `255` 
+3. correctly adding to and removing from the vector `v`
+
+## 12.01.2022
+**Yeah Yeah Yeah It's Been Awhile, Let's Brain Dump**
+
+What I need to figure out is how I should be adding to the lower envelope when f(v[k]) = INT_MAX
+
 ## 11.20.2022 
 **What the heck is up with my JFA**
 
