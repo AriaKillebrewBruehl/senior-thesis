@@ -4,7 +4,7 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
-     try {
+    try {
         if (edges.empty()) {
             throw 0;
         }
@@ -15,7 +15,7 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
     if (edges.type() == 0) {
         cv::cvtColor(edges, edges, cv::COLOR_GRAY2BGR);
     }
-    resz(edges);
+
     cv::Mat isos;
     isos = read(pathIsos, imgIsos);
      try {
@@ -29,21 +29,20 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
     if (isos.type() == 0) {
         cv::cvtColor(isos, isos, cv::COLOR_GRAY2BGR);
     }
-    resz(isos);
+
 
     distMap dMap = distanceMap("", edges, "", isos, false);
     cv::Mat distances = dMap.distances;
     cv::Mat priorities = dMap.priorityBuffer;
 
-    cv::Mat oMap = offsetMap("", distances, "", priorities, false);
+    cv::Mat oMap = offsetMap("", distances,false);
 
-    cv::Mat edgesIsos = combine("", edges, "", isos, false);
-    cv::bitwise_not(edgesIsos, edgesIsos);
-
-    cv::Mat final = combine("", edgesIsos, "", oMap, false);
-
+    // cv::Mat edgesIsos = combine("", edges, "", isos, false);
+    // cv::bitwise_not(edges, edges);
+    // cv::Mat final = combine("", edges, "", oMap, false);
+    // cv::bitwise_not(final, final);
     if (saving) {
-        save(final, pathEdges, "-fullMap");
+        save(oMap, pathEdges, "-fullMap");
     }
-    return final;
+    return oMap;
 }
