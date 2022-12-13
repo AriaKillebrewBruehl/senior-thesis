@@ -1,5 +1,9 @@
 #include "sampled-transform.hpp"
 
+bool p = false;
+int32_t func(int32_t x) {
+    return round(sqrt(x));
+}
 // indicator function for membership in a set of seed pixels
 int32_t f(cv::Mat arr, int32_t p) {
     try {
@@ -168,8 +172,8 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
             return arr;
         }
     }
+    
     for (int j = 0; j < arr.cols; j++) {
-        std::cout << std::endl << "row " << j << std::endl;
         // extract column and run one-dimensional distance transform 
         cv::Mat column = arr.col(j);
         assert(column.type() == 4);
@@ -178,7 +182,9 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
     }
+    // save(arr, "", "-cols-only1");
 
+    p = true;
     for (int i = 0; i < arr.rows; i++) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
@@ -241,17 +247,11 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     assert(correct.type() == 4);
     cv::Mat sampled;
     sampled =  TwoD(correct, f);
-    std::cout << std::endl << std::endl;
-    for (int i = 0; i < sampled.rows; i++) {
-        for (int j = 0; j < sampled.cols ; j++) {
-            sampled.at<int32_t>(i, j) = round(sqrt(sampled.at<int32_t>(i, j)));
-            std::cout << sampled.at<int32_t>(i, j) << " ";
-        }
-        std::cout << std::endl;
-    }
+
+    std::transform(sampled.begin<int32_t>(),sampled.end<int32_t>(),sampled.begin<int32_t>(), func);
 
     if (saving) {
-        save(sampled, path, "-sampled-2");
+        save(sampled, path, "-sampled1");
     }
 
     return sampled;
