@@ -107,6 +107,8 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
             // if s >= z[k] then parabola from v[k] does not need to be part of the lower envelope, so delete it by decreasing k
             v.erase(v.begin() + k);
             assert(!v.empty());
+            z.erase(z.begin() + k);
+            assert(!z.empty());
             k--;
         }
         // if the current parabola would be offset by infinity, don't add it and don't change the existing lower envelope
@@ -133,7 +135,10 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         }
         // if there were no seed pixels in the array make everything int_max
         if (v.size() == 1 && !one_set) {
-            final.at<int32_t>(i, 0) = INT32_MAX;
+            final.at<int32_t>(i, 0) = 255;
+            continue;
+        }
+        if (f(arr, i) == 0) {
             continue;
         }
         // distance between i and the horizontal position of the kth parabola 
@@ -251,7 +256,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     std::transform(sampled.begin<int32_t>(),sampled.end<int32_t>(),sampled.begin<int32_t>(), func);
 
     if (saving) {
-        save(sampled, path, "-sampled1");
+        save(sampled, path, "-sampled");
     }
 
     return sampled;
