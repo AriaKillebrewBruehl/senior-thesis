@@ -48,6 +48,7 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
                 distances.at<int32_t>(i, j) = int32_t(isos_dist);
             } else {
                 distances.at<int32_t>(i, j) = int32_t(edge_dist);
+            }
         }
     }
     // save image
