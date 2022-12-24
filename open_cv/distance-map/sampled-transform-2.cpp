@@ -1,6 +1,5 @@
-#include "sampled-transform.hpp"
+#include "sampled-transform-2.hpp"
 
-bool p = false;
 int32_t func(int32_t x) {
     return round(sqrt(x));
 }
@@ -187,9 +186,7 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
     }
-    // save(arr, "", "-cols-only1");
 
-    p = true;
     for (int i = 0; i < arr.rows; i++) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
