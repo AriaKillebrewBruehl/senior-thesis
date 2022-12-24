@@ -3,8 +3,8 @@
 #include <string>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
-#include "type2str.hpp"
-#include "read-save.hpp"
+#include "../boiler-plate/type2str.hpp"
+#include "../boiler-plate/read-save.hpp"
 #include "sampled-transform-2.hpp"
 
 struct distMap {
