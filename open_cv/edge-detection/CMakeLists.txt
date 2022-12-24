@@ -24,14 +24,14 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(gs gray-scale.cpp read-save.cpp type2str.cpp)
-add_executable(canny canny.cpp read-save.cpp type2str.cpp)
-add_executable(DoG DoG.cpp read-save.cpp type2str.cpp)
-add_executable(edge-extraction extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp read-save.cpp type2str.cpp)
-add_executable(skeleton skeleton.cpp read-save.cpp type2str.cpp)
-add_executable(close close-gaps.cpp read-save.cpp type2str.cpp)
-add_executable(tests tests.cpp extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp gray-scale.cpp read-save.cpp type2str.cpp)
-add_executable(thresh threshold-edges.cpp skeleton.cpp read-save.cpp type2str.cpp)
+add_executable(gs gray-scale.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(canny canny.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(DoG DoG.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(edge-extraction extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(skeleton skeleton.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(close close-gaps.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(tests tests.cpp extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp gray-scale.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(thresh threshold-edges.cpp skeleton.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(gs ${OpenCV_LIBS})
