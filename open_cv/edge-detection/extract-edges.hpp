@@ -5,8 +5,8 @@
 #include "canny.hpp"
 #include "DoG.hpp"
 #include "threshold-edges.hpp"
-#include "type2str.hpp"
-#include "read-save.hpp"
+#include "../boiler-plate/read-save.hpp"
+#include "../boiler-plate/type2str.hpp"
 
 cv::Mat extractEdges(std::string path, cv::Mat img, bool saving);
 

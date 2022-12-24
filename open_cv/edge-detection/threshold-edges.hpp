@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
 #include "skeleton.hpp"
-#include "read-save.hpp"
+#include "../boiler-plate/read-save.hpp"
 
 cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving);
 bool meetsThreshold(cv::Mat img, int threshold);
