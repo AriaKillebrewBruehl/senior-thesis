@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION "3.17")
 
 # name of this example project
-project(jfa)
+project(distance-map)
 
 # set OpenCV_DIR variable equal to the path to the cmake
 # files within the previously installed opencv program
@@ -24,15 +24,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(combine combine.cpp read-save.cpp type2str.cpp)
-add_executable(jfa jfa.cpp read-save.cpp type2str.cpp)
-add_executable(dis-map distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
-add_executable(o-map offset-map.cpp distance-map.cpp jfa.cpp read-save.cpp type2str.cpp)
-add_executable(tests tests.cpp fullMap.cpp offset-map.cpp sampled-transform-2.cpp distance-map2.cpp jfa.cpp jfa2.cpp combine.cpp read-save.cpp type2str.cpp)
+add_executable(tests tests.cpp fullMap.cpp offset-map.cpp sampled-transform-2.cpp distance-map2.cpp combine.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
 
 # tell it to link the executable target against OpenCV
-target_link_libraries(combine ${OpenCV_LIBS})
-target_link_libraries(jfa ${OpenCV_LIBS})
-target_link_libraries(dis-map ${OpenCV_LIBS})
-target_link_libraries(o-map ${OpenCV_LIBS})
 target_link_libraries(tests ${OpenCV_LIBS})
