@@ -6,10 +6,14 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i+=2) {
             cv::Mat image;
-            sample(image, argv[i], true);
+            // image = read(argv[i], image);
+            // cv::bitwise_not(image, image);
+            // save(image, argv[i], "-white");
+            // sample(image, argv[i], true);
 
             // jmp_flood2(argv[i], image, true);
-            // fullMap(argv[i],image, argv[i + 1], image, true);
+
+            fullMap(argv[i],image, argv[i + 1], image, true);
             // offsetMap(argv[i],image, true);
             // distanceMap(argv[i],image, argv[i + 1], image, true);
         }
