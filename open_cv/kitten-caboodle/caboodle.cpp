@@ -1,6 +1,5 @@
 #include "caboodle.hpp"
 
-
 cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
@@ -14,38 +13,42 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     }
 
     try {
-        if (image.type() != 16) {
+        if (image.type() != 16 && image.type() != 0) {
             throw image.type();
         }
     } catch (int t) {
-        std::cout << "ERROR: Input image in caboodle must be of type 8UC3." << std::endl;
-        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
+        std::cout << "ERROR: Input image in caboodle must be of type 8UC3 or 8UC1." << std::endl;
+        std::cout << "ERROR: Provided image was of type " << t << ", " << type2str(t) << "." << std::endl;
         cv::Mat empty;
         return empty;
     }
 
     // step 0: extract grayscale version of image
-    cv::Mat gray = grayscale("", image, false);
-    std::cout << "converted image to grayscale" << std::endl;
+    cv::Mat gray;
+    if (image.type() != 0) {
+        gray = grayscale(path, image, true);
+        std::cout << "converted image to grayscale" << std::endl;
+    } else {
+        gray = image;
+    }
 
     // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges("", gray, true);
+    cv::Mat edges = extractEdges(path, gray, true);
     std::cout << "extracted edges from image" << std::endl;
 
     // step 2: extract the isophotes of the image
-    cv::Mat isophotes = extractIsophotes("", image, true);
+    cv::Mat isophotes = extractIsophotes(path, image, true);
     std::cout << "extracted isophotes from image" << std::endl;
 
-    // step 3: distance map
-    distMap map = distanceMap("", edges, "", isophotes, false);
+    // step 3: offset map
+    cv::Mat map = fullMap(path, edges, path, isophotes, false);
     std::cout << "extracted distance map from image" << std::endl;
-    cv::Mat distances = map.distances;
 
     if (saving) {
-        save(distances, path, "-caboodled");
+        save(map, path, "-caboodled");
     }
 
-    return distances;
+    return map;
 }
 
 int main(int argc, char** argv) {
