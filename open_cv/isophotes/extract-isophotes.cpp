@@ -13,6 +13,9 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
     }
 
     try {
+        if (image.type() == 0) {
+            cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
+        }
         if (image.type() != 16) {
             throw image.type();
         }
@@ -25,11 +28,11 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
     
 
     // get isophote image
-    cv::Mat isos = getIsophotes("", image, false);
+    cv::Mat isos = getIsophotes(path, image, false);
     
     isos.convertTo(isos, CV_8UC1);
     // extract edges from isophote image
-    cv::Mat isosExtracted = extractEdges("", isos, false);
+    cv::Mat isosExtracted = extractEdges(path, isos, false);
 
     if (saving) {
         save(isosExtracted, path, "-extracted-isos");
@@ -37,14 +40,3 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
 
     return isosExtracted;
 }
-
-// int main(int argc, char** argv) {
-//     if (argc < 2) {
-//          std::cerr << "Must pass in image to run DoG on." << std::endl;
-//     } else {
-//         for (int i = 1; i < argc; i++) {
-//             cv::Mat image;
-//             extractIsophotes(argv[i],image, true);
-//         }
-//     }
-// }
