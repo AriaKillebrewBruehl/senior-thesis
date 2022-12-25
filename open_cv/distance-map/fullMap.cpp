@@ -12,8 +12,11 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
         std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
         return edges;
     }
-    if (edges.type() == 0) {
+    if (edges.type() == 16) {
         cv::cvtColor(edges, edges, cv::COLOR_GRAY2BGR);
+    } 
+    if (edges.type() != 4) {
+        edges.convertTo(edges, CV_32SC1);
     }
 
     cv::Mat isos;
@@ -26,23 +29,18 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
         std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
         return edges;
     }
-    if (isos.type() == 0) {
+    if (isos.type() == 16) {
         cv::cvtColor(isos, isos, cv::COLOR_GRAY2BGR);
+    } 
+    if (isos.type() != 4) {
+        isos.convertTo(isos, CV_32SC1);
     }
-
 
     distMap dMap = distanceMap("", edges, "", isos, false);
     cv::Mat distances = dMap.distances;
     cv::Mat priorities = dMap.priorityBuffer;
 
-    cv::Mat oMap = offsetMap("", distances,false);
-
-    // cv::Mat edgesIsos = combine("", edges, "", isos, false);
-    // cv::bitwise_not(edges, edges);
-    // cv::Mat final = combine("", edges, "", oMap, false);
-    // cv::bitwise_not(final, final);
-    if (saving) {
-        save(oMap, pathEdges, "-fullMap");
-    }
+    distances.convertTo(distances, CV_8UC1);
+    cv::Mat oMap = offsetMap(pathEdges, distances,true);
     return oMap;
 }
