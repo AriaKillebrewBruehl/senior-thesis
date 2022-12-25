@@ -2,6 +2,27 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 12.24.2022 
+
+Working on my thesis because I know that's what Jesus would have wanted :) 
+Before I work on placing the dots I want to return to the `kitten-caboodle` folder and see about linking everything that I have so far together and, even through I am reluctant
+to do so, run some actual images through what I have. I also need to do some Spring cleaning on my code base. Let's just make a list of what to do over break:
+
+- [] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
+- [] Clean up code and images
+- [] Finish background section of writing
+- [] Write about offset map generation process 
+
+Okay here is the sate I am leaving things at for tn before I go celebrate that "600 years ago today on a cold north pole night something magical happened under a star that shined so bright that is right it is the birth of our lord saviour baby jesus christ." - Chris Simpsons Artist
+
+There is a bug in extract isophotes where if the isophotes are too dark (above 64 in grayscale) they don't get extracted! Here is my proposed fix: 
+
+1. extract connected components
+2. find lowest colors among components
+3. threshold based off that
+
+I shall do that some other time. 
+
 ## 12.09.2022
 
 Quick update on how I fixed the distance map thing. What I really needed to do was just implement the algorithm from the paper because, plot twist, it works. This involved changing a couple of things:
