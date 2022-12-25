@@ -67,29 +67,21 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
 
     // luminance quantization 
     processColors(src);
-
-    // convert image to 4 channels
-    cv::Mat threshed(src.size(), CV_MAKE_TYPE(src.depth(), 4));
-    int from_to[] = { 0,0, 1,1, 2,2, 2,3 };
-    cv::mixChannels(&src,1,&threshed,1,from_to,4);
-    // convert to grayscale and threshold image
-    cv::cvtColor(threshed, threshed, cv::COLOR_RGB2GRAY);
-    cv::threshold(threshed, threshed, 64, 255, cv::THRESH_BINARY);
+    
+    // // convert image to 4 channels
+    // cv::Mat threshed(src.size(), CV_MAKE_TYPE(src.depth(), 4));
+    // int from_to[] = { 0,0, 1,1, 2,2, 2,3 };
+    // cv::mixChannels(&src,1,&threshed,1,from_to,4);
+    // // convert to grayscale and threshold image
+    // cv::cvtColor(threshed, threshed, cv::COLOR_RGB2GRAY);
+    // cv::threshold(threshed, threshed, 64, 255, cv::THRESH_BINARY);
+    cv::cvtColor(src, src, cv::COLOR_RGB2GRAY);
+    save(src, path, "recolored");
+    cv::threshold(src, src, 64, 255, cv::THRESH_BINARY);
 
     if (saving) {
-        save(threshed, path, "-isos*");
+        save(src, path, "-isos");
     }
     
-    return threshed;
+    return src;
 }
-
-// int main(int argc, char** argv) {
-//     if (argc < 2) {
-//          std::cerr << "Must pass in image to run DoG on." << std::endl;
-//     } else {
-//         for (int i = 1; i < argc; i++) {
-//             cv::Mat image;
-//             getIsophotes(argv[i],image, true);
-//         }
-//     }
-// }
