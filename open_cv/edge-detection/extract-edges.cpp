@@ -59,14 +59,3 @@ cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
 
     return morphed2;
 }
-
-// int main(int argc, char** argv) {
-//     if (argc < 2) {
-//          std::cerr << "Must pass in image to extract edges of." << std::endl;
-//     } else {
-//         for (int i = 1; i < argc; i++) {
-//             cv::Mat image;
-//             extractEdges(argv[i], image, true); 
-//         }
-//     }
-// }
