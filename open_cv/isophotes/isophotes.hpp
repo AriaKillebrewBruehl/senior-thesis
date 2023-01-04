@@ -8,7 +8,7 @@
 #include "../boiler-plate/type2str.hpp"
 #include "../boiler-plate/read-save.hpp"
 
-typedef std::pair<int, int> color_freq;
+typedef std::pair<uchar, int> color_freq;
 
 struct comp {
     constexpr bool operator()(
@@ -17,9 +17,9 @@ struct comp {
     const noexcept
     {
         // min heap
-        return a.second < b.second;
+        return a.first > b.first;
     }
 };
 
 cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving);
-void processColors(cv::Mat& img);
+cv::Mat processColors(cv::Mat& img);
