@@ -10,4 +10,4 @@
 #include "isophotes.hpp"
 #include "../edge-detection/extract-edges.hpp"
 
-cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving);
+cv::Mat extractIsophotes(std::string path, cv::Mat img, int edgethresh, int isothresh, bool saving);
