@@ -31,7 +31,7 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
     assert(isos.type() == 0);
     
     // extract edges from isophote image
-    cv::Mat isosExtracted = extractEdges(path, isos, false);
+    cv::Mat isosExtracted = extractEdges(path, isos, 500, false);
     assert(isos.type() == 0);
 
     if (saving) {
