@@ -25,14 +25,14 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, bool saving) {
         cv::Mat empty;
         return empty;
     }
-    
 
     // get isophote image
     cv::Mat isos = getIsophotes(path, image, false);
+    assert(isos.type() == 0);
     
-    isos.convertTo(isos, CV_8UC1);
     // extract edges from isophote image
     cv::Mat isosExtracted = extractEdges(path, isos, false);
+    assert(isos.type() == 0);
 
     if (saving) {
         save(isosExtracted, path, "-extracted-isos");
