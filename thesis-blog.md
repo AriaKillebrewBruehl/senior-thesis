@@ -2,6 +2,55 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 01.04.2022
+
+I have made it so `extractEdges` and `extractIsophotes` take a threshold parameter, that
+way in so these functions can be tuned to image and for `extractEdges` you can threshold
+lower when working with the isophotes image. 
+I also fixed the heap so that the lightest values are at the top, not the darkest.
+
+I've tested things with Cameron and Beyonce and things look pretty good!
+
+<p align = "center">
+
+<img src="./blog-images/isophotes/method2/beyonce.png-extracted-isos.png" alt="drawing" width="200">
+<img src="./blog-images/isophotes/method2/cameron.png-extracted-isos.png" alt="drawing" width="200">
+
+Fig.1 - More improvements
+<br>
+</p>
+
+
+## 01.04.2022 
+
+For whatever reason `cv::threshold` is not working, so I needed to do that manually.
+
+## 01.03.2022 
+
+So it turns out that the issue with the `diff-comps.png` image getting its isphotes 
+extracted is not an issue (I think). Basically the light blue and white get reduced
+to the same color when the `process` function is called which is why that section was
+not showing up. And I think that's totally fine bc it makes sense for them to reduce
+to the same spot. 
+
+
+## 12.27.2022
+
+I think the most efficient way to do this would be to make a min heap with the value 
+(frequency of the color) determining order. 
+
+## 12.26.2022 
+
+Okay after giving it some thought I don't think that method with the connected components 
+will actually work because if you have two segments that are next to each other but are 
+different colors then they will be considered the same component like this:
+
+    xxxyyy
+    xxxyyy
+
+I think that it would actually be faster to do what I need to do, which is find the 
+lightest color, is just do a pass over the image and track the lightest pixels. 
+
 ## 12.24.2022 
 
 Working on my thesis because I know that's what Jesus would have wanted :) 
