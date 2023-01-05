@@ -6,22 +6,22 @@ inline uchar reduceVal(const uchar val)
     return 255;
 }
 
-std::unordered_map<int, int> colors{};
+std::unordered_map<uchar, int> colors{};
 std::priority_queue<color_freq, std::vector<color_freq>, comp> heap;
 
-// reduce values on L and remove a and b 
-void processColors(cv::Mat& img) {
+// return a grayscale version of the image with only the L component
+// TODO: change this to std::transform?
+cv::Mat processColors(cv::Mat& img) {
+    cv::Mat gs = cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
     for (int i = 0; i < img.rows; i++) {
         for (int j = 0; j < img.cols; j++) {
-            int L = reduceVal(img.at<cv::Vec3b>(i, j)[0]);
-            img.at<cv::Vec3b>(i, j)[0] =  L;
-            img.at<cv::Vec3b>(i, j)[1] = 0; // a
-            img.at<cv::Vec3b>(i, j)[2] = 0; // b
+            uchar L = reduceVal(img.at<cv::Vec3b>(i, j)[0]);
+            gs.at<uchar>(i,j) = (L);
             colors[L]++;
         }
     }
+    return gs;
 }
-
 
 cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // read in image
@@ -59,35 +59,35 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
     
     // luminance quantization and create color frequency map
-    processColors(src);
+    cv::Mat processed = processColors(src);
 
     // generate heap
-    for (std::pair<int, int> i : colors) {
+    for (std::pair<uchar, int> i : colors) {
         heap.push(i);
     }
-    std::cout << "made heap" << std::endl;
     // take the top 25% of colors
-    int s = (heap.size() <= 4) ? 1 : heap.size() / 4;
-    std::cout << "s: " << s << std::endl;
-    int t;
-
-    std::priority_queue<color_freq, std::vector<color_freq>, comp> heap2 = heap;
-    while (!heap2.empty()) {
-        std::cout << heap2.top().first << " " << heap2.top().second << std::endl;
-        heap2.pop();
-    }
+    int s = (heap.size() <= 3) ? 1 : std::ceil(float(heap.size()) / 3.0);
+   
+    uchar t;
     for (int i = 0; i < s; i++) {
         t = heap.top().first;
         heap.pop();
     }
-    std::cout << "t: " << t <<  std::endl;
-    cv::cvtColor(src, src, cv::COLOR_RGB2GRAY);
-    save(src, path, "recolored");
-    cv::threshold(src, src, t, 255, cv::THRESH_BINARY);
-    save(src, path, "-isos");
+    
+    // set all pixels >= t to black
+    for (int i = 0; i < processed.rows; i++) {
+        for (int j = 0; j < processed.cols; j++) {
+            if (processed.at<uchar>(i, j) >= t) {
+                processed.at<uchar>(i, j) = 0;
+            } else {
+               processed.at<uchar>(i, j) = 255; 
+            }
+        }
+    }
+
     if (saving) {
-        save(src, path, "-isos");
+        save(processed, path, "-isos");
     }
     
-    return src;
+    return processed;
 }
