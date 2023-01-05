@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            extractIsophotes(argv[i],image, true);
+            extractIsophotes(argv[i],image, 150, 4, true);
         }
     }
 }
