@@ -54,14 +54,12 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
         cv::bilateralFilter (src, dest, i, i*2, i/2 );
         src = dest;
     }  
-    save(src, path, "-filtered");
+
     // convert image to CIE L*a*b
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
-    save(src, path, "-cielab");
     
     // luminance quantization and create color frequency map
     cv::Mat processed = processColors(src);
-    save(processed, path, "-processed");
 
     // generate heap
     for (std::pair<uchar, int> i : colors) {
@@ -75,23 +73,14 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
         t = heap.top().first;
         heap.pop();
     }
-
-
-    std::cout << "t: " << int(t) << std::endl;
     
     // set all pixels >= t (lighter than t) to white
     for (int i = 0; i < processed.rows; i++) {
         for (int j = 0; j < processed.cols; j++) {
-            // if (processed.at<uchar>(i, j) >= t) {
-            //     // std::cout << ".";
-            //     processed.at<uchar>(i, j) = 255;
-            // } else {
-            //      processed.at<uchar>(i, j) = 0;
-            // }
             processed.at<uchar>(i, j) = processed.at<uchar>(i, j) >= t ? uchar(255) : uchar(0);
         }
     }
-    save(processed, path, "-isos");
+
     if (saving) {
         save(processed, path, "-isos");
     }
