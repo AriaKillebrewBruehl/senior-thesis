@@ -16,10 +16,9 @@ struct comp {
     std::pair<int, int> const& b)
     const noexcept
     {
-        // min heap
-        return a.first > b.first;
+        return a.first < b.first;
     }
 };
 
-cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving);
+cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving);
 cv::Mat processColors(cv::Mat& img);
