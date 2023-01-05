@@ -1,6 +1,6 @@
 #include "extract-edges.hpp"
 
-cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
+cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     // read in image
     cv::Mat image;
     image = read(path, img);
@@ -24,32 +24,18 @@ cv::Mat extractEdges(std::string path, cv::Mat img, bool saving) {
     }
 
     // run DoG
-    cv::Mat dog = DoG(path, image, false);
-    // cv::Mat canny = cannyFilter(path, image, false);
+    cv::Mat edges = DoG(path, image, false);
+    // cv::Mat edges = cannyFilter(path, image, false);
 
-    // cv::Mat morphed;
+
     cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
-    // canny.convertTo(canny, CV_8UC1);
-    // cv::morphologyEx(canny, morphed, cv::MORPH_CLOSE, element);
-    // cv::Mat morphed3;
-    // morphed.convertTo(morphed, CV_8UC1);
-    // cv::morphologyEx(morphed, morphed3, cv::MORPH_CLOSE, element);
-    // cv::Mat morphed4;
-    // morphed3.convertTo(morphed3, CV_8UC1);
-    // cv::morphologyEx(morphed3, morphed4, cv::MORPH_CLOSE, element);
-    // std::string file_type = path.substr(path.length()-4, 4);
-    // std::string output_file = path + "-extracted-pre-thresh-morph" + file_type;
-    // cv::imwrite(output_file,  morphed3);
-
 
     // extract edges via threshold
-    cv::Mat extracted = threshold("", dog, 1000, false);
+    cv::Mat extracted = threshold("", edges, thresh, false);
 
     // morphological operations
     cv::Mat morphed2;
-    // cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2));
     extracted.convertTo(extracted, CV_8UC1);
-    // save(extracted, path, "-extracted-thresh2");
     cv::morphologyEx(extracted, morphed2, cv::MORPH_OPEN, element, cv::Point(-1, -1), 3);
 
     // save image
