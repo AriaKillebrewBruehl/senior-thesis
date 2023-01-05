@@ -77,11 +77,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, bool saving) {
     // set all pixels >= t to black
     for (int i = 0; i < processed.rows; i++) {
         for (int j = 0; j < processed.cols; j++) {
-            if (processed.at<uchar>(i, j) >= t) {
-                processed.at<uchar>(i, j) = 0;
-            } else {
-               processed.at<uchar>(i, j) = 255; 
-            }
+            processed.at<uchar>(i, j) = processed.at<uchar>(i, j) >= t ? 0 : 255;
         }
     }
 
