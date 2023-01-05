@@ -2,6 +2,14 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## break goals 
+
+- [] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
+    - [x] fix thresholding in `isophote-detection` 
+- [] Clean up code and images
+- [] Finish background section of writing
+- [] Write about offset map generation process 
+
 ## 01.04.2022
 
 I have made it so `extractEdges` and `extractIsophotes` take a threshold parameter, that
