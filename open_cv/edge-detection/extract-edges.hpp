@@ -8,5 +8,5 @@
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
 
-cv::Mat extractEdges(std::string path, cv::Mat img, bool saving);
+cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving);
 
