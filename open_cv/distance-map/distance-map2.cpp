@@ -32,8 +32,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
         cv::cvtColor(isos, isos, cv::COLOR_GRAY2BGR);
     }
     
-    cv::Mat edgedists = sample(edges, pathEdges, true);
-    cv::Mat isosdists = sample(isos, pathIsos, true);
+    cv::Mat edgedists = sample(edges, pathEdges, false);
+    cv::Mat isosdists = sample(isos, pathIsos, false);
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_32SC1);
    
