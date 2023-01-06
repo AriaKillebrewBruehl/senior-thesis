@@ -4,11 +4,11 @@
 
 ## break goals 
 
-- [] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
+- [ ] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
     - [x] fix thresholding in `isophote-detection` 
-- [] Clean up code and images
-- [] Finish background section of writing
-- [] Write about offset map generation process 
+- [ ] Clean up code and images
+- [ ] Finish background section of writing
+- [ ] Write about offset map generation process 
 
 ## 01.04.2022
 
@@ -24,10 +24,15 @@ I've tested things with Cameron and Beyonce and things look pretty good!
 <img src="./blog-images/isophotes/method2/beyonce.png-extracted-isos.png" alt="drawing" width="200">
 <img src="./blog-images/isophotes/method2/cameron.png-extracted-isos.png" alt="drawing" width="200">
 
-Fig.1 - More improvements
+Fig.1 - New isophote extraction
 <br>
 </p>
 
+
+I think that the issue in `caboodle` is that the image I'm testing on has a 
+black background. The edge and isophote detection works great but the offset
+map is coming back all white. I want to find a way to tell what color the background of an image is so that if it is black I can just invert it. I 
+think this should be easy enough with `connectedComponents`. That was indeed the issue!
 
 ## 01.04.2022 
 
