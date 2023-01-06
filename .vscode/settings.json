@@ -67,7 +67,8 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "algorithm": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/open_cv/build/3rdparty/ade/ade-0.1.2a"
 }
