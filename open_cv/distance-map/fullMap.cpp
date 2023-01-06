@@ -41,6 +41,6 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, c
     cv::Mat priorities = dMap.priorityBuffer;
 
     distances.convertTo(distances, CV_8UC1);
-    cv::Mat oMap = offsetMap(pathEdges, distances,true);
+    cv::Mat oMap = offsetMap(pathEdges, distances, saving);
     return oMap;
 }
