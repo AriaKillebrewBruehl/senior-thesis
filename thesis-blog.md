@@ -10,7 +10,27 @@
 - [ ] Finish background section of writing
 - [ ] Write about offset map generation process 
 
-## 01.04.2022
+## 01.06.2022
+
+New issue! When I am trying to get the edges from an the red sphere they are coming back with a lot of noise. 
+
+<p align = "center">
+
+<img src=".//blog-images/edge-detection/noisy-sphere.png" alt="drawing" width="200">
+Fig.1 - Sphere noise
+</p>
+
+I think a fairly easy way to fix this would be to apply the bilateral filtering
+that is done for extracting isophotes to smooth things. Maybe even do the 
+binning too. Okay here is the sphere after bilateral filtering. That worked but not all the way... 
+
+<p align = "center">
+
+<img src=".//blog-images/edge-detection/less-noisy-sphere.png" alt="drawing" width="200">
+Fig.2 - Less sphere noise
+</p>
+
+## 01.05.2022
 
 I have made it so `extractEdges` and `extractIsophotes` take a threshold parameter, that
 way in so these functions can be tuned to image and for `extractEdges` you can threshold
