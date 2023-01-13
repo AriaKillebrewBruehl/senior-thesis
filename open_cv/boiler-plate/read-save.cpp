@@ -37,5 +37,7 @@ void save(cv::Mat image, std::string path, std::string suffix) {
     std::string output_file = path + suffix + file_type;
     cv::imwrite(output_file, image);
 
+    std::cout << "Saved file as \'" << output_file << "\'." << std::endl;
+
     return;
 }
