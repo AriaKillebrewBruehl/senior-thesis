@@ -34,6 +34,9 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
 
     // step 1: extract the edges of the image
     cv::Mat edges = extractEdges(path, gray, 1000, true);
+    if (edges.type() != 0 && edges.channels() == 1) {
+        edges.convertTo(edges, CV_8U);
+    }
     assert(edges.type() == 0);
     std::cout << "extracted edges from image" << std::endl;
     
@@ -61,6 +64,9 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
 
     // step 2: extract the isophotes of the image
     cv::Mat isophotes = extractIsophotes(path, image, 150, 5, true);
+    if (isophotes.type() != 0 && isophotes.channels() == 1) {
+        isophotes.convertTo(isophotes, CV_8U);
+    }
     assert(isophotes.type() == 0);
     std::cout << "extracted isophotes from image" << std::endl;
 
