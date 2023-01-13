@@ -1,7 +1,7 @@
 #include "extract-edges.hpp"
 
 cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
-        // read images and resize
+    // read images and resize
     cv::Mat image;
     image = read(path, img);
     cv::Mat correct;
