@@ -38,29 +38,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
         edges.convertTo(edges, CV_8U);
     }
     assert(edges.type() == 0);
-    std::cout << "extracted edges from image" << std::endl;
-    
-    // get components
-    cv::Mat labels;
-    cv::Mat stats;
-    cv::Mat centroids;
-    int numComps =  cv::connectedComponentsWithStats(edges, labels, stats, centroids);
-
-    int i;
-    int j;
-    for (i = 0; i < labels.rows; i++) {
-        for (j = 0; j < labels.cols; j++) {
-            if (labels.at<int>(i, j) == 0) {
-                break;
-            }
-        }
-    }
-
-    // background is black so invert
-    if (edges.at<int>(i,j) == 0) {
-        cv::bitwise_not(edges, edges);
-    }
-    
+    std::cout << "extracted edges from image" << std::endl;    
 
     // step 2: extract the isophotes of the image
     cv::Mat isophotes = extractIsophotes(path, image, 150, 5, true);
@@ -69,22 +47,6 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     }
     assert(isophotes.type() == 0);
     std::cout << "extracted isophotes from image" << std::endl;
-
-    // get components
-    numComps =  cv::connectedComponentsWithStats(isophotes, labels, stats, centroids);
-
-    for (i = 0; i < labels.rows; i++) {
-        for (j = 0; j < labels.cols; j++) {
-            if (labels.at<int>(i, j) == 0) {
-                break;
-            }
-        }
-    }
-
-    // background is black so invert
-    if (isophotes.at<int>(i,j) == 0) {
-        cv::bitwise_not(isophotes, isophotes);
-    }
     
     // step 3: offset map
     cv::Mat map = fullMap(path, edges, path, isophotes, saving);
