@@ -214,17 +214,16 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
         std::cout << "ERROR: Could not read in image in sample." << std::endl;
         return image;
     }
-    
+
     if (image.type() != 4) {
-        // convert color image to binary
-        if (image.type() == 16) {
-            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
-            cv::threshold(image, image, 0, 255, cv::THRESH_BINARY);
-        } 
-    
         try{
             if (image.channels() != 1) {
-                throw image.channels();
+                cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+                cv::threshold(image, image, 0, 255, cv::THRESH_BINARY);
+                if (image.channels() != 1) {
+                    throw image.channels();
+                }
+                
             }
         } catch (int j) {
             std::cout << "ERROR: Input image in sample must be single chanel" << std::endl;
@@ -252,6 +251,12 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
 
     std::transform(sampled.begin<int32_t>(),sampled.end<int32_t>(),sampled.begin<int32_t>(), func);
 
+    for (int i =0; i < sampled.rows; i++) {
+        for (int j = 0; j < sampled.cols; j++) {
+            std::cout << sampled.at<int32_t>(i,j) << " ";
+        }
+        std::cout << std::endl;
+    }
     if (saving) {
         save(sampled, path, "-sampled");
     }
