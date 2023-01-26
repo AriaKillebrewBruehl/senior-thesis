@@ -2,21 +2,84 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 01.26.2023
+
+Okay my next step is dot distribution. First I need to get a hand on that algorithm 
+
+1. dot init
+    - regularly sample the image pixels **except on feature lines** 
+    - sampling interval is *r*
+        - computed using *m* the distance between the adjacent offset lane centers (so we can have circles of diameter *m*)
+        - typically *r=m* 
+
+2. voronoi diagram 
+    - use JFA (sampled transform) with dots as seeds 
+        - record associated seed pixel for distances
+
+
+
+
 ## break goals 
 
-- [ ] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
+- [x] Link together `edge-detection`, `isophote-detection`, and `offset-map` in `kitten-caboodle` file
     - [x] fix thresholding in `isophote-detection` 
-- [ ] Clean up code and images
-- [ ] Finish background section of writing
+- [x] Clean up code and images
+- [x] Finish background section of writing
 - [ ] Write about offset map generation process 
 
-## 01.06.2022
+## 01.18.2023
+
+Okay so there is an issue in my edge detection for faces where I essentially end up with a lot of very 
+short edges. 
+
+<p align = "center">
+
+<img src="./blog-images/edge-detection/cameron.png-thresh.png" alt="drawing" width="200">
+Fig.1 - Lots of small edges
+</p>
+
+This means that when thresholding is applied, almost none of the edges make the cut for a high 
+threshold, or too many of them are left for a low threshold. I think the solution to this is to run
+the process that is done for the isophote extraction (bilateral filter, CIE, segmentation) and then 
+just edge extract that image without pulling on the brightest parts. 
+
+I think this looks slightly better, there is still some work to be done 
+
+<p align = "center">
+
+<img src="./blog-images/edge-detection/cameron.png-thresh.png-cie.png" alt="drawing" width="200">
+Fig.1 - Lots of small edges
+</p>
+
+
+## 01.14.2023
+
+Today is a writing day. Here are my goals:
+
+- [x] Edit introduction 
+- [ ] Finalize background (just a rough draft of all parts)
+    - [x] Representing Images on a Computer
+    - [x] Image Processing Libraries
+    - [x] Channels and Color Spaces
+        - [x] Channels
+        - [x] Depth
+        - [x] RGB and BGR color space
+        - [x] CIE
+    - [ ] Overview of Library Functions Used
+        - [x] Bilateral Filtering
+        - [x] Canny Edge Detection
+        - [x] Color Conversion
+        - [ ] Difference of Gaussians (I might not actually include this)
+        - [x] Morphological Operations
+        - [x] Thresholding
+
+## 01.06.2023
 
 New issue! When I am trying to get the edges from an the red sphere they are coming back with a lot of noise. 
 
 <p align = "center">
 
-<img src=".//blog-images/edge-detection/noisy-sphere.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/noisy-sphere.png" alt="drawing" width="200">
 Fig.1 - Sphere noise
 </p>
 
@@ -26,11 +89,11 @@ binning too. Okay here is the sphere after bilateral filtering. That worked but 
 
 <p align = "center">
 
-<img src=".//blog-images/edge-detection/less-noisy-sphere.png" alt="drawing" width="200">
+<img src="./blog-images/edge-detection/less-noisy-sphere.png" alt="drawing" width="200">
 Fig.2 - Less sphere noise
 </p>
 
-## 01.05.2022
+## 01.05.2023
 
 I have made it so `extractEdges` and `extractIsophotes` take a threshold parameter, that
 way in so these functions can be tuned to image and for `extractEdges` you can threshold
@@ -54,11 +117,11 @@ black background. The edge and isophote detection works great but the offset
 map is coming back all white. I want to find a way to tell what color the background of an image is so that if it is black I can just invert it. I 
 think this should be easy enough with `connectedComponents`. That was indeed the issue!
 
-## 01.04.2022 
+## 01.04.2023
 
 For whatever reason `cv::threshold` is not working, so I needed to do that manually.
 
-## 01.03.2022 
+## 01.03.2023 
 
 So it turns out that the issue with the `diff-comps.png` image getting its isphotes 
 extracted is not an issue (I think). Basically the light blue and white get reduced
