@@ -6,18 +6,20 @@
 
 Okay my next step is dot distribution. First I need to get a hand on that algorithm 
 
-1. dot init
+- [x] dot init
     - regularly sample the image pixels **except on feature lines** 
     - sampling interval is *r*
         - computed using *m* the distance between the adjacent offset lane centers (so we can have circles of diameter *m*)
         - typically *r=m* 
+    <p align = "center">
 
-2. voronoi diagram 
+    <img src="./blog-images/dots/simple-sphere-dots.png" alt="drawing" width="200">
+    Fig.1 - Dots from the simple sphere distance map with m = 6
+    </p>
+
+- [ ] voronoi diagram 
     - use JFA (sampled transform) with dots as seeds 
-        - record associated seed pixel for distances
-
-
-
+        - record associated seed pixel for distances, in `sampled-transform`
 
 ## break goals 
 
