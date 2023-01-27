@@ -24,12 +24,12 @@ using seed_map = std::unordered_map<pixel_type, pixel_type, hash_pair>;
 const pixel_type undef(-1, -1);
 
 struct sampled_pair {
-    cv::Mat sampled;
-    cv::Mat seeds;
+    cv::Mat* sampled;
+    cv::Mat* seeds;
 };
 
 // indicator function for membership in a set of seed pixels
 int32_t func(int32_t x);
-cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
-cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
-cv::Mat sample(cv::Mat img, std::string path, bool saving);
+sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
+sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
+sampled_pair sample(cv::Mat img, std::string path, bool saving);
