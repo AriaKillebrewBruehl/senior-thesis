@@ -200,24 +200,22 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     
     for (int j = 0; j < arr.cols; j++) {
         // extract column and run one-dimensional distance transform 
-        cv::Mat column = arr.col(j);
-        assert(column.type() == 4);
-        sampled_pair transformed_pair = OneD(column, f);
-        cv::Mat transformed_col = *transformed_pair.sampled;
-        assert(column.type() == 4);
+        cv::Mat3i column = arr.col(j);
+        // assert(column.channels() == 4);
+        cv::Mat3i transformed = OneD(column, f);
+       //  assert(column.type() == 4);
         // replace column in original array
-        transformed_col.col(0).copyTo(arr.col(j));
+        transformed.col(0).copyTo(arr.col(j));
     }
 
     for (int i = 0; i < arr.rows; i++) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
-        assert(row.type() == 4);
-        sampled_pair transformed_pair = OneD(row, f);
-        cv::Mat transformed_row = *transformed_pair.sampled;
-        assert(row.type() == 4);
+        // assert(row.type() == 4);
+        cv::Mat3i transformed = OneD(row, f);
+        // assert(row.type() == 4);
         // replace row in original array
-        transformed_row.row(0).copyTo(arr.row(i));
+        transformed.row(0).copyTo(arr.row(i));
     }
 
     return arr;
