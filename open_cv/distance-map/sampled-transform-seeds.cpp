@@ -1,4 +1,4 @@
-#include "sampled-transform-2.hpp"
+#include "sampled-transform-seeds.hpp"
 
 int32_t func(int32_t x) {
     return round(sqrt(x));
@@ -28,7 +28,8 @@ int32_t f(cv::Mat arr, int32_t p) {
     return value;
 }
 
-cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
+sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
+    sampled_pair s_p{nullptr, nullptr};
     // type checking
     {
         try {
@@ -38,7 +39,7 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } 
         catch (int i) {
             std::cout << "ERROR: Empty matrix in OneD." << std::endl;
-            return arr;
+            return s_p;
         }
         
         try {
@@ -49,7 +50,7 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         catch (int i) {
             std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
-            return arr;
+            return s_p;
         }
         
         try {
@@ -59,7 +60,7 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } 
         catch (int i) {
             std::cout << "ERROR: Input matrix in OneD has dimensions " << arr.rows << " x " << arr.cols << ". Must be a single row or single column matrix." << std::endl;
-            return arr;
+            return s_p;
         }
     }
 
@@ -149,10 +150,12 @@ cv::Mat OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         cv::rotate(final, final, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
     assert(final.type() == 4);
-    return final;
+    s_p.sampled = &final;
+    return s_p;
 }
 
-cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
+sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
+    sampled_pair s_p = {nullptr, nullptr};
     // type check
     {
         try {
@@ -161,7 +164,7 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
             }
         } catch (int i) {
             std::cout << "ERROR: Empty matrix in DTTwoDim." << std::endl;
-            return arr;
+            return s_p;
         }
         try {
             if (arr.type() != 4) {
@@ -170,7 +173,7 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } catch (int i) {
             std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
-            return arr;
+            return s_p;
         }
     }
     
@@ -178,26 +181,30 @@ cv::Mat TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // extract column and run one-dimensional distance transform 
         cv::Mat column = arr.col(j);
         assert(column.type() == 4);
-        cv::Mat transformed = OneD(column, f);
+        sampled_pair transformed_pair = OneD(column, f);
+        cv::Mat transformed_col = *transformed_pair.sampled;
         assert(column.type() == 4);
         // replace column in original array
-        transformed.col(0).copyTo(arr.col(j));
+        transformed_col.col(0).copyTo(arr.col(j));
     }
 
     for (int i = 0; i < arr.rows; i++) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
         assert(row.type() == 4);
-        cv::Mat transformed = OneD(row, f);
+        sampled_pair transformed_pair = OneD(row, f);
+        cv::Mat transformed_row = *transformed_pair.sampled;
         assert(row.type() == 4);
         // replace row in original array
-        transformed.row(0).copyTo(arr.row(i));
+        transformed_row.row(0).copyTo(arr.row(i));
     }
+    s_p.sampled = &arr;
 
-    return arr;
+    return s_p;
 }
 
-cv::Mat sample(cv::Mat img, std::string path, bool saving) {
+sampled_pair sample(cv::Mat img, std::string path, bool saving) {
+    sampled_pair s_p = {nullptr, nullptr};
     // read images and resize
     cv::Mat image;
     image = read(path, img);
@@ -209,7 +216,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
         }
     } catch (int i) {
         std::cout << "ERROR: Could not read in image in sample." << std::endl;
-        return image;
+        return s_p;
     }
 
     if (image.type() != 4) {
@@ -225,7 +232,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
         } catch (int j) {
             std::cout << "ERROR: Input image in sample must be single chanel" << std::endl;
             std::cout << "Input image has " << j << " chanels" << std::endl;
-            return image;
+            return s_p;
         }
 
         try {
@@ -236,7 +243,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
         } catch (int i) {
             std::cout << "ERROR: Input image in sample could not convert to type CV_32SC1." << std::endl;
             std::cout << "Input image has type " << i << "." << std::endl;
-            return image;
+            return s_p;
         } 
     } else {
         correct = image;
@@ -244,19 +251,19 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     
     assert(correct.type() == 4);
     
-    cv::Mat sampled;
-    sampled =  TwoD(correct, f);
+    sampled_pair sampled = TwoD(correct, f);
+    cv::Mat sampled_image = *sampled.sampled;
 
-    std::transform(sampled.begin<int32_t>(),sampled.end<int32_t>(),sampled.begin<int32_t>(), func);
+    std::transform(sampled_image.begin<int32_t>(),sampled_image.end<int32_t>(),sampled_image.begin<int32_t>(), func);
 
-    for (int i =0; i < sampled.rows; i++) {
-        for (int j = 0; j < sampled.cols; j++) {
-            std::cout << sampled.at<int32_t>(i,j) << " ";
+    for (int i =0; i < sampled_image.rows; i++) {
+        for (int j = 0; j < sampled_image.cols; j++) {
+            std::cout << sampled_image.at<int32_t>(i,j) << " ";
         }
         std::cout << std::endl;
     }
     if (saving) {
-        save(sampled, path, "-sampled");
+        save(sampled_image, path, "-sampled");
     }
 
     return sampled;
