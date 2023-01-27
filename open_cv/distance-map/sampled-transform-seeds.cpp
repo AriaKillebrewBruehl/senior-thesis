@@ -93,8 +93,6 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     }
     assert(arr.cols == 1);
 
-    seed
-
     cv::Mat final = cv::Mat::zeros(arr.rows, arr.cols, CV_32SC1); // output matrix 
     assert(final.type() == 4);
     int k = 0; // index of right-most parabola in lower envelope 
@@ -178,8 +176,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     return s_p;
 }
 
-sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
-    sampled_pair s_p = {nullptr, nullptr};
+cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     // type check
     {
         try {
@@ -188,7 +185,7 @@ sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
             }
         } catch (int i) {
             std::cout << "ERROR: Empty matrix in DTTwoDim." << std::endl;
-            return s_p;
+            return arr;
         }
         try {
             if (arr.type() != 4) {
@@ -197,7 +194,7 @@ sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } catch (int i) {
             std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
-            return s_p;
+            return arr;
         }
     }
     
@@ -222,9 +219,8 @@ sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // replace row in original array
         transformed_row.row(0).copyTo(arr.row(i));
     }
-    s_p.sampled = &arr;
 
-    return s_p;
+    return arr;
 }
 
 cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
