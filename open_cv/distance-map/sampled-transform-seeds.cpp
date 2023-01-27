@@ -1,5 +1,26 @@
 #include "sampled-transform-seeds.hpp"
 
+seed_map get_seeds(cv::Mat img) {
+    // seeds[(i, j)] gives the seed pixel for (i, j)
+    seed_map seeds;
+    assert(img.channels() == 1);
+    // default seed for undefined pixels
+    
+    for (int i = 0; i < img.rows; i++) {
+        for(int j = 0; j < img.cols; j++) {
+            pixel_type pix(i, j);
+            int32_t p = img.at<int32_t>(i, j);
+            // the pixel is undefined
+            if (p == 0) {
+                seeds[pix] = undef;
+            } else {
+                seeds[pix] = pix;
+            }
+        }
+    }
+    return seeds;
+}
+
 int32_t func(int32_t x) {
     return round(sqrt(x));
 }
