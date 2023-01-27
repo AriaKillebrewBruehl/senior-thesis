@@ -25,10 +25,11 @@ const pixel_type undef(-1, -1);
 
 struct sampled_pair {
     cv::Mat* sampled;
-    cv::Mat* seeds;
+    seed_map* seeds;
 };
 
 // indicator function for membership in a set of seed pixels
+seed_map get_seeds(cv::Mat img);
 int32_t func(int32_t x);
 sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
 sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f);
