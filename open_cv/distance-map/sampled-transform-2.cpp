@@ -24,10 +24,7 @@ int32_t f(cv::Mat arr, int32_t p) {
     } 
 
     int32_t value = int32_t(arr.at<int32_t>(p, 0)) == 255 ? INT_MAX: int32_t(arr.at<int32_t>(p, 0));
-    // int32_t value = int32_t(arr.at<int32_t>(p, 0));
-    // if (value == 255) {
-    //     return INT32_MAX;
-    // }
+
     return value;
 }
 
@@ -246,6 +243,7 @@ cv::Mat sample(cv::Mat img, std::string path, bool saving) {
     }
     
     assert(correct.type() == 4);
+    
     cv::Mat sampled;
     sampled =  TwoD(correct, f);
 
