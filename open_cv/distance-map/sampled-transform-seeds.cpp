@@ -1,24 +1,24 @@
 #include "sampled-transform-seeds.hpp"
 
-seed_map get_seeds(cv::Mat img) {
-    // seeds[(i, j)] gives the seed pixel for (i, j)
-    seed_map seeds;
+cv::Mat3i get_seeds(cv::Mat img) {
     assert(img.channels() == 1);
-    // default seed for undefined pixels
+    cv::Mat3i map = cv::Mat::zeros(img.rows, img.cols, CV_32SC3);
     
     for (int i = 0; i < img.rows; i++) {
         for(int j = 0; j < img.cols; j++) {
-            pixel_type pix(i, j);
             int32_t p = img.at<int32_t>(i, j);
+            map.at<cv::Vec3i>(i, j)[0] = p;
             // the pixel is undefined
             if (p == 0) {
-                seeds[pix] = undef;
+                map.at<cv::Vec3i>(i, j)[1] = -1;
+                map.at<cv::Vec3i>(i, j)[2] = -1;
             } else {
-                seeds[pix] = pix;
+                map.at<cv::Vec3i>(i, j)[1] = i;
+                map.at<cv::Vec3i>(i, j)[2] = j;
             }
         }
     }
-    return seeds;
+    return map;
 }
 
 int32_t func(int32_t x) {
@@ -93,6 +93,8 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     }
     assert(arr.cols == 1);
 
+    seed
+
     cv::Mat final = cv::Mat::zeros(arr.rows, arr.cols, CV_32SC1); // output matrix 
     assert(final.type() == 4);
     int k = 0; // index of right-most parabola in lower envelope 
@@ -165,6 +167,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         int32_t value = a * a + b;
         
         final.at<int32_t>(i, 0) = (value);
+
     }
 
     if (rotated) {
@@ -224,12 +227,12 @@ sampled_pair TwoD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     return s_p;
 }
 
-sampled_pair sample(cv::Mat img, std::string path, bool saving) {
-    sampled_pair s_p = {nullptr, nullptr};
+cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     // read images and resize
     cv::Mat image;
     image = read(path, img);
     cv::Mat correct;
+    cv::Mat3i final;
     
     try {
         if (image.empty()) {
@@ -237,7 +240,7 @@ sampled_pair sample(cv::Mat img, std::string path, bool saving) {
         }
     } catch (int i) {
         std::cout << "ERROR: Could not read in image in sample." << std::endl;
-        return s_p;
+        return final;
     }
 
     if (image.type() != 4) {
@@ -253,7 +256,7 @@ sampled_pair sample(cv::Mat img, std::string path, bool saving) {
         } catch (int j) {
             std::cout << "ERROR: Input image in sample must be single chanel" << std::endl;
             std::cout << "Input image has " << j << " chanels" << std::endl;
-            return s_p;
+            return final;
         }
 
         try {
@@ -264,7 +267,7 @@ sampled_pair sample(cv::Mat img, std::string path, bool saving) {
         } catch (int i) {
             std::cout << "ERROR: Input image in sample could not convert to type CV_32SC1." << std::endl;
             std::cout << "Input image has type " << i << "." << std::endl;
-            return s_p;
+            return final;
         } 
     } else {
         correct = image;
@@ -272,18 +275,19 @@ sampled_pair sample(cv::Mat img, std::string path, bool saving) {
     
     assert(correct.type() == 4);
     
-    sampled_pair sampled = TwoD(correct, f);
-    cv::Mat sampled_image = *sampled.sampled;
+    cv::Mat3i blank_map = get_seeds(correct);
+    cv::Mat3i sampled = TwoD(correct, f);
 
-    std::transform(sampled_image.begin<int32_t>(),sampled_image.end<int32_t>(),sampled_image.begin<int32_t>(), func);
+    std::transform(sampled.begin<cv::Vec3i>(),sampled.end<cv::Vec3i>(),sampled.begin<cv::Vec3i>(), func);
 
-    for (int i =0; i < sampled_image.rows; i++) {
-        for (int j = 0; j < sampled_image.cols; j++) {
-            std::cout << sampled_image.at<int32_t>(i,j) << " ";
-        }
-        std::cout << std::endl;
-    }
+    // for (int i =0; i < sampled_image.rows; i++) {
+    //     for (int j = 0; j < sampled_image.cols; j++) {
+    //         std::cout << sampled_image.at<int32_t>(i,j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
     if (saving) {
+        // TODO extract just distances
         save(sampled_image, path, "-sampled");
     }
 
