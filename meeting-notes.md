@@ -1,5 +1,27 @@
 ## Meeting Notes
 
+# 01/27
+
+- dots 
+-vornoi diagram dots 
+for each dot compute weighted avg of all pixels in cell for that dot 
+- that's the new center 
+- repeat 
+- stop when weighted avg center is the dot 
+
+- for writing ab weighted transform creation 
+  - i'm reimplementing this one paper's approach 
+      - that's a paper someone else could read 
+      - but i can take ppl through how this works and talk about some of these steps 
+      - i can choose what to focus on - there is a known thing but we found a new thing that works faster 
+      - maybe just a pseudo code of my code 
+      - pretend i'm just telling a friend 
+      - what are ppl trying to solve w this, show pseudo code / how it works, what is cool ab it 
+
+- ch 1 overview of the whole process 
+- somewhere put a sketch out of the different pieces of the puzzle 
+  - somewhere have the flow chart of the process and explain how i'll guide ppl through it, what i'll do in each chapter 
+
 # 12/06
 
 big F is lookuptable for all the rows that we made by doing the thing over all of the columns 
