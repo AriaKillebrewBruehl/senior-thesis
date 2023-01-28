@@ -32,14 +32,14 @@ cv::Mat1i get_distance(cv::Mat3i img) {
 }
 
 // indicator function for membership in a set of seed pixels
-int32_t f(cv::Mat arr, int32_t p) {
+int32_t f2(cv::Mat3i arr, int32_t p) {
     try {
-        if (arr.type() != 4) {
+        if (arr.type() != 20) {
             throw arr.type();
         }
     } catch (int t) {
-        std::cout << "ERROR: matrix passed to f was of type " << t << ".\n";
-        std::cout << "Function f only accepts matrices of type 4." << std::endl;
+        std::cout << "ERROR: matrix passed to f2 was of type " << t << ".\n";
+        std::cout << "Function f only accepts matrices of type 20." << std::endl;
         return INT32_MAX;
     }
     try {
@@ -188,7 +188,7 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_
     if (rotated) {
         cv::rotate(final, final, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
-    assert(final.type() == 4);
+    assert(final.type() == 20);
     return final;
 }
 
@@ -218,7 +218,7 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // extract column and run one-dimensional distance transform 
         cv::Mat3i column = arr.col(j);
         assert(column.type() == 20);
-        cv::Mat3i transformed = OneD(column, f, j);
+        cv::Mat3i transformed = OneD(column, f2, j);
         assert(column.type() == 20);
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
@@ -228,7 +228,7 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
         assert(row.type() == 20);
-        cv::Mat3i transformed = OneD(row, f, i);
+        cv::Mat3i transformed = OneD(row, f2, i);
         assert(row.type() == 20);
         // replace row in original array
         transformed.row(0).copyTo(arr.row(i));
@@ -237,13 +237,13 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     return arr;
 }
 
-cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
+cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
     // read images and resize
     cv::Mat image;
     image = read(path, img);
     cv::Mat correct;
     cv::Mat3i final;
-    
+
     try {
         if (image.empty()) {
             throw 0;
@@ -284,21 +284,25 @@ cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     }
     
     assert(correct.type() == 4);
-    
     cv::Mat3i blank_map = get_seeds(correct);
-    cv::Mat3i sampled = TwoD(correct, f);
-
+    cv::Mat3i sampled = TwoD(blank_map, f2);
+    
     cv::Mat1i distance_only = get_distance(sampled);
 
-    // for (int i =0; i < sampled_image.rows; i++) {
-    //     for (int j = 0; j < sampled_image.cols; j++) {
-    //         std::cout << sampled_image.at<int32_t>(i,j) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    for (int i =0; i < distance_only.rows; i++) {
+        for (int j = 0; j < distance_only.cols; j++) {
+            std::cout << distance_only.at<int32_t>(i,j) << " ";
+        }
+        std::cout << std::endl;
+    }
+
     if (saving) {
         save(distance_only, path, "-sampled");
     }
 
-    return sampled;
+    if (seeds) {
+        return sampled;
+    } 
+    std::cout << distance_only.channels() << std::endl;
+    return distance_only;
 }
