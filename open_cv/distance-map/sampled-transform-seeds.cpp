@@ -49,8 +49,7 @@ int32_t f(cv::Mat arr, int32_t p) {
     return value;
 }
 
-sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
-    sampled_pair s_p{nullptr, nullptr};
+cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     // type checking
     {
         try {
@@ -60,7 +59,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } 
         catch (int i) {
             std::cout << "ERROR: Empty matrix in OneD." << std::endl;
-            return s_p;
+            return arr;
         }
         
         try {
@@ -71,7 +70,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         catch (int i) {
             std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
-            return s_p;
+            return arr;
         }
         
         try {
@@ -81,7 +80,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         } 
         catch (int i) {
             std::cout << "ERROR: Input matrix in OneD has dimensions " << arr.rows << " x " << arr.cols << ". Must be a single row or single column matrix." << std::endl;
-            return s_p;
+            return arr;
         }
     }
 
@@ -93,7 +92,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     }
     assert(arr.cols == 1);
 
-    cv::Mat final = cv::Mat::zeros(arr.rows, arr.cols, CV_32SC1); // output matrix 
+    cv::Mat final = cv::Mat::zeros(arr.rows, arr.cols, CV_32SC3); // output matrix 
     assert(final.type() == 4);
     int k = 0; // index of right-most parabola in lower envelope 
     std::vector<int> v{0}; // v[i] gives the horizontal position of the ith parabola aka our position in our single column matrix 
@@ -172,8 +171,7 @@ sampled_pair OneD(cv::Mat arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         cv::rotate(final, final, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
     assert(final.type() == 4);
-    s_p.sampled = &final;
-    return s_p;
+    return final;
 }
 
 cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
@@ -272,7 +270,7 @@ cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     cv::Mat3i blank_map = get_seeds(correct);
     cv::Mat3i sampled = TwoD(correct, f);
 
-    std::transform(sampled.begin<cv::Vec3i>(),sampled.end<cv::Vec3i>(),sampled.begin<cv::Vec3i>(), func);
+   //  std::transform(sampled.begin<cv::Vec3i>(),sampled.end<cv::Vec3i>(),sampled.begin<cv::Vec3i>(), func);
 
     // for (int i =0; i < sampled_image.rows; i++) {
     //     for (int j = 0; j < sampled_image.cols; j++) {
@@ -280,10 +278,10 @@ cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     //     }
     //     std::cout << std::endl;
     // }
-    if (saving) {
-        // TODO extract just distances
-        save(sampled_image, path, "-sampled");
-    }
+    // if (saving) {
+    //     // TODO extract just distances
+    //     save(sampled_image, path, "-sampled");
+    // }
 
     return sampled;
 }
