@@ -21,9 +21,16 @@ cv::Mat3i get_seeds(cv::Mat img) {
     return map;
 }
 
-int32_t func(int32_t x) {
-    return round(sqrt(x));
+cv::Mat1i get_distance(cv::Mat3i img) {
+    cv::Mat1i distances = cv::Mat::zeros(img.rows, img.cols, CV_32SC1);
+    for (int i = 0; i < img.rows; i++) {
+        for (int j = 0; j < img.cols; j++) {
+            distances.at<int32_t>(i, j) = round(sqrt(img.at<cv::Vec3i>(i,j)[0]));
+        }
+    }
+    return distances;
 }
+
 // indicator function for membership in a set of seed pixels
 int32_t f(cv::Mat arr, int32_t p) {
     try {
@@ -281,7 +288,7 @@ cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     cv::Mat3i blank_map = get_seeds(correct);
     cv::Mat3i sampled = TwoD(correct, f);
 
-   //  std::transform(sampled.begin<cv::Vec3i>(),sampled.end<cv::Vec3i>(),sampled.begin<cv::Vec3i>(), func);
+    cv::Mat1i distance_only = get_distance(sampled);
 
     // for (int i =0; i < sampled_image.rows; i++) {
     //     for (int j = 0; j < sampled_image.cols; j++) {
@@ -289,10 +296,9 @@ cv::Mat3i sample(cv::Mat img, std::string path, bool saving) {
     //     }
     //     std::cout << std::endl;
     // }
-    // if (saving) {
-    //     // TODO extract just distances
-    //     save(sampled_image, path, "-sampled");
-    // }
+    if (saving) {
+        save(distance_only, path, "-sampled");
+    }
 
     return sampled;
 }
