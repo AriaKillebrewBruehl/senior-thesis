@@ -63,12 +63,12 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         }
         
         try {
-            if (arr.type() != 4) {
+            if (arr.type() != 20) {
                 throw arr.type();
             }
         } 
         catch (int i) {
-            std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
+            std::cout << "ERROR: Input matrix in OneD must be of type 20 (32S_C3)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
             return arr;
         }
@@ -186,11 +186,11 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
             return arr;
         }
         try {
-            if (arr.type() != 4) {
+            if (arr.type() != 20) {
                 throw arr.type();
             }
         } catch (int i) {
-            std::cout << "ERROR: Input matrix in OneD must be of type 4 (32S_C1)." << std::endl; 
+            std::cout << "ERROR: Input matrix in OneD must be of type 20 (32S_C3)." << std::endl; 
             std::cout << "Input matrix was of type: " << i << std::endl;
             return arr;
         }
