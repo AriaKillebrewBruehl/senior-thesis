@@ -49,7 +49,7 @@ int32_t f(cv::Mat arr, int32_t p) {
     return value;
 }
 
-cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
+cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_t n) {
     // type checking
     {
         try {
@@ -93,7 +93,7 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     assert(arr.cols == 1);
 
     cv::Mat final = cv::Mat::zeros(arr.rows, arr.cols, CV_32SC3); // output matrix 
-    assert(final.type() == 4);
+    assert(final.type() == 20);
     int k = 0; // index of right-most parabola in lower envelope 
     std::vector<int> v{0}; // v[i] gives the horizontal position of the ith parabola aka our position in our single column matrix 
     std::vector<int> z{INT_MIN, INT_MAX}; // range in which the ith parabola of the lower envelope is below the others is given by z[i] and z[i+1]
@@ -163,8 +163,19 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         int32_t b = f(arr, v[k]);
         int32_t value = a * a + b;
         
-        final.at<int32_t>(i, 0) = (value);
-
+        // set the distance 
+        final.at<cv::Vec3i>(i, 0)[0] = value;
+        // set the seed pixels
+        if (!rotated) {
+            // v[k] gives the row 
+            final.at<cv::Vec3i>(i, 0)[1] = v[k];
+            final.at<cv::Vec3i>(i, 0)[2] = n;
+        } else {
+            // v[k] gives the column 
+            final.at<cv::Vec3i>(i, 0)[2] = v[k];
+            final.at<cv::Vec3i>(i, 0)[1] = n;
+        }
+        
     }
 
     if (rotated) {
@@ -199,9 +210,9 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     for (int j = 0; j < arr.cols; j++) {
         // extract column and run one-dimensional distance transform 
         cv::Mat3i column = arr.col(j);
-        // assert(column.channels() == 4);
-        cv::Mat3i transformed = OneD(column, f);
-       //  assert(column.type() == 4);
+        assert(column.type() == 20);
+        cv::Mat3i transformed = OneD(column, f, j);
+        assert(column.type() == 20);
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
     }
@@ -209,9 +220,9 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     for (int i = 0; i < arr.rows; i++) {
         // extract row and run one-dimensional distance transform 
         cv::Mat row = arr.row(i);
-        // assert(row.type() == 4);
-        cv::Mat3i transformed = OneD(row, f);
-        // assert(row.type() == 4);
+        assert(row.type() == 20);
+        cv::Mat3i transformed = OneD(row, f, i);
+        assert(row.type() == 20);
         // replace row in original array
         transformed.row(0).copyTo(arr.row(i));
     }
