@@ -33,4 +33,4 @@ cv::Mat3i get_seeds(cv::Mat img);
 cv::Mat1i get_distance(cv::Mat3i img);
 cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_t n);
 cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f);
-cv::Mat3i sample(cv::Mat img, std::string path, bool saving);
+cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds);
