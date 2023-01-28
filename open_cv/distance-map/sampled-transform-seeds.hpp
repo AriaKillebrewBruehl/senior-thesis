@@ -30,7 +30,7 @@
 
 // indicator function for membership in a set of seed pixels
 cv::Mat3i get_seeds(cv::Mat img);
-int32_t func(int32_t x);
+cv::Mat1i get_distance(cv::Mat3i img);
 cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_t n);
 cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f);
 cv::Mat3i sample(cv::Mat img, std::string path, bool saving);
