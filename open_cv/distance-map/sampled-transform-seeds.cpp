@@ -9,7 +9,7 @@ cv::Mat3i get_seeds(cv::Mat img) {
             int32_t p = img.at<int32_t>(i, j);
             map.at<cv::Vec3i>(i, j)[0] = p;
             // the pixel is undefined
-            if (p == 0) {
+            if (p != 0) {
                 map.at<cv::Vec3i>(i, j)[1] = -1;
                 map.at<cv::Vec3i>(i, j)[2] = -1;
             } else {
@@ -106,7 +106,7 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_
     std::vector<int> z{INT_MIN, INT_MAX}; // range in which the ith parabola of the lower envelope is below the others is given by z[i] and z[i+1]
 
     bool one_set = false;
-    if (f(arr, 0) != INT32_MAX) {
+    if (f2(arr, 0) != INT32_MAX) {
         one_set = true;
     }
 
@@ -116,14 +116,14 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_
         while (true) {
             int  r = v[k];
             // current pixel is neither a seed pixel nor assigned a value
-            if (f(arr, i) == INT32_MAX) {
+            if (f2(arr, i) == INT32_MAX) {
                 curr_inf = true;
                 break;
             }
             // we know at least one pixel in the array has been set
             one_set = true;
             // intersection of parabola from i and r
-            s = ((f(arr, i) + (i*i)) - (f(arr, r) + (r*r))) / (2 * i - 2 * r);
+            s = ((f2(arr, i) + (i*i)) - (f2(arr, r) + (r*r))) / (2 * i - 2 * r);
            
             if (s > z[k]) {
                 break;
@@ -162,27 +162,17 @@ cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f, int32_
             final.at<int32_t>(i, 0) = 255;
             continue;
         }
-        if (f(arr, i) == 0) {
-            continue;
-        }
+        
         // distance between i and the horizontal position of the kth parabola 
         int32_t a = abs(i-v[k]);
-        int32_t b = f(arr, v[k]);
+        int32_t b = f2(arr, v[k]);
         int32_t value = a * a + b;
         
         // set the distance 
         final.at<cv::Vec3i>(i, 0)[0] = value;
         // set the seed pixels
-        if (!rotated) {
-            // v[k] gives the row 
-            final.at<cv::Vec3i>(i, 0)[1] = v[k];
-            final.at<cv::Vec3i>(i, 0)[2] = n;
-        } else {
-            // v[k] gives the column 
-            final.at<cv::Vec3i>(i, 0)[2] = v[k];
-            final.at<cv::Vec3i>(i, 0)[1] = n;
-        }
-        
+        final.at<cv::Vec3i>(i, 0)[1] = arr.at<cv::Vec3i>(v[k], 0)[1];
+        final.at<cv::Vec3i>(i, 0)[2] = arr.at<cv::Vec3i>(v[k], 0)[2];
     }
 
     if (rotated) {
@@ -222,6 +212,13 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         assert(column.type() == 20);
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
+    //     for (int i =0; i < transformed.rows; i++) {
+    //     for (int j = 0; j < transformed.cols; j++) {
+    //         std::cout << transformed.at<cv::Vec3i>(i,j)[0] <<  " (" << transformed.at<cv::Vec3i>(i,j)[2] << "," << transformed.at<cv::Vec3i>(i,j)[1] << ") ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
     }
 
     for (int i = 0; i < arr.rows; i++) {
@@ -285,17 +282,12 @@ cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
     
     assert(correct.type() == 4);
     cv::Mat3i blank_map = get_seeds(correct);
+    
+    std::cout << std::endl;
     cv::Mat3i sampled = TwoD(blank_map, f2);
     
     cv::Mat1i distance_only = get_distance(sampled);
-
-    for (int i =0; i < distance_only.rows; i++) {
-        for (int j = 0; j < distance_only.cols; j++) {
-            std::cout << distance_only.at<int32_t>(i,j) << " ";
-        }
-        std::cout << std::endl;
-    }
-
+    
     if (saving) {
         save(distance_only, path, "-sampled");
     }
@@ -303,6 +295,5 @@ cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
     if (seeds) {
         return sampled;
     } 
-    std::cout << distance_only.channels() << std::endl;
     return distance_only;
 }
