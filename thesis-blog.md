@@ -2,6 +2,31 @@
 
 ## *Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life*
 
+## 01.28.2023
+
+Okay I think the seed pixel thing is working nicely. The next thing I need to do is make the invert thing a boiler
+plate function and figure out where to put it. 
+
+## 01.27.2023
+
+So I had been integrating the seed map with a struct that holds the final distance image and then the map 
+
+    struct sampled_pair {
+        cv::Mat* sampled;
+        seed_map* seeds;
+    };
+
+But that is a waste of space! Instead I will reimplement with just one cv::Mat with three channels where the first is
+the distance, the next is the x of the seed, and the last is the y of the seed. To do that I need to:
+
+- [x] change signatures back 
+- [x] create initializer for seeds in the image
+- [x] change # of channels in final images
+- [x] input seeds 
+
+
+Maybe change so many of the `cv::Mat`s to a more specific type of `cv::Mat3i` etc. 
+
 ## 01.26.2023
 
 Okay my next step is dot distribution. First I need to get a hand on that algorithm 
