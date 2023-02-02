@@ -7,9 +7,15 @@
 The distance map portion of chapter 3 has been written and I think it has all the necessary images! Here are
 my next steps
 
-- [ ] make invert boiler plate
+- [x] make invert boiler plate
   - [ ] find a good place to call it
 - [ ] work on step 6.2.2 of Kang (updating centroids)
+  - [ ] compute centroid of Voronoi cell c = ρ^(−1) ∑ wi · xi (xi is the i-th pixel in the cell, wi is associated weight, and ρ = ∑iwi ??, wi = 1 in basic Lloyd algorithm)
+  - [ ] if a part of a voronoi cell is occluded by an offset line, remove that part in computing the updated centroid of the cell
+    - [ ] set wi = 0 for all pixels w/in offset lines
+  - [ ] if voronoi cell is divided by an offset line
+    - [ ] pick non-occluded pice closest to the previous centroid
+      - [ ] compute the new centroid of the ell using only that pice (wi = 1 for all in the pice, wi = 0 for all out of the piece)
 
 ## 01.31.2023
 
