@@ -6,8 +6,10 @@
 #include "../boiler-plate/type2str.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "sampled-transform-2.hpp"
+#include "sampled-transform-seeds.hpp"
 
-struct distMap {
+struct distMap
+{
     cv::Mat distances;
     cv::Mat priorityBuffer;
 };
