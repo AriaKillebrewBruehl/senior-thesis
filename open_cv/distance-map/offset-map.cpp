@@ -4,25 +4,10 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving) {
     // read images and resize
     cv::Mat dists;
     dists = read(pathDists, imgDists);
-    try {
-        if (dists.empty()) {
-            throw 0;
-        }
-    } catch (int i) {
-        std::cout << "ERROR: Could not read in image in offsetMap."
-                  << std::endl;
-        return dists;
-    }
+    assert(!dists.empty());
     if (dists.type() != 0) {
         dists.convertTo(dists, 0);
     }
-
-    // for (int i = 0; i < dists.rows; i++) {
-    //     for (int j = 0; j < dists.cols; j++) {
-    //         std::cout << int(dists.at<uchar>(i,j)) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
 
     cv::Mat visual = cv::Mat::zeros(dists.rows, dists.cols, CV_8UC1);
     cv::Mat offsetMap = cv::Mat::zeros(dists.rows, dists.cols, CV_8UC1);
