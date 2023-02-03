@@ -1,46 +1,22 @@
 #include "distance-map2.hpp"
 
-distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos, cv::Mat imgIsos, bool saving)
-{
+distMap distanceMap(std::string pathEdges, cv::Mat imgEdges,
+                    std::string pathIsos, cv::Mat imgIsos, bool saving) {
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
-    try
-    {
-        if (edges.empty())
-        {
-            throw 0;
-        }
-    }
-    catch (int i)
-    {
-        std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
-        distMap dMap;
-        return dMap;
-    }
-    if (edges.type() == 0)
-    {
-        cv::cvtColor(edges, edges, cv::COLOR_GRAY2BGR);
+    assert(!edges.empty());
+
+    if (edges.type() == 0) {
+        edges.convertTo(edges, 0);
     }
 
     cv::Mat isos;
     isos = read(pathIsos, imgIsos);
-    try
-    {
-        if (isos.empty())
-        {
-            throw 0;
-        }
-    }
-    catch (int i)
-    {
-        std::cout << "ERROR: Could not read in image in distanceMap." << std::endl;
-        distMap dMap;
-        return dMap;
-    }
-    if (isos.type() == 0)
-    {
-        cv::cvtColor(isos, isos, cv::COLOR_GRAY2BGR);
+    assert(!isos.empty());
+
+    if (isos.type() == 0) {
+        isos.convertTo(isos, 0);
     }
 
     cv::Mat edgedists = sample_seeds(edges, pathEdges, true, false);
@@ -51,25 +27,19 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIso
     int edge_weight = 1;
     int isos_weight = 2;
 
-    for (int i = 0; i < distances.rows; i++)
-    {
-        for (int j = 0; j < distances.cols; j++)
-        {
+    for (int i = 0; i < distances.rows; i++) {
+        for (int j = 0; j < distances.cols; j++) {
             float edge_dist = edgedists.at<int32_t>(i, j) / edge_weight;
             float isos_dist = isosdists.at<int32_t>(i, j) / isos_weight;
-            if (isos_dist < edge_dist)
-            {
+            if (isos_dist < edge_dist) {
                 distances.at<int32_t>(i, j) = int32_t(isos_dist);
-            }
-            else
-            {
+            } else {
                 distances.at<int32_t>(i, j) = int32_t(edge_dist);
             }
         }
     }
     // save image
-    if (saving)
-    {
+    if (saving) {
         save(distances, pathEdges, "-dists-heavy-isos");
     }
 
