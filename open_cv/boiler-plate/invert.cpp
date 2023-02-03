@@ -1,6 +1,7 @@
 #include "invert.hpp"
 
 cv::Mat invert(cv::Mat arr) {
+    assert(!arr.empty());
     // get components
     cv::Mat labels;
     cv::Mat stats;
