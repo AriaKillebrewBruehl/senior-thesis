@@ -14,13 +14,12 @@ cv::Mat placeDots(std::string path, cv::Mat offsetMap, int d, bool saving) {
             // feature lines are white
             if (image.at<uchar>(i, j) != 255) {
                 double r = ((double)rand()) / RAND_MAX;
-                if (r <=  1 / double(d*d)) {
+                if (r <= 1 / double(d * d)) {
                     seeds.at<uchar>(i, j) = 255;
                 }
             }
         }
     }
-
 
     if (saving) {
         save(seeds, path, "-dots");
