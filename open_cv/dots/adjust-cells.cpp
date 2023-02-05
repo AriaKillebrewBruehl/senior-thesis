@@ -32,9 +32,8 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
     // TODO type checking
     // given a distance map
     seed_map map = generate_map(seeds);
-
+    cv::Mat adjusted = cv::Mat::zeros(seeds.rows, seeds.cols, CV_8UC1);
     for (auto const &pair : map) {
-        pixel_type center = pair.first;
         int32_t x_sum = 0;
         int32_t y_sum = 0;
         int32_t w = 1;
@@ -53,10 +52,16 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                 // how do i tell if there is an offset line
                 // in between parts of pixels
             }
-
             x_sum += x * w;
             y_sum += x * w;
             ro += w;
         }
+        adjusted.at<uchar>(pair.first.first, pair.first.second) = uchar(255);
     }
+
+    if (saving) {
+        save(adjusted, path_offset, "-new-dots");
+    }
+
+    return adjusted;
 }
