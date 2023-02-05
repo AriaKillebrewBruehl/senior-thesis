@@ -2,17 +2,26 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.05.2023
+
+Snowed in at the ski cabin! I think I'm a little stuck on coding so I will work on writing for a bit!
+Today's writing goals:
+
+- [ ] 2.1.1 thresholding edges
+- [ ] 2.2 isophote detection
+
 # 02.02.2023
 
 The distance map portion of chapter 3 has been written and I think it has all the necessary images! Here are
 my next steps
 
 - [x] make invert boiler plate
-  - [ ] find a good place to call it
+  - [x] find a good place to call it
 - [ ] work on step 6.2.2 of Kang (updating centroids)
-  - [ ] compute centroid of Voronoi cell c = ρ^(−1) ∑ wi · xi (xi is the i-th pixel in the cell, wi is associated weight, and ρ = ∑iwi ??, wi = 1 in basic Lloyd algorithm)
-  - [ ] if a part of a voronoi cell is occluded by an offset line, remove that part in computing the updated centroid of the cell
-    - [ ] set wi = 0 for all pixels w/in offset lines
+  - [x] compute centroid of Voronoi cell c = ρ^(−1) ∑ wi · xi (xi is the i-th pixel in the cell, wi is associated weight, and ρ = ∑iwi ??, wi = 1 in basic Lloyd algorithm)
+        _do i want a separate data structure that has each seed and all the associated pixels? probably yes_
+  - [x] if a part of a voronoi cell is occluded by an offset line, remove that part in computing the updated centroid of the cell
+    - [x] set wi = 0 for all pixels w/in offset lines (just continuing)
   - [ ] if voronoi cell is divided by an offset line
     - [ ] pick non-occluded pice closest to the previous centroid
       - [ ] compute the new centroid of the ell using only that pice (wi = 1 for all in the pice, wi = 0 for all out of the piece)
