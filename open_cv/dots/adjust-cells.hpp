@@ -1,16 +1,14 @@
 #include <iostream>
+
 #include "../boiler-plate/read-save.hpp"
 
-struct hash_pair
-{
+struct hash_pair {
     template <class T1, class T2>
-    size_t operator()(const std::pair<T1, T2> &p) const
-    {
+    size_t operator()(const std::pair<T1, T2> &p) const {
         auto hash1 = std::hash<T1>{}(p.first);
         auto hash2 = std::hash<T2>{}(p.second);
 
-        if (hash1 != hash2)
-        {
+        if (hash1 != hash2) {
             return hash1 ^ hash2;
         }
         // If hash1 == hash2, their XOR is zero.
@@ -19,6 +17,9 @@ struct hash_pair
 };
 
 using pixel_type = std::pair<int, int>;
-using seed_map = std::unordered_map<pixel_type, std::vector<pixel_type>, hash_pair>;
+using seed_map =
+    std::unordered_map<pixel_type, std::vector<pixel_type>, hash_pair>;
 
-cv::Mat adjust(cv::Mat img, std::string path, bool saving);
+cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
+               std::string path_seeds, cv::Mat img_seeds, bool saving,
+               bool offset);
