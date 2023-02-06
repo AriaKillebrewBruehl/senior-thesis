@@ -7,6 +7,9 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, int edgethresh,
     assert(!image.empty());
 
     if (image.type() == 0) {
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        }
         image.convertTo(image, 0);
     }
 
