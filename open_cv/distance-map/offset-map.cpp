@@ -6,6 +6,9 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving) {
     dists = read(pathDists, imgDists);
     assert(!dists.empty());
     if (dists.type() != 0) {
+        if (dists.channels() != 1) {
+            cv::cvtColor(dists, dists, cv::COLOR_RGB2GRAY);
+        }
         dists.convertTo(dists, 0);
     }
 

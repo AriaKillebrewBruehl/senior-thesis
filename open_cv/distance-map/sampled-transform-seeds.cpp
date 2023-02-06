@@ -220,12 +220,14 @@ cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
 
     assert(!image.empty());
     if (image.type() != 4) {
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        }
         image.convertTo(image, 4);
     }
 
     cv::Mat3i blank_map = get_seeds(image);
 
-    std::cout << std::endl;
     cv::Mat3i sampled = TwoD(blank_map, f2);
 
     cv::Mat1i distance_only = get_distance(sampled);

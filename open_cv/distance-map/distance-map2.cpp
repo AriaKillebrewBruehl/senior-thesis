@@ -8,6 +8,9 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges,
     assert(!edges.empty());
 
     if (edges.type() == 0) {
+        if (edges.channels() != 1) {
+            cv::cvtColor(edges, edges, cv::COLOR_RGB2GRAY);
+        }
         edges.convertTo(edges, 0);
     }
 
@@ -16,6 +19,9 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges,
     assert(!isos.empty());
 
     if (isos.type() == 0) {
+        if (isos.channels() != 1) {
+            cv::cvtColor(isos, isos, cv::COLOR_RGB2GRAY);
+        }
         isos.convertTo(isos, 0);
     }
 
