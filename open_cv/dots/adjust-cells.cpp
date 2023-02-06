@@ -35,16 +35,11 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
 
     cv::Mat seeds = read(path_seeds, img_seeds);
     assert(!seeds.empty());
-    if (seeds.type() != 4) {
-        if (seeds.channels() != 1) {
-            cv::cvtColor(seeds, seeds, cv::COLOR_RGB2GRAY);
-        }
-        offsets.convertTo(seeds, CV_32SC1);
-    }
+    assert(seeds.type() == 20);
 
     // given a distance map
     seed_map map = generate_map(seeds);
-    cv::Mat adjusted = cv::Mat::zeros(seeds.rows, seeds.cols, CV_8UC1);
+    cv::Mat adjusted = cv::Mat::zeros(seeds.rows, seeds.cols, CV_32SC1);
     for (auto const &pair : map) {
         int32_t x_sum = 0;
         int32_t y_sum = 0;
@@ -70,12 +65,11 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         }
         int32_t final_x = x_sum / ro;
         int32_t final_y = y_sum / ro;
-        adjusted.at<uchar>(final_x, final_y) = uchar(255);
+        adjusted.at<int32_t>(final_x, final_y) = int32_t(255);
         // std::cout << "prev center: " << pair.first.first << ", "
         //           << pair.first.second << std::endl;
         // std::cout << "new center:  " << final_x << ", " << final_y <<
-        // std::endl;
-        // std::cout << std::endl;
+        // std::endl; std::cout << std::endl;
     }
 
     if (saving) {
