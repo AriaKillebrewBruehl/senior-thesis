@@ -5,21 +5,17 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     image = read(path, img);
     assert(!image.empty());
 
-    if (image.type() != 16) {
-        image.convertTo(image, 16);
-    }
-
-    // step 0: extract grayscale version of image
-    cv::Mat gray;
+    // step 0: convert image to grayscale
     if (image.type() != 0) {
-        gray = grayscale(path, image, true);
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        }
+        image.convertTo(image, CV_8UC1);
         std::cout << "converted image to grayscale" << std::endl;
-    } else {
-        gray = image;
     }
 
     // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges(path, gray, 1000, true);
+    cv::Mat edges = extractEdges(path, image, 1000, true);
     if (edges.type() != 0) {
         edges.convertTo(edges, 0);
     }
