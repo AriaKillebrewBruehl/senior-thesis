@@ -12,8 +12,9 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving) {
         dists.convertTo(dists, 0);
     }
 
-    cv::Mat visual = cv::Mat::zeros(dists.rows, dists.cols, CV_8UC1);
-    cv::Mat offsetMap = cv::Mat::zeros(dists.rows, dists.cols, CV_8UC1);
+    cv::Mat visual = cv::Mat(dists.rows, dists.cols, CV_8UC1, cv::Scalar(255));
+    cv::Mat offsetMap =
+        cv::Mat(dists.rows, dists.cols, CV_8UC1, cv::Scalar(255));
     float l = 6.0;
     int w = 1;
     int id = 0;
@@ -24,9 +25,6 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving) {
             if (delta <= w) {
                 int id = ceil(d / l);
                 offsetMap.at<uchar>(i, j) = uchar(id);
-                visual.at<uchar>(i, j) = uchar(255);
-            } else {
-                offsetMap.at<uchar>(i, j) = uchar(0);
                 visual.at<uchar>(i, j) = uchar(0);
             }
         }
