@@ -20,12 +20,23 @@ using pixel_type = std::pair<int, int>;
 using seed_map =
     std::unordered_map<pixel_type, std::vector<pixel_type>, hash_pair>;
 
-// Given an offset matrix and a seed matrix adjust seed pixels towards centers
-// of offset lanes
+/*
 cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                std::string path_seeds, cv::Mat img_seeds, bool saving,
                bool offset);
 
-// Given a seed matrix generate a map[pixel_type]std::vector<pixel_type> for
-// seed pixels and their neighbors
+    Given an offset map that labels sections NOT a visual map or a map
+    labeling lines and a seed map, return a seed map with the centroids
+    adjusted. If offset is set offset line constraints will be considered.
+*/
+cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
+               std::string path_seeds, cv::Mat img_seeds, bool saving,
+               bool offset);
+
+/*
+seed_map generate_map(cv::Mat image)
+Given a seed map image return a map std::unordered_map<pixel_type,
+std::vector<pixel_type>> where map[(x,y)] = [(x',y')] means that pixel
+(x',y') is the the Voronoi cell with pixel (x,y) as its seed
+*/
 seed_map generate_map(cv::Mat image);
