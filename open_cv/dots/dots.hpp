@@ -5,5 +5,6 @@
 #include "adjust-cells.hpp"
 #include "place-dots.hpp"
 
-// input image is offset map
+// Given an offset map return the adjusted seeds for the map.
+// Make sure input is offset map with ids, NOT the visual map!
 cv::Mat dots(std::string path, cv::Mat img, bool saving);
