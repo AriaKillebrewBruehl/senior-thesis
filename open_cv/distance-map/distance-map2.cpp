@@ -1,6 +1,6 @@
 #include "distance-map2.hpp"
 
-distMap distanceMap(std::string pathEdges, cv::Mat imgEdges,
+cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
                     std::string pathIsos, cv::Mat imgIsos, bool saving) {
     // read images and resize
     cv::Mat edges;
@@ -46,11 +46,8 @@ distMap distanceMap(std::string pathEdges, cv::Mat imgEdges,
     }
     // save image
     if (saving) {
-        save(distances, pathEdges, "-dists-heavy-isos");
+        save(distances, pathEdges, "-dists");
     }
 
-    distMap dists;
-    dists.distances = distances;
-
-    return dists;
+    return distances;
 }
