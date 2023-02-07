@@ -2,13 +2,23 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.06.2023
+
+Thoughts before the end of the night:
+
+- [ ] in adjust figure out why seeds are ending up on the diagonal
+- [ ] in adjust get "cell divided by offset line working"
+  - [ ] need to pass in a distance map instead of an offset map? or at least the correct type of offset map
+
 # 02.05.2023
 
 Snowed in at the ski cabin! I think I'm a little stuck on coding so I will work on writing for a bit!
 Today's writing goals:
 
-- [ ] 2.1.1 thresholding edges
-- [ ] 2.2 isophote detection
+- [x] 2.1.1 thresholding edges
+  - [x] include images
+  - [x] pseudo code
+- [x] 2.2 isophote detection
 
 # 02.02.2023
 
