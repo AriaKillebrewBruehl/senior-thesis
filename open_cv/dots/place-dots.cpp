@@ -13,15 +13,15 @@ cv::Mat placeDots(std::string path, cv::Mat offsetMap, int d, bool saving) {
     }
 
     // blank map for seed pixels
-    cv::Mat seeds = cv::Mat::zeros(image.rows, image.cols, CV_32SC1);
+    cv::Mat seeds = cv::Mat(image.rows, image.cols, CV_32SC1, cv::Scalar(255));
     srand(time(0));
     for (int i = 0; i < image.rows; i++) {
         for (int j = 0; j < image.cols; j++) {
-            // feature lines are white
-            if (image.at<int32_t>(i, j) != 255) {
+            // feature lines are black
+            if (image.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
                 if (r <= 1 / double(d * d)) {
-                    seeds.at<int32_t>(i, j) = 255;
+                    seeds.at<int32_t>(i, j) = 0;
                 }
             }
         }
