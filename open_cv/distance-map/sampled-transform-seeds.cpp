@@ -3,6 +3,13 @@
 cv::Mat3i get_seeds(cv::Mat img) {
     assert(!img.empty());
     assert(img.channels() == 1);
+    if (img.type() != 4) {
+        if (img.channels() != 1) {
+            cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
+        }
+        img.convertTo(img, 4);
+    }
+
     cv::Mat3i map = cv::Mat::zeros(img.rows, img.cols, CV_32SC3);
 
     for (int i = 0; i < img.rows; i++) {
@@ -225,10 +232,10 @@ cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
         }
         image.convertTo(image, 4);
     }
+    cv::Mat inverted = invert(image);
+    cv::Mat3i init_map = get_seeds(inverted);
 
-    cv::Mat3i blank_map = get_seeds(image);
-
-    cv::Mat3i sampled = TwoD(blank_map, f2);
+    cv::Mat3i sampled = TwoD(init_map, f2);
 
     cv::Mat1i distance_only = get_distance(sampled);
 
