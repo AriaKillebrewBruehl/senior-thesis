@@ -42,20 +42,21 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
     seed_map map = generate_map(seeds);
 
     cv::Mat adjusted = cv::Mat::zeros(seeds.rows, seeds.cols, CV_32SC1);
-    int i = 0;
     for (auto const &pair : map) {
-        int32_t x_sum = 0;
-        int32_t y_sum = 0;
+        float x_sum = 0;
+        float y_sum = 0;
         float w = 1.0;
-        int32_t ro = 0;
+        float ro = 0;
         for (auto const &p : pair.second) {
             int32_t x = p.first;
             int32_t y = p.second;
             if (offset) {
-                // if p is part of an offset line don't include it
+                // if p is part of an offset line
                 if (offsets.at<int32_t>(y, x) == 255) {
                     // wi = min{D(xi)/Dw,1}
-                    // what is D(xi) the value of the pixel in the distance map
+                    w = seeds.at<cv::Vec3i>(y, x)[0] >= 100
+                            ? 1.0
+                            : float(seeds.at<cv::Vec3i>(y, x)[0]) / 100.0;
                     continue;
                 }
 
@@ -64,6 +65,8 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                 // label all the connected regions that are between the offset
                 // lines if the region of the centroid is different from the
                 // region of the current pixel, don't include it
+            } else {
+                w = 1.0;
             }
             x_sum += x * w;
             y_sum += x * w;
@@ -72,11 +75,6 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         int32_t final_x = x_sum / ro;
         int32_t final_y = y_sum / ro;
         adjusted.at<int32_t>(final_x, final_y) = int32_t(255);
-        i++;
-        // std::cout << "prev center: " << pair.first.first << ", "
-        //           << pair.first.second << std::endl;
-        // std::cout << "new center:  " << final_x << ", " << final_y <<
-        // std::endl; std::cout << std::endl;
     }
     if (saving) {
         save(adjusted, path_offset, "-new-dots");
