@@ -29,29 +29,11 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving) {
                 offsetMap.at<uchar>(i, j) = uchar(0);
                 visual.at<uchar>(i, j) = uchar(0);
             }
-
-            // std::cout << "(" << i << ", " << j << ")" << std::endl;
-            // float R_min = ((l - w) * id) - (w / 2);
-            // float R_max = ((l - w) * id) + (w / 2);
-            // float delta = float(dists.at<uchar>(i, j)) *
-            // float(priorities.at<uchar>(i, j)); std::cout << "R_min: " <<
-            // R_min << " R_max: " << R_max << " delta: " << delta << std::endl;
-
-            // if (R_min <= delta && delta <= R_max) {
-            //     std::cout << "hi" << std::endl;
-            //     id++;
-            //     offsetMap.at<uchar>(i, j) = uchar(id);
-            //     visual.at<uchar>(i, j) = uchar(255);
-            // } else {
-            //     offsetMap.at<uchar>(i, j) = uchar(0);
-            //     visual.at<uchar>(i, j) = uchar(0);
-            // }
         }
-        // std::cout << std::endl;
     }
 
     if (saving) {
-        save(visual, pathDists, "-o-map");
+        save(visual, pathDists, "-o-map-visual");
     }
     return offsetMap;
 }
