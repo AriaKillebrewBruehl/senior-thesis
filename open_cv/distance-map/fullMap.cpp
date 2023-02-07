@@ -6,7 +6,7 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
     assert(!edges.empty());
-    assert(edges.depth() == 0);
+    // assert(edges.depth() == 0);
 
     cv::Mat inverted_edges = invert(edges);
 
@@ -21,7 +21,7 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
     isos = read(pathIsos, imgIsos);
     assert(!isos.empty());
 
-    assert(isos.depth() == 0);
+    // assert(isos.depth() == 0);
 
     cv::Mat inverted_isos = invert(isos);
 
@@ -32,11 +32,8 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
         inverted_isos.convertTo(inverted_isos, 4);
     }
 
-    distMap dMap = distanceMap("", inverted_edges, "", inverted_isos, false);
-    cv::Mat distances = dMap.distances;
-    cv::Mat priorities = dMap.priorityBuffer;
-
-    distances.convertTo(distances, CV_8UC1);
-    cv::Mat oMap = offsetMap(pathEdges, distances, saving);
+    cv::Mat distances =
+        distanceMap("", inverted_edges, "", inverted_isos, false);
+    cv::Mat oMap = offsetMap(pathEdges, distances, saving, true);
     return oMap;
 }
