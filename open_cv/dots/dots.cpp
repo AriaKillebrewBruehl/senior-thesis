@@ -7,7 +7,7 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
     // TODO type checking
 
     // step 0: generate seeds
-    cv::Mat seeds = placeDots("", image, 6, false);
+    cv::Mat seeds = placeDots("", image, 6, true);
 
     int t1 = 10;
     int t2 = 30;
@@ -30,4 +30,5 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
     if (saving) {
         save(adjusted, path, "-adjusted");
     }
+    return adjusted;
 }
