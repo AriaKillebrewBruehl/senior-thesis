@@ -18,6 +18,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving,
     // each offset line is tagged with an id on a white background
     cv::Mat offsetMapLines =
         cv::Mat(dists.rows, dists.cols, CV_32SC1, cv::Scalar(255));
+    // each offset line is black and each section is tagged with an id
     cv::Mat offsetMapSections =
         cv::Mat(dists.rows, dists.cols, CV_32SC1, cv::Scalar(255));
     float l = 6.0;
