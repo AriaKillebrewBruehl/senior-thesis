@@ -7,7 +7,8 @@ seed_map generate_map(cv::Mat image) {
 
     for (int i = 0; i < image.rows; i++) {
         for (int j = 0; j < image.cols; j++) {
-            if (image.at<int32_t>(i, j) != 255) {
+            // we aren't at a seed pixel
+            if (image.at<cv::Vec3i>(i, j)[0] != 0) {
                 pixel_type seed;
                 seed.first = image.at<cv::Vec3i>(i, j)[1];
                 seed.second = image.at<cv::Vec3i>(i, j)[2];
@@ -19,15 +20,15 @@ seed_map generate_map(cv::Mat image) {
             }
         }
     }
-    for (auto pair : map) {
-        std::cout << "(" << pair.first.first << ", " << pair.first.second
-                  << "): [";
-        for (auto p : pair.second) {
-            std::cout << "(" << p.first << ", " << p.second << "), ";
-        }
-        std::cout << "]" << std::endl;
-        std::cout << std::endl;
-    }
+    // for (auto pair : map) {
+    //     std::cout << "(" << pair.first.first << ", " << pair.first.second
+    //               << "): [";
+    //     for (auto p : pair.second) {
+    //         std::cout << "(" << p.first << ", " << p.second << "), ";
+    //     }
+    //     std::cout << "]" << std::endl;
+    //     std::cout << std::endl;
+    // }
     return map;
 }
 
@@ -44,10 +45,22 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
     }
 
     cv::Mat dists_w_seeds = read(path_dists_w_seeds, img_dists_w_seeds);
+    std::cout << dists_w_seeds.type() << std::endl;
     assert(!dists_w_seeds.empty());
     assert(dists_w_seeds.type() == 20);
 
+    // save(dists_w_seeds, path_dists_w_seeds, "-seeds-in-adj");
+
     seed_map map = generate_map(dists_w_seeds);
+    for (auto pair : map) {
+        std::cout << "(" << pair.first.first << ", " << pair.first.second
+                  << "): [";
+        // for (auto p : pair.second) {
+        //     std::cout << "(" << p.first << ", " << p.second << "), ";
+        // }
+        // std::cout << "]" << std::endl;
+        std::cout << std::endl;
+    }
 
     cv::Mat adjusted = cv::Mat(dists_w_seeds.rows, dists_w_seeds.cols, CV_32SC1,
                                cv::Scalar(255));
@@ -86,6 +99,11 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         }
         int32_t final_x = x_sum / ro;
         int32_t final_y = y_sum / ro;
+        // std::cout << "prev x: " << seed_x << " prev y: " << seed_y <<
+        // std::endl; std::cout << "x sum: " << x_sum << " y sum: " << y_sum <<
+        // std::endl; std::cout << "final x: " << final_x << " final y: " <<
+        // final_y
+        //           << std::endl;
         adjusted.at<int32_t>(final_x, final_y) = 0;
     }
     if (saving) {
