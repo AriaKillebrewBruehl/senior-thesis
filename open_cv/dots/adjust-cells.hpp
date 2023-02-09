@@ -35,7 +35,7 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
 
 /*
 seed_map generate_map(cv::Mat image)
-Given a seed map image return a map std::unordered_map<pixel_type,
+Given a distance map return a map std::unordered_map<pixel_type,
 std::vector<pixel_type>> where map[(x,y)] = [(x',y')] means that pixel
 (x',y') is the the Voronoi cell with pixel (x,y) as its seed
 */
