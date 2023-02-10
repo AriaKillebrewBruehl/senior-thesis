@@ -7,7 +7,8 @@ int main(int argc, char **argv) {
         for (int i = 1; i < argc; i += 2) {
             cv::Mat image;
             // distanceMap(argv[i], image, argv[i + 1], image, true);
-            sample_seeds(image, argv[i], true, true);
+            // sample_seeds(image, argv[i], true, true);
+            fullMap(argv[i], image, argv[i + 1], image, true);
         }
     }
 }
