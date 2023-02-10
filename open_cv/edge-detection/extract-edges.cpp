@@ -1,20 +1,18 @@
 #include "extract-edges.hpp"
 
-inline uchar reduceVal(const uchar val)
-{
+inline uchar reduceVal(const uchar val) {
     if (val < 192) return uchar(val / 64.0 + 0.5) * 64;
     return 255;
 }
 
 // return a grayscale version of the image with only the L component
 // TODO: change this to std::transform?
-cv::Mat processColors(cv::Mat& img) {
+cv::Mat processColors2(cv::Mat& img) {
     cv::Mat gs = cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
     for (int i = 0; i < img.rows; i++) {
         for (int j = 0; j < img.cols; j++) {
-            // std::cout << i << std::endl;
             uchar L = reduceVal(img.at<cv::Vec3b>(i, j)[0]);
-            gs.at<uchar>(i,j) = (L);
+            gs.at<uchar>(i, j) = (L);
         }
     }
     return gs;
@@ -25,7 +23,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::Mat image;
     image = read(path, img);
     cv::Mat correct;
-    
+
     try {
         if (image.empty()) {
             throw 0;
@@ -39,42 +37,43 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     if (image.type() != 16) {
         if (image.type() == 0) {
             image.convertTo(image, CV_8UC3);
-            try{
+            try {
                 if (image.type() != 16) {
                     throw image.type();
-                } 
-            }
-            catch (int i) {
-                std::cout << "ERROR: Input image in sample must be of type 8UC3." << std::endl;
-                std::cout << "Input image is of type " << i << " and cannot be converted." << std::endl;
+                }
+            } catch (int i) {
+                std::cout
+                    << "ERROR: Input image in sample must be of type 8UC3."
+                    << std::endl;
+                std::cout << "Input image is of type " << i
+                          << " and cannot be converted." << std::endl;
                 return image;
             }
-             
         }
     }
 
     std::cout << image.channels() << std::endl;
     int MAX_KERNEL_LENGTH = 15;
     cv::Mat src = image;
-    // bilateral filter 
-    for ( int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2 ) {
+    // bilateral filter
+    for (int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2) {
         cv::Mat dest;
-        cv::bilateralFilter (src, dest, i, i*2, i/2 );
+        cv::bilateralFilter(src, dest, i, i * 2, i / 2);
         src = dest;
-    }  
+    }
 
     // convert image to CIE L*a*b
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
-    
+
     // luminance quantization and create color frequency map
-    cv::Mat processed = processColors(src);
-   
+    cv::Mat processed = processColors2(src);
+
     assert(processed.type() == 0);
 
     cv::Mat edges = cannyFilter(path, processed, true);
 
-
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
 
     // extract edges via threshold
     cv::Mat extracted = threshold(path, edges, thresh, false);
@@ -82,7 +81,8 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     // // morphological operations
     cv::Mat morphed2;
     extracted.convertTo(extracted, CV_8UC1);
-    cv::morphologyEx(extracted, morphed2, cv::MORPH_OPEN, element, cv::Point(-1, -1), 3);
+    cv::morphologyEx(extracted, morphed2, cv::MORPH_OPEN, element,
+                     cv::Point(-1, -1), 3);
 
     if (saving) {
         save(morphed2, path, "-extracted-w-morph");
