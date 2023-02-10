@@ -23,7 +23,6 @@ cv::Mat invert(cv::Mat arr) {
         while (j < labels.cols && not_found) {
             j++;
             if (labels.at<int>(i, j) == 0) {
-                std::cout << "hi" << std::endl;
                 not_found = false;
             }
         }
