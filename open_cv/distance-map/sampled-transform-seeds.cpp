@@ -16,7 +16,7 @@ cv::Mat3i get_seeds(cv::Mat img) {
         for (int j = 0; j < img.cols; j++) {
             int32_t p = img.at<int32_t>(i, j);
             map.at<cv::Vec3i>(i, j)[0] = p;
-            // the pixel is undefined
+            // the pixel is not set
             if (p != 0) {
                 map.at<cv::Vec3i>(i, j)[1] = -1;
                 map.at<cv::Vec3i>(i, j)[2] = -1;
