@@ -53,46 +53,53 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
     cv::Mat adjusted = cv::Mat(dists_w_seeds.rows, dists_w_seeds.cols, CV_32SC1,
                                cv::Scalar(255));
     for (auto const &pair : map) {
-        int32_t seed_x = pair.first.first;
-        int32_t seed_y = pair.first.second;
-        float x_sum = 0;
-        float y_sum = 0;
+        int32_t seed_row = pair.first.first;
+        int32_t seed_col = pair.first.second;
+
+        float row_sum = 0;
+        float col_sum = 0;
         float w = 1.0;
         float ro = 0;
+
         for (auto const &p : pair.second) {
-            int32_t x = p.first;
-            int32_t y = p.second;
+            int32_t row = p.first;
+            int32_t col = p.second;
             if (offset) {
                 // if p is part of an offset line
-                if (offsets.at<int32_t>(y, x) == 0) {
+                if (offsets.at<int32_t>(row, col) == 0) {
                     // wi = min{D(xi)/Dw,1}
-                    w = dists_w_seeds.at<cv::Vec3i>(y, x)[0] >= 100
+                    w = dists_w_seeds.at<cv::Vec3i>(row, col)[0] >= 100
                             ? 1.0
-                            : float(dists_w_seeds.at<cv::Vec3i>(y, x)[0]) /
+                            : float(dists_w_seeds.at<cv::Vec3i>(row, col)[0]) /
                                   100.0;
-                }
-                // if there is an offset line separating the current pixel and
-                // its seed
-                int seed_section = offsets.at<int32_t>(seed_y, seed_x);
-                int pixel_section = offsets.at<int32_t>(y, x);
-                if (pixel_section != seed_section) {
-                    w = 0;
+                } else {
+                    // if there is an offset line separating the current pixel
+                    // and its seed
+                    int32_t seed_section =
+                        offsets.at<int32_t>(seed_row, seed_col);
+                    int32_t pixel_section = offsets.at<int32_t>(row, col);
+                    if (pixel_section != seed_section) {
+                        w = 0;
+                    }
                 }
             } else {
                 w = 1.0;
             }
-            x_sum += x * w;
-            y_sum += x * w;
+
+            row_sum += row * w;
+            col_sum += col * w;
             ro += w;
         }
-        int32_t final_x = x_sum / ro;
-        int32_t final_y = y_sum / ro;
-        // std::cout << "prev x: " << seed_x << " prev y: " << seed_y <<
-        // std::endl; std::cout << "x sum: " << x_sum << " y sum: " << y_sum <<
-        // std::endl; std::cout << "final x: " << final_x << " final y: " <<
-        // final_y
+        int32_t final_row = int(row_sum / ro);
+        int32_t final_col = int(col_sum / ro);
+        // std::cout << "prev row: " << seed_row << " prev col: " << seed_col
         //           << std::endl;
-        adjusted.at<int32_t>(final_x, final_y) = 0;
+        // std::cout << "row sum: " << row_sum << " col sum: " << col_sum
+        //           << std::endl;
+        // std::cout << "final row: " << final_row << " final col: " <<
+        // final_col
+        //           << std::endl;
+        adjusted.at<int32_t>(final_row, final_col) = 0;
     }
     if (saving) {
         save(adjusted, path_offset, "-new-dots");
