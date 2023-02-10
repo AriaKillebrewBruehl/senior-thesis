@@ -24,7 +24,13 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(caboodle caboodle.cpp ../isophotes/extract-isophotes.cpp ../isophotes/isophotes.cpp ../edge-detection/extract-edges.cpp ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/threshold-edges.cpp ../edge-detection/skeleton.cpp ../edge-detection/gray-scale.cpp ../distance-map/distance-map2.cpp ../distance-map/offset-map.cpp ../distance-map/sampled-transform-2.cpp ../distance-map/fullMap.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(caboodle caboodle.cpp 
+    ../boiler-plate/invert.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp
+    ../distance-map/distance-map2.cpp ../distance-map/fullMap.cpp  ../distance-map/sampled-transform-seeds.cpp ../distance-map/offset-map.cpp
+    ../dots/adjust-cells.cpp ../dots/dots.cpp ../dots/place-dots.cpp
+    ../isophotes/extract-isophotes.cpp ../isophotes/isophotes.cpp 
+    ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/extract-edges.cpp  ../edge-detection/gray-scale.cpp ../edge-detection/skeleton.cpp ../edge-detection/threshold-edges.cpp 
+    )
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(caboodle ${OpenCV_LIBS})
