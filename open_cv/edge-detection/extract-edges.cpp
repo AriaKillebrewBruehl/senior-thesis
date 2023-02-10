@@ -41,7 +41,6 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     }
     assert(image.type() == 16);
 
-    std::cout << image.channels() << std::endl;
     int MAX_KERNEL_LENGTH = 15;
     cv::Mat src = image;
     // bilateral filter
