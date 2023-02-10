@@ -41,7 +41,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving,
     }
 
     if (saving) {
-        save(visual, pathDists, "-o-map-visual");
+        save(offsetMapSections, pathDists, "-o-map-visual");
     }
     if (lines) {
         return offsetMapLines;
