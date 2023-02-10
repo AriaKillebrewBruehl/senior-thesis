@@ -1,5 +1,8 @@
 ## Meeting Notes
 
+# 02/10
+  in color space seciton include something that isn't just 0s and 1s 
+
 # 01/27
 
 - dots 
