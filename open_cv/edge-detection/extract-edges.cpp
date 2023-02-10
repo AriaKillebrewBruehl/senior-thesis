@@ -33,24 +33,13 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
         return image;
     }
 
-    std::cout << image.type() << " " << type2str(image.type()) << std::endl;
     if (image.type() != 16) {
-        if (image.type() == 0) {
-            image.convertTo(image, CV_8UC3);
-            try {
-                if (image.type() != 16) {
-                    throw image.type();
-                }
-            } catch (int i) {
-                std::cout
-                    << "ERROR: Input image in sample must be of type 8UC3."
-                    << std::endl;
-                std::cout << "Input image is of type " << i
-                          << " and cannot be converted." << std::endl;
-                return image;
-            }
+        if (image.channels() != 3) {
+            cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
         }
+        image.convertTo(image, 16);
     }
+    assert(image.type() == 16);
 
     std::cout << image.channels() << std::endl;
     int MAX_KERNEL_LENGTH = 15;
