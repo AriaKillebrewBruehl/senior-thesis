@@ -15,12 +15,16 @@ cv::Mat invert(cv::Mat arr) {
     int numComps =
         cv::connectedComponentsWithStats(arr, labels, stats, centroids);
 
-    int i;
-    int j;
-    for (i = 0; i < labels.rows; i++) {
-        for (j = 0; j < labels.cols; j++) {
+    int i = -1;
+    int j = -1;
+    bool not_found = true;
+    while (i < labels.rows && not_found) {
+        i++;
+        while (j < labels.cols && not_found) {
+            j++;
             if (labels.at<int>(i, j) == 0) {
-                break;
+                std::cout << "hi" << std::endl;
+                not_found = false;
             }
         }
     }
