@@ -6,7 +6,6 @@
 
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
-#include "sampled-transform-2.hpp"
 #include "sampled-transform-seeds.hpp"
 
 cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
