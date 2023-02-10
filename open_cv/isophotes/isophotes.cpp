@@ -27,8 +27,6 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::Mat image = read(path, img);
     assert(!image.empty());
 
-    std::cout << type2str(16) << std::endl;
-
     if (image.type() != 16) {
         if (image.channels() != 3) {
             cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
