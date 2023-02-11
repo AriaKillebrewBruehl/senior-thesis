@@ -13,7 +13,9 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
 
     // step 0: generate seeds
     cv::Mat seeds = placeSeeds("", offsets, 6, true);
+    std::cout << "placed seeds" << std::endl;
 
+    // step 1: adjust seeds
     int t1 = 10;
     int t2 = 30;
     while (t1 || t2) {
@@ -50,9 +52,13 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
         //     std::cin >> c;
         // }
     }
+    std::cout << "adjusted seeds" << std::endl;
+
+    // step 2: size dots
+    cv::Mat rendered = placeDots(path, seeds, path, seeds, true);
 
     if (saving) {
-        save(seeds, path, "-adjusted");
+        save(rendered, path, "-rendered");
     }
-    return seeds;
+    return rendered;
 }
