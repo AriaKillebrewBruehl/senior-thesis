@@ -1,23 +1,5 @@
 #include "extract-edges.hpp"
 
-inline uchar reduceVal(const uchar val) {
-    if (val < 192) return uchar(val / 64.0 + 0.5) * 64;
-    return 255;
-}
-
-// return a grayscale version of the image with only the L component
-// TODO: change this to std::transform?
-cv::Mat processColors2(cv::Mat& img) {
-    cv::Mat gs = cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
-    for (int i = 0; i < img.rows; i++) {
-        for (int j = 0; j < img.cols; j++) {
-            uchar L = reduceVal(img.at<cv::Vec3b>(i, j)[0]);
-            gs.at<uchar>(i, j) = (L);
-        }
-    }
-    return gs;
-}
-
 cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     // read images and resize
     cv::Mat image;
@@ -46,7 +28,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
 
     // luminance quantization and create color frequency map
-    cv::Mat processed = processColors2(src);
+    cv::Mat processed = processColors(src);
 
     assert(processed.type() == 0);
     cv::Mat edges = cannyFilter(path, processed, true);
