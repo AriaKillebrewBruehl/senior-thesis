@@ -9,7 +9,6 @@ std::unordered_map<uchar, int> colors{};
 std::priority_queue<color_freq, std::vector<color_freq>, comp> heap;
 
 // return a grayscale version of the image with only the L component
-// TODO: change this to std::transform?
 cv::Mat processColors(cv::Mat& img) {
     cv::Mat gs = cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
     for (int i = 0; i < img.rows; i++) {
@@ -51,6 +50,11 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
 
     // generate heap
     for (std::pair<uchar, int> i : colors) {
+        std::cout << int(i.first) << " " << int(i.second) << std::endl;
+        if (i.second < 100) {
+            std::cout << "not including color" << std::endl;
+            continue;
+        }
         heap.push(i);
     }
     // take the top 1/thresh of colors
@@ -63,6 +67,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
         t = heap.top().first;
         heap.pop();
     }
+    std::cout << "t: " << int(t) << std::endl;
 
     // set all pixels >= t (lighter than t) to white
     for (int i = 0; i < processed.rows; i++) {
@@ -73,7 +78,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     }
 
     if (saving) {
-        save(processed, path, "-isos");
+        save(processed, path, "-highlights");
     }
 
     return processed;
