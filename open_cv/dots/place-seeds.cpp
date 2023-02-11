@@ -1,6 +1,6 @@
-#include "place-dots.hpp"
+#include "place-seeds.hpp"
 
-cv::Mat placeDots(std::string path, cv::Mat offsetMap, int d, bool saving) {
+cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving) {
     cv::Mat image;
     image = read(path, offsetMap);
 
@@ -28,7 +28,7 @@ cv::Mat placeDots(std::string path, cv::Mat offsetMap, int d, bool saving) {
     }
 
     if (saving) {
-        save(seeds, path, "-dots");
+        save(seeds, path, "-seeds");
     }
 
     return seeds;
