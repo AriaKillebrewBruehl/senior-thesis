@@ -2,13 +2,23 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.11.2023
+
+Next steps:
+
+- [ ] get going on sizing dots
+  - [ ] `s(x) = s_max ·(1−T (x))^γ`
+    - [ ] figure out what `s_max` should be
+    - if `T(x)` is the brightness of the area then do I need to pass in a CIEL\*a\*b\* image?
+    - [ ] figure out threshold for `s(x)` not being drawn
+    - [ ] rendering image as bigger than the input
+
 # 02.06.2023
 
 Thoughts before the end of the night:
 
-- [ ] in adjust figure out why seeds are ending up on the diagonal
-- [ ] in adjust get "cell divided by offset line working"
-  - [ ] need to pass in a distance map instead of an offset map? or at least the correct type of offset map
+- [x] in adjust figure out why seeds are ending up on the diagonal
+- [x] in adjust get "cell divided by offset line working"
 
 # 02.05.2023
 
