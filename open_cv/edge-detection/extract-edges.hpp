@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "../boiler-plate/invert.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
 #include "DoG.hpp"
