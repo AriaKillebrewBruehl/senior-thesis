@@ -3,24 +3,13 @@
 cv::Mat cannyFilter(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
-    try {
-        if (image.empty()) {
-            throw 0;
-        }
-    } catch (int i) {
-        std::cout << "ERROR: Could not read in image in cannyFilter." << std::endl;
-        return image;
-    }
+    assert(!image.empty());
 
-    try {
-        if (image.type() != 0) {
-            throw image.type();
+    if (image.type() != 0) {
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
         }
-    } catch (int t) {
-        std::cout << "ERROR: Input image to cannyFilter must be of type 8UC1." << std::endl;
-        std::cout << "ERROR: Provided image was of type " << type2str(t) << "." << std::endl;
-        cv::Mat empty;
-        return empty;
+        image.convertTo(image, 0);
     }
 
     cv::Mat dst, edges;
@@ -28,7 +17,7 @@ cv::Mat cannyFilter(std::string path, cv::Mat img, bool saving) {
     int threshold = 40;
     const int ratio = 3;
     const int kernel_size = 3;
-    
+
     dst.create(image.size(), image.type());
 
     float sigma = 0.33;
@@ -42,12 +31,6 @@ cv::Mat cannyFilter(std::string path, cv::Mat img, bool saving) {
 
     // apply Canny filter
     cv::Canny(edges, edges, lower, upper, kernel_size);
-
-    // cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3,3));
-    // cv::dilate(edges, edges, element, cv::Point(-1, -1), 2);
-
-//    dst = cv::Scalar::all(0);
-//    image.copyTo(dst, edges);
 
     if (saving) {
         save(edges, path, "-canny-thick");
