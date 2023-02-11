@@ -15,21 +15,11 @@ cv::Mat invert(cv::Mat arr) {
     int numComps =
         cv::connectedComponentsWithStats(arr, labels, stats, centroids);
 
-    int i = -1;
-    int j = -1;
-    bool not_found = true;
-    while (i < labels.rows && not_found) {
-        i++;
-        while (j < labels.cols && not_found) {
-            j++;
-            if (labels.at<int>(i, j) == 0) {
-                not_found = false;
-            }
-        }
-    }
+    int x = stats.at<int>(cv::Point(0, 0));
+    int y = stats.at<int>(cv::Point(1, 0));
 
     // background is black so invert
-    if (arr.at<int>(i, j) == 0) {
+    if (arr.at<int>(y, x) == 0) {
         cv::bitwise_not(arr, arr);
     }
 
