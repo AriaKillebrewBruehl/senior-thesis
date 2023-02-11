@@ -24,14 +24,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     image = read(path, img);
     cv::Mat correct;
 
-    try {
-        if (image.empty()) {
-            throw 0;
-        }
-    } catch (int i) {
-        std::cout << "ERROR: Could not read in image in sample." << std::endl;
-        return image;
-    }
+    assert(!image.empty());
 
     if (image.type() != 16) {
         if (image.channels() != 3) {
@@ -49,7 +42,6 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
         cv::bilateralFilter(src, dest, i, i * 2, i / 2);
         src = dest;
     }
-
     // convert image to CIE L*a*b
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
 
@@ -57,23 +49,29 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::Mat processed = processColors2(src);
 
     assert(processed.type() == 0);
-
     cv::Mat edges = cannyFilter(path, processed, true);
-
-    cv::Mat element =
-        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
 
     // extract edges via threshold
     cv::Mat extracted = threshold(path, edges, thresh, false);
 
-    // // morphological operations
-    cv::Mat morphed2;
-    extracted.convertTo(extracted, CV_8UC1);
-    cv::morphologyEx(extracted, morphed2, cv::MORPH_OPEN, element,
-                     cv::Point(-1, -1), 3);
+    // cv::Mat element =
+    //     cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
 
+    // // // morphological operations
+    // cv::Mat morphed2;
+    // if (extracted.type() != 0 || extracted.type() != 16) {
+    //     if (extracted.channels() == 3) {
+    //         extracted.convertTo(extracted, 16);
+    //     } else {
+    //         extracted.convertTo(extracted, 0);
+    //     }
+    // }
+    // cv::morphologyEx(extracted, morphed2, cv::MORPH_OPEN, element,
+    //                  cv::Point(-1, -1), 3);
+
+    cv::Mat inverted = invert(extracted);
     if (saving) {
-        save(morphed2, path, "-extracted-w-morph");
+        save(inverted, path, "-extracted");
     }
-    return extracted;
+    return inverted;
 }
