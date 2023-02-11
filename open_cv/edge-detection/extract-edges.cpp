@@ -28,7 +28,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::cvtColor(src, src, cv::COLOR_RGB2Lab);
 
     // luminance quantization and create color frequency map
-    cv::Mat processed = processColors(src);
+    cv::Mat processed = processColors(src, nullptr);
 
     assert(processed.type() == 0);
     cv::Mat edges = cannyFilter(path, processed, true);
