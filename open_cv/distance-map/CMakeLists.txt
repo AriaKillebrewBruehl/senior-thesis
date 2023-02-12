@@ -24,7 +24,9 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(tests tests.cpp fullMap.cpp offset-map.cpp sampled-transform-seeds.cpp sampled-transform-2.cpp distance-map2.cpp combine.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/invert.cpp)
+add_executable(tests tests.cpp 
+    fullMap.cpp offset-map.cpp sampled-transform-seeds.cpp distance-map2.cpp combine.cpp 
+    ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/invert.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(tests ${OpenCV_LIBS})
