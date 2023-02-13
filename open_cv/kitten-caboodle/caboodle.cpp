@@ -5,32 +5,57 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     image = read(path, img);
     assert(!image.empty());
 
-    // step 0: convert image to grayscale
-    if (image.type() != 0) {
-        if (image.channels() != 1) {
-            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
-        }
-        image.convertTo(image, CV_8UC1);
-        std::cout << "converted image to grayscale" << std::endl;
-    }
-
     // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges(path, image, 1000, true);
+    cv::Mat edges = extractEdges(path, image, 1000, false);
     if (edges.type() != 0) {
         edges.convertTo(edges, 0);
     }
+    save(edges, path, "-edges");
     std::cout << "extracted edges from image" << std::endl;
-
+    int c = 0;
+    while (!c) {
+        std::cout << "continue? 0/1" << std::endl;
+        system("pause");
+        std::cin >> c;
+    }
     // step 2: extract the isophotes of the image
-    cv::Mat isophotes = extractIsophotes(path, image, 150, 5, true);
+    cv::Mat isophotes = extractIsophotes(path, image, 10, 5, false);
     if (isophotes.type() != 0) {
         isophotes.convertTo(isophotes, 0);
     }
+    save(isophotes, path, "-isophotes");
     std::cout << "extracted isophotes from image" << std::endl;
-
+    c = 0;
+    while (!c) {
+        std::cout << "continue? 0/1" << std::endl;
+        system("pause");
+        std::cin >> c;
+    }
     // step 3: offset map
-    cv::Mat map = fullMap(path, edges, path, isophotes, saving);
-    std::cout << "extracted distance map from image" << std::endl;
+    cv::Mat map = fullMap(path, edges, path, isophotes, false);
+    save(map, path, "-offsetmap");
+    std::cout << "extracted offset map from image" << std::endl;
+
+    c = 0;
+    while (!c) {
+        std::cout << "continue? 0/1" << std::endl;
+        system("pause");
+        std::cin >> c;
+    }
+    // step 4: generate final dot placement
+    cv::Mat adjusted = dots(path, map, false);
+    save(adjusted, path, "-adjusted");
+    std::cout << "finalized dot placement for image" << std::endl;
+
+    // step 5: place circles!
+    c = 0;
+    while (!c) {
+        std::cout << "continue? 0/1" << std::endl;
+        system("pause");
+        std::cin >> c;
+    }
+    cv::Mat rendered = placeDots(path, adjusted, path, image, true);
+    std::cout << "sized dots" << std::endl;
 
     return map;
 }
