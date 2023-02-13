@@ -2,16 +2,40 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.12.2023
+
+:partying_face: :partying_face: :partying_face:
+
+What if you wanted to take this image:
+
+<p align = "center">
+<img src="./blog-images/dots/sphere.png" alt="drawing" width="200">
+</br>
+Fig.1 - A sphere!
+</p>
+
+and turn it into dots!!!! Well you can and it'd look like this:
+
+<p align = "center">
+<img src="./blog-images/dots/sphere-o-map-sections.png-adjusted.png-rendered.png" alt="drawing" width="200">
+</br>
+Fig.2 - A sphere made out of dots!
+</p>
+
+AHHHHHHHHHHHHHHHHHHHHHHHH
+
+I am having seg faults i've never had before and i have no idea why and its driving me crazy!!
+
 # 02.11.2023
 
 Next steps:
 
-- [ ] get going on sizing dots
-  - [ ] `s(x) = s_max ·(1−T (x))^γ`
-    - [ ] figure out what `s_max` should be
-    - if `T(x)` is the brightness of the area then do I need to pass in a CIEL\*a\*b\* image?
-    - [ ] figure out threshold for `s(x)` not being drawn
-    - [ ] rendering image as bigger than the input
+- [x] get going on sizing dots
+  - [x] `s(x) = s_max ·(1−T (x))^γ`
+    - [x] figure out what `s_max` should be
+    - [x] if `T(x)` is the brightness of the area then do I need to pass in a CIEL\*a\*b\* image?
+    - [x] figure out threshold for `s(x)` not being drawn
+    - [x] rendering image as bigger than the input
 
 # 02.06.2023
 
