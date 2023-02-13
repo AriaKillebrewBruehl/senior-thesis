@@ -6,8 +6,10 @@
 
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
+#include "../boiler-plate/CIEprocess.hpp"
 #include "../distance-map/fullMap.hpp"
 #include "../dots/dots.hpp"
+#include "../dots/place-dots.hpp"
 #include "../edge-detection/extract-edges.hpp"
 #include "../isophotes/extract-isophotes.hpp"
 
