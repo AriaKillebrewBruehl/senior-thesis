@@ -54,11 +54,8 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
     }
     std::cout << "adjusted seeds" << std::endl;
 
-    // step 2: size dots
-    cv::Mat rendered = placeDots(path, seeds, path, seeds, true);
-
     if (saving) {
-        save(rendered, path, "-rendered");
+        save(seeds, path, "-adjusted");
     }
-    return rendered;
+    return seeds;
 }
