@@ -13,11 +13,12 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     save(edges, path, "-edges");
     std::cout << "extracted edges from image" << std::endl;
     int c = 0;
-    while (!c) {
-        std::cout << "continue? 0/1" << std::endl;
-        system("pause");
-        std::cin >> c;
+    std::cout << "continue/quit? 0/1" << std::endl;
+    std::cin >> c;
+    if (!c) {
+        abort();
     }
+
     // step 2: extract the isophotes of the image
     cv::Mat isophotes = extractIsophotes(path, image, 10, 5, false);
     if (isophotes.type() != 0) {
@@ -26,10 +27,10 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     save(isophotes, path, "-isophotes");
     std::cout << "extracted isophotes from image" << std::endl;
     c = 0;
-    while (!c) {
-        std::cout << "continue? 0/1" << std::endl;
-        system("pause");
-        std::cin >> c;
+    std::cout << "continue/quit? 0/1" << std::endl;
+    std::cin >> c;
+    if (!c) {
+        abort();
     }
     // step 3: offset map
     cv::Mat map = fullMap(path, edges, path, isophotes, false);
@@ -37,10 +38,10 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     std::cout << "extracted offset map from image" << std::endl;
 
     c = 0;
-    while (!c) {
-        std::cout << "continue? 0/1" << std::endl;
-        system("pause");
-        std::cin >> c;
+    std::cout << "continue/quit? 0/1" << std::endl;
+    std::cin >> c;
+    if (!c) {
+        abort();
     }
     // step 4: generate final dot placement
     cv::Mat adjusted = dots(path, map, false);
@@ -49,10 +50,10 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
 
     // step 5: place circles!
     c = 0;
-    while (!c) {
-        std::cout << "continue? 0/1" << std::endl;
-        system("pause");
-        std::cin >> c;
+    std::cout << "continue/quit? 0/1" << std::endl;
+    std::cin >> c;
+    if (!c) {
+        abort();
     }
     cv::Mat rendered = placeDots(path, adjusted, path, image, true);
     std::cout << "sized dots" << std::endl;
