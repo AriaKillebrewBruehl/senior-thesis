@@ -2,6 +2,54 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.13.2023
+
+:partying_face: :partying_face: :partying_face: part 2
+
+I've gotten some great results running `caboodle` with people as input! I've found that maximum dot size makes a big difference.
+
+<p align = "center">
+<img src="./blog-images/rendered/cameron.png" alt="drawing" width="200">
+</br>
+Fig.1 - Cameron Diaz
+</br>
+<img src="./blog-images/rendered/cameron.png-6.png" alt="drawing" width="200">
+</br>
+Fig.2 - Rendering with maxSize = 6
+</br>
+<img src="./blog-images/rendered/cameron.png-rendered.png-10.png" alt="drawing" width="200">
+</br>
+Fig.3 - Rendering with maxSize = 10
+</br>
+<img src="./blog-images/rendered/cameron.png-12.png" alt="drawing" width="200">
+</br>
+Fig.4 - Rendering with maxSize = 12
+</br>
+<img src="./blog-images/rendered/marx.png" alt="drawing" width="200">
+</br>
+Fig.5 - What is a Reed thesis without Karl Marx?
+</br>
+<img src="./blog-images/rendered/marx.png-rendered.png" alt="drawing" width="200">
+</br>
+Fig.6 - Can't tell you because this thesis has Marx...
+</p>
+
+I definitely want to look into the hatching thing for dark areas, I think that will make a huge difference for rendering darker skin tones.
+
+<p align = "center">
+<img src="./blog-images/rendered/camron.png" alt="drawing" width="200">
+</br>
+Fig.7 - The rapper Cam'ron
+</br>
+<img src="./blog-images/rendered/camron.png-12.png" alt="drawing" width="200">
+</br>
+Fig.7 - Rendering with maxSize = 12
+</br>
+<img src="./blog-images/rendered/camron.png-20.png" alt="drawing" width="200">
+</br>
+Fig.7 - Rendering with maxSize = 20
+</p>
+
 # 02.12.2023
 
 :partying_face: :partying_face: :partying_face:
