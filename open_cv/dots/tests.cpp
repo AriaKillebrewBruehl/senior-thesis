@@ -6,8 +6,8 @@ int main(int argc, char **argv) {
     } else {
         for (int i = 1; i < argc; i += 2) {
             cv::Mat image;
-            // dots(argv[i], image, true);
-            placeDots(argv[i], image, argv[i + 1], image, true);
+            dots(argv[i], image, true);
+            // placeDots(argv[i], image, argv[i + 1], image, true);
         }
     }
 }
