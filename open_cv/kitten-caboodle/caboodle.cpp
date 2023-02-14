@@ -6,7 +6,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     assert(!image.empty());
 
     // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges(path, image, 1000, false);
+    cv::Mat edges = extractEdges(path, image, 300, false);
     if (edges.type() != 0) {
         edges.convertTo(edges, 0);
     }
