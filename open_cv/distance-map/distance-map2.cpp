@@ -25,8 +25,8 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
         isos.convertTo(isos, 0);
     }
 
-    cv::Mat edgedists = sample_seeds(edges, pathEdges, true, false);
-    cv::Mat isosdists = sample_seeds(isos, pathIsos, true, false);
+    cv::Mat edgedists = sample_seeds(edges, pathEdges, false, false);
+    cv::Mat isosdists = sample_seeds(isos, pathIsos, false, false);
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_32SC1);
 
