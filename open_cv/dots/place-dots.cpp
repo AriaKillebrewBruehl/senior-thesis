@@ -28,13 +28,13 @@ cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
     cv::Mat rendered = cv::Mat(image.rows * scale, image.cols * scale, CV_8UC1,
                                cv::Scalar(255));
     float gamma = 1.2;
-    int s_max = 6;
+    int s_max = 20;
     for (int i = 0; i < image.rows; i++) {
         for (int j = 0; j < image.cols; j++) {
             if (seeds.at<uchar>(i, j) == 0) {
                 float t = float(image.at<uchar>(i, j)) / 255.0;
                 float s = s_max * std::pow((1 - t), gamma);
-                if (s >= 1.5) {
+                if (s >= 1.0) {
                     cv::circle(rendered, cv::Point2d(j * scale, i * scale),
                                int(s), cv::Scalar(0), -1);
                 }
