@@ -60,7 +60,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
     cv::Mat centroids;
     int numComps =
         cv::connectedComponentsWithStats(image, labels, stats, centroids);
-    std::cout << "components found: " << numComps << std::endl;
+
     std::unordered_map<int, bool> remove;
     // for each component except the background
     for (int i = 1; i < stats.rows; i++) {
