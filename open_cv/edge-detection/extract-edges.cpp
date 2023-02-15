@@ -31,7 +31,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::Mat processed = processColors(src, nullptr);
 
     assert(processed.type() == 0);
-    cv::Mat edges = cannyFilter(path, processed, true);
+    cv::Mat edges = cannyFilter(path, processed, false);
 
     // extract edges via threshold
     cv::Mat extracted = threshold(path, edges, thresh, false);
@@ -52,6 +52,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     //                  cv::Point(-1, -1), 3);
 
     cv::Mat inverted = invert(extracted);
+
     if (saving) {
         save(inverted, path, "-extracted");
     }
