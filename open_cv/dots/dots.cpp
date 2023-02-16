@@ -12,7 +12,7 @@ cv::Mat dots(std::string path, cv::Mat img, bool saving) {
     }
 
     // step 0: generate seeds
-    cv::Mat seeds = placeSeeds("", offsets, 6, true);
+    cv::Mat seeds = placeSeeds("", offsets, 6, false);
 
     int t1 = 10;
     int t2 = 30;
