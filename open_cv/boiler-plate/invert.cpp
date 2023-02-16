@@ -8,6 +8,7 @@ cv::Mat invert(cv::Mat arr) {
         }
         arr.convertTo(arr, 0);
     }
+
     // get components
     cv::Mat labels;
     cv::Mat stats;
@@ -15,11 +16,10 @@ cv::Mat invert(cv::Mat arr) {
     int numComps =
         cv::connectedComponentsWithStats(arr, labels, stats, centroids);
 
-    int x = stats.at<int>(cv::Point(0, 0));
-    int y = stats.at<int>(cv::Point(1, 0));
-
+    int col = stats.at<int>(cv::CC_STAT_LEFT);
+    int row = stats.at<int>(cv::CC_STAT_TOP);
     // background is black so invert
-    if (arr.at<int>(y, x) == 0) {
+    if (arr.at<uchar>(row, col) == 0) {
         cv::bitwise_not(arr, arr);
     }
 
