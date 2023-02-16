@@ -24,16 +24,30 @@ cv::Mat cannyFilter(std::string path, cv::Mat img, bool saving) {
 
     double m = cv::mean(image)[0];
 
-    int lower = int(std::max(0.0, (1.0 - sigma) * m));
-    int upper = int(std::min(255.0, (1.0 + sigma) * m));
+    // int lower = int(std::max(0.0, (1.0 - sigma) * m));
+    // int upper = int(std::min(255.0, (1.0 + sigma) * m));
+    int lower = 75;
+    int upper = 125;
     // blur image to remove noise
     cv::blur(image, edges, cv::Size(3, 3));
 
     // apply Canny filter
     cv::Canny(edges, edges, lower, upper, kernel_size);
 
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2));
+    cv::morphologyEx(edges, edges, cv::MORPH_DILATE, element, cv::Point(-1, -1),
+                     2);
+    std::cout << type2str(edges.type()) << std::endl;
+    cv::medianBlur(edges, edges, 3);
+    // cv::Mat element2 =
+    //     cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
+    // cv::morphologyEx(edges, edges, cv::MORPH_OPEN, element2, cv::Point(-1,
+    // -1),
+    //                  8);
+
     if (saving) {
-        save(edges, path, "-canny-thick");
+        save(edges, path, "-canny-75-125-d2-m3");
     }
     return edges;
 }
