@@ -2,6 +2,41 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.16.2023
+
+
+
+Steps that need to be taken to go from current method to Son et. al
+
+- [ ] Change current edge detection to flow base line drawing from King et al. 
+  - [ ] This gives the tangential direction at each feature pixel 
+- [x] Finding isophotes 
+  - [ ] Add isophotes to the feature line map 
+- [ ] Determine direction vectors for while (non-feature) pixels with scattered data interpolation to the vectors at feature pixels 
+  - [ ] Multi level B-spline interpolation 
+    - [ ] Before this convert direction vectors to 2x2 structure tensors ate avoid cancel-our of opposite vectors 
+    - [ ] At non feature pixels an Eigen vector of the interpolated structure serves as the new direction vector 
+- [ ] Structure grid
+  - [ ] G is a vector-valued image (G: p -> (t0, t1)) where t0 and t1 denote the distances from pixel p to nearest grid lines measured along the two perpendicular local axes 
+    - [ ] D is desired interval between neighboring grid lines then ti in [0, d/2] reflects the periodic nature of the grid 
+      - [ ] Same interval is used in tangential and normal feature directions (default is d = 6)
+        - [ ] Stipple dots are located at (0, 0) and hatching lines are placed along (t0, 0) or (0, t1)
+  - [ ] G is constructed by running two passes to stripe pattern synthesis along tangential and normal feature directions 
+- [ ] Stripe pattern synthesis 
+  - [ ] Stripe pattern is synthesized via iterative refinement of the distance values in P through local optimization 
+
+
+
+Things I think could add 
+
+- [ ] Kang et al line drawing
+
+- [ ] Maybe try Gaussian smoothing the grayscale tone map T to reduce noise and avoid abrupt tone changes 
+
+- [ ] ###### Try pixel based dot rendering 
+
+
+
 # 02.13.2023
 
 :partying_face: :partying_face: :partying_face: part 2
@@ -401,20 +436,20 @@ Okay so basically jfa is super super slow if the image is larger.
 Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm
 
     image = read(img);
-
+    
     for (i < MAX_KERNEL_LENGTH) {
         apply bilateral filter to image;
     }
-
+    
     image = convert-to-CIELab;
-
+    
     // luminance quatization and remove a and b
     // now color in image represents luminance
     processColors(image);
-
+    
     image = grayscale(image);
     image = threshold(image);
-
+    
     return image;
 
 This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
@@ -508,34 +543,34 @@ Here is the final algorithm:
         set any pixel that is not equal to i to black;
         return isolated;
     }
-
+    
     threshold {
         read in image;
-
+    
         convert to binary;
-
+    
         cv::Mat labels;
         cv::Mat stats;
         cv::Mat centroids;
         int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids);
-
+    
         std::unordered_map<int, bool> remove;
-
+    
         for each component except the background  {
             comp = just the component;
             isolated = isolate(comp, i);
             skel = skeleton(isolated);
             remove[i] = !meetsThreshold(skel, theshhold);
         }
-
+    
         for each pixel in the labeled image {
             color = pixel;
-
+    
             if remove[color] {
                 pixel = 0;
             }
         }
-
+    
     }
 
 <p align = "center">
