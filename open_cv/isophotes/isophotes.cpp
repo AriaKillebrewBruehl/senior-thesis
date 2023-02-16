@@ -9,8 +9,11 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     assert(!image.empty());
 
     if (image.type() != 16) {
-        if (image.channels() != 3) {
+        if (image.channels() == 1) {
             cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
+        }
+        if (image.channels() == 4) {
+            cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
         }
         image.convertTo(image, 16);
     }
