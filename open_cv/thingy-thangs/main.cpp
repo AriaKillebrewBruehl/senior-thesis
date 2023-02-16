@@ -11,32 +11,36 @@ cv::Mat CIE(cv::Mat img) {
 }
 
 cv::Mat morphErode(cv::Mat img) {
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(4, 4));
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(4, 4));
     cv::morphologyEx(img, img, cv::MORPH_ERODE, element, cv::Point(-1, -1));
     return img;
 }
 
 cv::Mat morphDilate(cv::Mat img) {
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(4, 4));
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(4, 4));
     cv::morphologyEx(img, img, cv::MORPH_DILATE, element, cv::Point(-1, -1));
     return img;
 }
 
 cv::Mat morphOpen(cv::Mat img) {
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
     cv::morphologyEx(img, img, cv::MORPH_OPEN, element, cv::Point(-1, -1));
     return img;
 }
 
 cv::Mat morphClose(cv::Mat img) {
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+    cv::Mat element =
+        cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
     cv::morphologyEx(img, img, cv::MORPH_CLOSE, element, cv::Point(-1, -1));
     return img;
 }
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-         std::cerr << "Must pass in image to run DoG on." << std::endl;
+        std::cerr << "Must pass in image to run DoG on." << std::endl;
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
