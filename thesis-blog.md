@@ -6,6 +6,41 @@
 
 
 
+Kang et al. steps
+
+- [ ] For each pixel-centered kernel 
+
+  - [ ] Perform a nonlinear vector smoothing such that the salient edge directions are preserved while weak edges are directed to follow the neighboring dominant ones 
+
+    - [ ] To preserve sharp corners encourage smoothing among the edges with similar orientations 
+
+  - [ ] $t^{new}(x) = \frac{1}{k} \sum_{y \in \Omega(x)} \phi(x, y)t^{cur}(y)w_s(w, y)w_m(x, y)w_d(x,y)$
+
+    - [ ] $\Omega(x)$ denotes the neighborhood of $x$
+
+    - [ ] $k$ is the vector normalizing term 
+
+    - [ ] Spatial weight function $w_s(x, y) = 1$ if $||x-y|| < r$, $0$ otherwise
+
+      - [ ] Radially symmetric box filter of radius $r$ where $r$ is the radius of the kernel $\Omega$ 
+
+    - [ ] $w_m$ is the magnitude weight function $w_m(x, y) = \frac{1}{2}(1 + tanh[upeta \cdot (\hat{g}(y) - \hat{g}(x))])$
+
+      - [ ] $\hat{g](z)}$ is the normalized gradient magnitude at $z$ and $\upeta$ control the fall-off rate 
+        - [ ] They set $\upeta = 1$
+
+    - [ ] $w_d$ if the direction weight function $w_d(x, y) =| t^{cur}(x) \cdot t^{cur}(y)|$ where $t^{cur}(z)$ denotes the current normalized tangent vector at $z$ 
+
+      - [ ] Reverse the direction of $t^{cur}(y)$ before smoothing using the sign function $\phi(x, y) \in {1, -1}$
+
+        - [ ] $\phi(x, y) = 1$ if $t^{cur}(x) \cdot t^{cur}(y) >0, -1$ otherwise
+
+         
+
+  - [ ] $t^0(x)$ is obtained by taking perpendicular vectors from the initial gradient map $g^0(x)$ of the input image 
+    - [ ] Normalized before use 
+    - [ ] $g^0(x)$ is computed by employing Sobel operator 
+
 Steps that need to be taken to go from current method to Son et. al
 
 - [ ] Change current edge detection to flow base line drawing from King et al. 
