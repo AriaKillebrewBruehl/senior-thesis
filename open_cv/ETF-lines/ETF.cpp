@@ -12,4 +12,9 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         }
         image.convertTo(image, 0);
     }
+
+    if (saving) {
+        save(image, path, "-ETF");
+    }
+    return image;
 }
