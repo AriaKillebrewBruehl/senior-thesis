@@ -45,7 +45,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
         }
     }
     // step 3: offset map
-    cv::Mat map = fullMap(path, edges, path, isophotes, false);
+    cv::Mat map = fullMap(path, edges, path, isophotes, 6.0, false);
     save(map, path, "-offsetmap");
     std::cout << "extracted offset map from image" << std::endl;
 
