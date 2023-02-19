@@ -32,5 +32,14 @@ add_executable(caboodle caboodle.cpp
     ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/extract-edges.cpp  ../edge-detection/gray-scale.cpp ../edge-detection/skeleton.cpp ../edge-detection/threshold-edges.cpp 
     )
 
+add_executable(caboodle2 caboodle2.cpp 
+    ../boiler-plate/invert.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/CIEprocess.cpp
+    ../distance-map/distance-map2.cpp ../distance-map/fullMap.cpp  ../distance-map/sampled-transform-seeds.cpp ../distance-map/offset-map.cpp
+    ../dots/adjust-cells.cpp ../dots/dots.cpp ../dots/place-dots.cpp ../dots/place-seeds.cpp
+    ../isophotes/extract-isophotes.cpp ../isophotes/isophotes.cpp 
+    ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/extract-edges.cpp  ../edge-detection/gray-scale.cpp ../edge-detection/skeleton.cpp ../edge-detection/threshold-edges.cpp 
+    )
+
 # tell it to link the executable target against OpenCV
 target_link_libraries(caboodle ${OpenCV_LIBS})
+target_link_libraries(caboodle2 ${OpenCV_LIBS})
