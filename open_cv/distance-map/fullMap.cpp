@@ -1,7 +1,7 @@
 #include "fullMap.hpp"
 
 cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
-                cv::Mat imgIsos, bool saving) {
+                cv::Mat imgIsos, float l, bool saving) {
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
@@ -34,6 +34,6 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
 
     cv::Mat distances =
         distanceMap("", inverted_edges, "", inverted_isos, false);
-    cv::Mat oMap = offsetMap(pathEdges, distances, saving, false);
+    cv::Mat oMap = offsetMap(pathEdges, distances, 6.0, saving, false);
     return oMap;
 }

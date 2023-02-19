@@ -14,4 +14,4 @@ then returns an offset map with a white background and offset lines of color
 corrsponding to the line's id
 */
 cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
-                cv::Mat imgIsos, bool saving);
+                cv::Mat imgIsos, float l, bool saving);

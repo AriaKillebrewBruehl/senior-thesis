@@ -14,5 +14,5 @@
     an offset map with black offset lines and sections of color corresponding to
     the section id.
 */
-cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, bool saving,
+cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, float l, bool saving,
                   bool lines);
