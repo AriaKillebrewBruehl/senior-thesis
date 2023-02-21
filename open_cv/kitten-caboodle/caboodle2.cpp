@@ -65,6 +65,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+SET_UP:
     for (;;) {
         cv::imshow("Hedcut Demo - Initial Input", image);
         char key = (char)cv::waitKey(0);
@@ -104,6 +105,9 @@ EDGE_EXTRACTION:
         if (key == 27) {
             return EXIT_SUCCESS;
         }
+        if (key == 'b' || key == 'B') {
+            goto SET_UP;
+        }
         if (key == 'n' || key == 'N') {
             goto ISOPHOTE_DETECTION;
         }
@@ -141,6 +145,9 @@ ISOPHOTE_DETECTION:
         if (key == 27) {
             return EXIT_SUCCESS;
         }
+        if (key == 'b' || key == 'B') {
+            goto EDGE_EXTRACTION;
+        }
         if (key == 'n' || key == 'N') {
             goto ISOPHOTE_EXTRACTION;
         }
@@ -176,6 +183,9 @@ ISOPHOTE_EXTRACTION:
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            goto ISOPHOTE_DETECTION;
         }
         if (key == 'n' || key == 'N') {
             goto OFFSET_MAP;
@@ -214,6 +224,9 @@ OFFSET_MAP:
         if (key == 27) {
             return EXIT_SUCCESS;
         }
+        if (key == 'b' || key == 'B') {
+            goto ISOPHOTE_EXTRACTION;
+        }
         if (key == 'n' || key == 'N') {
             goto ADJUST_DOTS;
         }
@@ -246,6 +259,9 @@ ADJUST_DOTS:
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            goto OFFSET_MAP;
         }
         if (key == 'n' || 'N') {
             goto PLACE_CIRCLES;
@@ -281,6 +297,9 @@ PLACE_CIRCLES:
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            goto ADJUST_DOTS;
         }
         if (key == 's' || key == 'S') {
             save(rendered, image_path, "-rendered");
