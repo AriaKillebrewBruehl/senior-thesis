@@ -99,6 +99,7 @@ EDGE_EXTRACTION:
     cv::Mat edges;
     int thresh = 300;
     edges = extractEdges("", image, thresh, false);
+    cv::destroyWindow("Hedcut Demo - Initial Input");
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -106,6 +107,7 @@ EDGE_EXTRACTION:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Extracted Edges");
             goto SET_UP;
         }
         if (key == 'n' || key == 'N') {
@@ -139,6 +141,7 @@ ISOPHOTE_DETECTION:
     cv::Mat isophotes;
     thresh = 5;
     isophotes = getIsophotes("", image, thresh, true);
+    cv::destroyWindow("Hedcut Demo - Extracted Edges");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -146,6 +149,7 @@ ISOPHOTE_DETECTION:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Detected Isophotes");
             goto EDGE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
@@ -178,6 +182,7 @@ ISOPHOTE_EXTRACTION:
     cv::Mat isophotes_extracted;
     thresh = 50;
     cv::Mat map = extractEdges("", isophotes, thresh, false);
+    cv::destroyWindow("Hedcut Demo - Detected Isophotes");
     cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -185,6 +190,7 @@ ISOPHOTE_EXTRACTION:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'n' || key == 'N') {
@@ -218,6 +224,7 @@ OFFSET_MAP:
     cv::Mat offset_map;
     float l = 6.0;
     offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
+    cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     cv::imshow("Hedcut Demo - Offset Map", offset_map);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -225,6 +232,7 @@ OFFSET_MAP:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Offset Map");
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
@@ -254,6 +262,7 @@ ADJUST_DOTS:
            "'S'/ 's' to save current image.\nPress 'ESC' to exit program.\n";
     cv::Mat adjusted_dots;
     adjusted_dots = dots("", offset_map, false);
+    cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -261,6 +270,7 @@ ADJUST_DOTS:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Adjusted Dots");
             goto OFFSET_MAP;
         }
         if (key == 'n' || 'N') {
@@ -292,6 +302,7 @@ PLACE_CIRCLES:
     cv::Mat rendered;
     int max_size = 12;
     rendered = placeDots("", adjusted_dots, "", image, max_size, false);
+    cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -299,6 +310,7 @@ PLACE_CIRCLES:
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Rendered");
             goto ADJUST_DOTS;
         }
         if (key == 's' || key == 'S') {
