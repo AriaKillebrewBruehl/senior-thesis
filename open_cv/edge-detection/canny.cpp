@@ -38,7 +38,6 @@ cv::Mat cannyFilter(std::string path, cv::Mat img, bool saving) {
         cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2));
     cv::morphologyEx(edges, edges, cv::MORPH_DILATE, element, cv::Point(-1, -1),
                      2);
-    std::cout << type2str(edges.type()) << std::endl;
     cv::medianBlur(edges, edges, 3);
     // cv::Mat element2 =
     //     cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
