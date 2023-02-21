@@ -70,10 +70,12 @@ int main(int argc, char** argv) {
     cv::Mat isophotes;
     cv::Mat isophotes_extracted;
     cv::Mat offset_map;
+    cv::Mat offset_map_display;
     cv::Mat adjusted_dots;
     cv::Mat rendered;
-
     int thresh;
+    float l;
+    int max_size;
 
 SET_UP : {
     for (;;) {
@@ -191,7 +193,7 @@ ISOPHOTE_EXTRACTION : {
            "'S' / 's' to save current image.\nPress 'ESC' to exit program.\n";
 
     thresh = 50;
-    cv::Mat map = extractEdges("", isophotes, thresh, false);
+    isophotes_extracted = extractEdges("", isophotes, thresh, false);
     cv::destroyWindow("Hedcut Demo - Detected Isophotes");
     cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
@@ -223,7 +225,8 @@ ISOPHOTE_EXTRACTION : {
         cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     }
 }
-OFFSET_MAP:
+
+OFFSET_MAP : {
     std::cout << "Beginning offset map proccess\nPress 'L' / 'l' to "
                  "increase / decrease offset lane distance by 0.5 px "
                  "(initial value is 6.0 px).\nPress 'N' / 'n' to move to dot "
@@ -231,10 +234,12 @@ OFFSET_MAP:
                  "Press 'S'/ 's' to save current image.\nPress 'ESC' to exit "
                  "program.\n ";
 
-    float l = 6.0;
+    l = 6.0;
     offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
-    cv::imshow("Hedcut Demo - Offset Map", offset_map);
+    offset_map.convertTo(offset_map_display, CV_16SC1);
+    std::cout << type2str(offset_map.type()) << offset_map.type() << std::endl;
+    cv::imshow("Hedcut Demo - Offset Map", offset_map_display);
     for (;;) {
         char key = (char)cv::waitKey(0);
         if (key == 27) {
@@ -261,10 +266,12 @@ OFFSET_MAP:
             thresh += 0.25;
         }
         offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
-        cv::imshow("Hedcut Demo - Offset Map", offset_map);
+        offset_map.convertTo(offset_map_display, CV_16SC1);
+        cv::imshow("Hedcut Demo - Offset Map", offset_map_display);
     }
+}
 
-ADJUST_DOTS:
+ADJUST_DOTS : {
     std::cout
         << "Beginning dot adjusting process.\nPress 'N' / 'n' to move to  "
            "circle placement. \nPress 'R' to reset values at any step.\nPress "
@@ -301,14 +308,16 @@ ADJUST_DOTS:
         adjusted_dots = dots("", offset_map, false);
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
+}
 
-PLACE_CIRCLES:
+PLACE_CIRCLES : {
     std::cout
         << "Beginning circle placement process.\nPress 'D' / 'd' to "
            "increase / decrease maximum circle size by 1 (initial value is "
            "12 px).\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
            "save current image.\nPress 'ESC' to exit program.\n";
-    int max_size = 20;
+
+    max_size = 20;
     rendered = placeDots("", adjusted_dots, "", image, max_size, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
@@ -340,5 +349,6 @@ PLACE_CIRCLES:
         rendered = placeDots("", adjusted_dots, "", image, max_size, false);
         cv::imshow("Hedcut Demo - Rendered", rendered);
     }
+}
     return EXIT_SUCCESS;
 }
