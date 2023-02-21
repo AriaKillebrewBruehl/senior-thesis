@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
                  "any step\n";
     parser.printMessage();
 
-    // 1) read in input image
+    // 1) read in input
     cv::Mat image;
     bool go = parser.get<bool>("go");
     cv::String image_path = parser.get<cv::String>("@input");
@@ -65,11 +65,20 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-SET_UP:
+    // setup variables
+    cv::Mat edges;
+    cv::Mat isophotes;
+    cv::Mat isophotes_extracted;
+    cv::Mat offset_map;
+    cv::Mat adjusted_dots;
+    cv::Mat rendered;
+
+    int thresh;
+
+SET_UP : {
     for (;;) {
         cv::imshow("Hedcut Demo - Initial Input", image);
         char key = (char)cv::waitKey(0);
-        std::cout << key << std::endl;
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -86,18 +95,18 @@ SET_UP:
             goto EDGE_EXTRACTION;
         }
     }
+}
 
 // 2) loop over edge detection, allow tuning of threshold paramenter
-EDGE_EXTRACTION:
+EDGE_EXTRACTION : {
     std::cout
         << "Beginning edge detection proccess\nPress 'T' / 't'to increase / "
            "decrease threshold parameter by 25 px for edge detection (initial "
            "value is 300 px).\nPress 'N' / 'n' to move to isophote detection "
            "step.\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
-           "save current image.\nPress 'ESC' to exit program.";
+           "save current image.\nPress 'ESC' to exit program.\n";
 
-    cv::Mat edges;
-    int thresh = 300;
+    thresh = 300;
     edges = extractEdges("", image, thresh, false);
     cv::destroyWindow("Hedcut Demo - Initial Input");
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
@@ -129,16 +138,16 @@ EDGE_EXTRACTION:
         edges = extractEdges("", image, thresh, false);
         cv::imshow("Hedcut Demo - Extracted Edges", edges);
     }
-
+}
 // 3) accept edge image and being isophotes, allow tuning of portion of
-ISOPHOTE_DETECTION:
+ISOPHOTE_DETECTION : {
     std::cout
         << "Beginning isophote detection proccess\nPress 'I' / 'i' to increase "
            "/ decrease fraction of isophotes taken to 1/n (initial "
            "value is 1/5).\nPress 'N' / 'n' to move to isophote extraction "
            "step.\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
            "save current image.\nPress 'ESC' to exit program.\n ";
-    cv::Mat isophotes;
+
     thresh = 5;
     isophotes = getIsophotes("", image, thresh, true);
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
@@ -171,15 +180,16 @@ ISOPHOTE_DETECTION:
         isophotes = getIsophotes("", image, thresh, false);
         cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     }
+}
 
-ISOPHOTE_EXTRACTION:
+ISOPHOTE_EXTRACTION : {
     std::cout
         << "Beginning isophote extraction proccess\nPress 'T' / 't' to "
            "increase / decrease threshold parameter by 10 px for edge "
            "detection (initial value is 50 px).\nPress 'N' / 'n' to move to"
            " offsetmap step.\nPress 'R' to reset values at any step.\nPress "
            "'S' / 's' to save current image.\nPress 'ESC' to exit program.\n";
-    cv::Mat isophotes_extracted;
+
     thresh = 50;
     cv::Mat map = extractEdges("", isophotes, thresh, false);
     cv::destroyWindow("Hedcut Demo - Detected Isophotes");
@@ -212,7 +222,7 @@ ISOPHOTE_EXTRACTION:
         cv::Mat map = extractEdges("", isophotes, thresh, false);
         cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     }
-
+}
 OFFSET_MAP:
     std::cout << "Beginning offset map proccess\nPress 'L' / 'l' to "
                  "increase / decrease offset lane distance by 0.5 px "
@@ -221,7 +231,6 @@ OFFSET_MAP:
                  "Press 'S'/ 's' to save current image.\nPress 'ESC' to exit "
                  "program.\n ";
 
-    cv::Mat offset_map;
     float l = 6.0;
     offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
@@ -260,7 +269,7 @@ ADJUST_DOTS:
         << "Beginning dot adjusting process.\nPress 'N' / 'n' to move to  "
            "circle placement. \nPress 'R' to reset values at any step.\nPress "
            "'S'/ 's' to save current image.\nPress 'ESC' to exit program.\n";
-    cv::Mat adjusted_dots;
+
     adjusted_dots = dots("", offset_map, false);
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
@@ -299,8 +308,7 @@ PLACE_CIRCLES:
            "increase / decrease maximum circle size by 1 (initial value is "
            "12 px).\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
            "save current image.\nPress 'ESC' to exit program.\n";
-    cv::Mat rendered;
-    int max_size = 12;
+    int max_size = 20;
     rendered = placeDots("", adjusted_dots, "", image, max_size, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
