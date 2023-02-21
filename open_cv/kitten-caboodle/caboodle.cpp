@@ -71,7 +71,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
             abort();
         }
     }
-    cv::Mat rendered = placeDots(path, adjusted, path, image, true);
+    cv::Mat rendered = placeDots(path, adjusted, path, image, 12, true);
     std::cout << "sized dots" << std::endl;
 
     cv::Mat bigEdges = cv::Mat(rendered.size(), CV_8UC1, cv::Scalar(255));
