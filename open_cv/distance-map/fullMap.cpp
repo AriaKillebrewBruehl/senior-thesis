@@ -6,7 +6,6 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
     assert(!edges.empty());
-    // assert(edges.depth() == 0);
 
     cv::Mat inverted_edges = invert(edges);
 
