@@ -50,7 +50,7 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
 
     seed_map map = generate_map(dists_w_seeds);
 
-    cv::Mat adjusted = cv::Mat(dists_w_seeds.rows, dists_w_seeds.cols, CV_32SC1,
+    cv::Mat adjusted = cv::Mat(dists_w_seeds.rows, dists_w_seeds.cols, CV_8UC1,
                                cv::Scalar(255));
     for (auto const &pair : map) {
         int32_t seed_row = pair.first.first;
@@ -99,7 +99,7 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         // std::cout << "final row: " << final_row << " final col: " <<
         // final_col
         //           << std::endl;
-        adjusted.at<int32_t>(final_row, final_col) = 0;
+        adjusted.at<uchar>(final_row, final_col) = uchar(0);
     }
     if (saving) {
         save(adjusted, path_offset, "-new-dots");

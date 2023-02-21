@@ -13,7 +13,7 @@ cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving) {
     }
 
     // blank map for seed pixels
-    cv::Mat seeds = cv::Mat(image.rows, image.cols, CV_32SC1, cv::Scalar(255));
+    cv::Mat seeds = cv::Mat(image.rows, image.cols, CV_8UC1, cv::Scalar(255));
     srand(time(0));
     for (int i = 0; i < image.rows; i++) {
         for (int j = 0; j < image.cols; j++) {
@@ -21,7 +21,7 @@ cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving) {
             if (image.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
                 if (r <= 1 / double(d * d)) {
-                    seeds.at<int32_t>(i, j) = 0;
+                    seeds.at<uchar>(i, j) = uchar(0);
                 }
             }
         }
