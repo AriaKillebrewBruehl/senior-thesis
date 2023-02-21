@@ -5,4 +5,4 @@
 #include "../boiler-plate/read-save.hpp"
 
 cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
-                  cv::Mat imagOrig, bool saving);
+                  cv::Mat imagOrig, int s_max, bool saving);

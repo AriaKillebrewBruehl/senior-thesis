@@ -1,7 +1,7 @@
 #include "place-dots.hpp"
 
 cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
-                  cv::Mat imgOrig, bool saving) {
+                  cv::Mat imgOrig, int s_max, bool saving) {
     cv::Mat seeds = read(pathSeeds, imgSeeds);
     assert(!seeds.empty());
 
@@ -28,7 +28,6 @@ cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
     cv::Mat rendered = cv::Mat(image.rows * scale, image.cols * scale, CV_8UC1,
                                cv::Scalar(255));
     float gamma = 1.2;
-    int s_max = 20;
     for (int i = 0; i < image.rows; i++) {
         for (int j = 0; j < image.cols; j++) {
             if (seeds.at<uchar>(i, j) == 0) {
