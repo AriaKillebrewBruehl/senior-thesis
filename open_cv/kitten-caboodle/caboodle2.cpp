@@ -65,6 +65,10 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    if (image.channels() == 4) {
+        cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
+    }
+
     // setup variables
     cv::Mat edges;
     cv::Mat isophotes;
@@ -278,6 +282,7 @@ ADJUST_DOTS : {
            "'S'/ 's' to save current image.\nPress 'ESC' to exit program.\n";
 
     adjusted_dots = dots("", offset_map, false);
+    std::cout << "Finished adjusting dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
@@ -306,6 +311,7 @@ ADJUST_DOTS : {
         // //     thresh += 0.25;
         // }
         adjusted_dots = dots("", offset_map, false);
+        std::cout << "Finished adjusting dots" << std::endl;
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
