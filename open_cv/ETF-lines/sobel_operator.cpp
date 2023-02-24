@@ -1,6 +1,6 @@
 #include "sobel_operator.hpp"
 
-g0 sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
+cv::Mat sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
     assert(!image.empty());
@@ -40,29 +40,25 @@ g0 sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     cv::convertScaleAbs(grad_x, grad_x);
     cv::convertScaleAbs(grad_y, grad_y);
 
-    cv::Mat g_zero = cv::Mat(grad_x.size(), );
-    cv::Mat sobelMagnitude = cv::Mat::zeros(grad_x.size(), CV_16FC1);
-    cv::Mat sobelAngles = cv::Mat::zeros(grad_x.size(), CV_16FC1);
+    cv::Mat g_zero = cv::Mat(grad_x.size(), CV_8UC2);
+    // cv::Mat sobelMagnitude = cv::Mat::zeros(grad_x.size(), CV_16FC1);
+    // cv::Mat sobelAngles = cv::Mat::zeros(grad_x.size(), CV_16FC1);
     for (int i = 0; i < grad_x.rows; i++) {
         for (int j = 0; j < grad_x.cols; j++) {
             float x = (float)grad_x.at<uchar>(i, j);
             float y = (float)grad_y.at<uchar>(i, j);
             float mag = sqrt(x * x + y * y);
-            sobelMagnitude.at<float16_t>(i, j) = mag;
+            g_zero.at<cv::Vec2b>(i, j)[0] = mag;
             float theta = atan(y / x);
-            sobelAngles.at<float16_t>(i, j) = theta;
+            g_zero.at<cv::Vec2b>(i, j)[1] = theta;
         }
     }
 
-    g_zero.magnitudes = sobelMagnitude;
-    g_zero.directions = sobelAngles;
-
     if (saving) {
-        save(sobelMagnitude, path, "-sobel-magnitude");
-        save(sobelAngles, path, "-sobel-angles");
+        save(g_zero, path, "-sobel-mag-dir");
     }
 
-    std::cout << sobelMagnitude << std::endl << std::endl;
-    std::cout << sobelAngles << std::endl << std::endl;
+    std::cout << g_zero << std::endl << std::endl;
+
     return g_zero;
 }
