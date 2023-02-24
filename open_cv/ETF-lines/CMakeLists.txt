@@ -24,9 +24,10 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(tests tests.cpp 
-    extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp
+add_executable(a tests.cpp 
+     sobel_operator.cpp
      ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/invert.cpp ../boiler-plate/CIEprocess.cpp)
-
+add_executable(sobel Sobel.cpp)
 # tell it to link the executable target against OpenCV
-target_link_libraries(tests ${OpenCV_LIBS})
+target_link_libraries(a ${OpenCV_LIBS})
+target_link_libraries(sobel ${OpenCV_LIBS})
