@@ -25,23 +25,25 @@ int phi(cv::Mat T, cv::Point2d x, cv::Point2d y) {
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat Tcur, int r, int u, int k) {
-    cv::Mat Gnew = sobel_mag_angle("", Tcur, false);
-    cv::Mat Tnew = cv::Mat::zeros(Tcur.size(), Tcur.type());
-    for (int i = 0; i < Tcur.rows; i++) {
-        for (int j = 0; j < Tcur.rows; j++) {
+cv::Mat ETFFilter(cv::Mat tCur, int r, int u, int k) {
+    cv::Mat gNew = sobel_mag_angle("", tCur, false);
+    cv::Mat tNew = cv::Mat::zeros(tCur.size(), tCur.type());
+    for (int i = 0; i < tCur.rows; i++) {
+        for (int j = 0; j < tCur.rows; j++) {
             float sum;
             // for each pixel in the neighborhood
-            int p = phi(Tcur, cv::Point(i, j), cv::Point(i, j));
+            // since gHat is normalized we only need the direction
+            uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
+            int p = phi(tCur, cv::Point(i, j), cv::Point(i, j));
             int s = ws(cv::Point(i, j), cv::Point(i, j), r);
             float m = wm(cv::Point(i, j), cv::Point(i, j), u);
-            int d = wd(Tcur, cv::Point(i, j), cv::Point(i, j));
-            sum += p * Tcur.at<int>(i, j) * s * m * d;
+            int d = wd(tCur, cv::Point(i, j), cv::Point(i, j));
+            sum += p * tCur.at<int>(i, j) * s * m * d;
             sum *= 1 / k;
-            Tnew.at<int>(i, j) = sum;
+            tNew.at<int>(i, j) = sum;
         }
     }
-    return Tnew;
+    return tNew;
 }
 
 cv::Vec2b perpendicular_normalize(cv::Vec2b g) {
