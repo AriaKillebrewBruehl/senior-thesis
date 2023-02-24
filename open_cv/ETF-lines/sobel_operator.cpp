@@ -1,6 +1,6 @@
 #include "sobel_operator.hpp"
 
-cv::Mat sobel_operator(std::string path, cv::Mat img, bool saving) {
+g0 sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
     assert(!image.empty());
@@ -21,8 +21,6 @@ cv::Mat sobel_operator(std::string path, cv::Mat img, bool saving) {
     int ksize = 1;
     int scale = 1;
     int delta = 0;
-    cv::Mat sobelMagnitude;
-    cv::Mat sobelAngles;
 
     // Remove noise by blurring with a Gaussian filter ( kernel size = 3 )
     cv::GaussianBlur(image, src, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
@@ -36,27 +34,35 @@ cv::Mat sobel_operator(std::string path, cv::Mat img, bool saving) {
     // get gradient in y direction
     cv::Sobel(src_gray, grad_y, ddepth, 0, 1, ksize, scale, delta,
               cv::BORDER_DEFAULT);
-    std::cout << type2str(grad_x.type()) << std::endl;
+    std::cout << grad_x << std::endl;
+    std::cout << grad_y << std::endl;
     // converting back to CV_8U
-    // cv::convertScaleAbs(grad_x, abs_grad_x);
-    // cv::convertScaleAbs(grad_y, abs_grad_y);
+    cv::convertScaleAbs(grad_x, grad_x);
+    cv::convertScaleAbs(grad_y, grad_y);
 
+    cv::Mat g_zero = cv::Mat(grad_x.size(), );
     cv::Mat sobelMagnitude = cv::Mat::zeros(grad_x.size(), CV_16FC1);
     cv::Mat sobelAngles = cv::Mat::zeros(grad_x.size(), CV_16FC1);
     for (int i = 0; i < grad_x.rows; i++) {
         for (int j = 0; j < grad_x.cols; j++) {
-            float x = (float)grad_x.at<int32_t>(i, j);
-            float y = (float)grad_y.at<int32_t>(i, j);
+            float x = (float)grad_x.at<uchar>(i, j);
+            float y = (float)grad_y.at<uchar>(i, j);
             float mag = sqrt(x * x + y * y);
             sobelMagnitude.at<float16_t>(i, j) = mag;
             float theta = atan(y / x);
             sobelAngles.at<float16_t>(i, j) = theta;
         }
     }
-    cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+
+    g_zero.magnitudes = sobelMagnitude;
+    g_zero.directions = sobelAngles;
 
     if (saving) {
-        save(grad, path, "-sobel");
+        save(sobelMagnitude, path, "-sobel-magnitude");
+        save(sobelAngles, path, "-sobel-angles");
     }
-    return grad;
+
+    std::cout << sobelMagnitude << std::endl << std::endl;
+    std::cout << sobelAngles << std::endl << std::endl;
+    return g_zero;
 }
