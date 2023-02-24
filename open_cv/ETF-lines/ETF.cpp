@@ -26,6 +26,7 @@ int phi(cv::Mat T, cv::Point2d x, cv::Point2d y) {
 }
 
 cv::Mat ETFFilter(cv::Mat Tcur, int r, int u, int k) {
+    cv::Mat Gnew = sobel_mag_angle("", Tcur, false);
     cv::Mat Tnew = cv::Mat::zeros(Tcur.size(), Tcur.type());
     for (int i = 0; i < Tcur.rows; i++) {
         for (int j = 0; j < Tcur.rows; j++) {
@@ -43,6 +44,13 @@ cv::Mat ETFFilter(cv::Mat Tcur, int r, int u, int k) {
     return Tnew;
 }
 
+cv::Vec2b perpendicular_normalize(cv::Vec2b g) {
+    cv::Vec2b t;
+    t[0] = g[0] + M_PI_2;
+    t[1] = 1;
+    return t;
+}
+
 cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     cv ::Mat image;
     image = read(path, img);
@@ -56,11 +64,15 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         image.convertTo(image, CV_8UC3);
     }
 
-    g0 g_zero;
-    g_zero = sobel_mag_angle(path, image, false);
-    
-    // calculate t0
-    // calculate g0 with a sobel operator
+    // initial gradient map
+    // g0<cv::Vec2b>.at(i,j)[0] gives magnitude of the vector at (i, j)
+    // g0<cv::Vec2b>.at(i,j)[1] gives direction of the vector at (i, j)
+    cv::Mat g0 = sobel_mag_angle(path, image, false);
+
+    // calculate t0 by taking perpendicular vectors (CC) from g0
+    cv::Mat t0 = cv::Mat(g0.size(), g0.type());
+    std::transform(g0.begin<cv::Vec2b>(), g0.end<cv::Vec2b>(),
+                   t0.begin<cv::Vec2b>(), perpendicular_normalize);
 
     return image;
 }
