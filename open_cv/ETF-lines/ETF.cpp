@@ -32,15 +32,19 @@ cv::Mat ETFFilter(cv::Mat tCur, int r, int u, int k) {
         for (int j = 0; j < tCur.rows; j++) {
             float sum;
             // for each pixel in the neighborhood
-            // since gHat is normalized we only need the direction
-            uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-            int p = phi(tCur, cv::Point(i, j), cv::Point(i, j));
-            int s = ws(cv::Point(i, j), cv::Point(i, j), r);
-            float m = wm(cv::Point(i, j), cv::Point(i, j), u);
-            int d = wd(tCur, cv::Point(i, j), cv::Point(i, j));
-            sum += p * tCur.at<int>(i, j) * s * m * d;
-            sum *= 1 / k;
-            tNew.at<int>(i, j) = sum;
+            for (int y = 0; y < k; y++) {
+                for (int x = 0; x < k; x++) {
+                    // since gHat is normalized we only need the direction
+                    uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
+                    int p = phi(tCur, cv::Point(i, j), cv::Point(y, x));
+                    int s = ws(cv::Point(i, j), cv::Point(y, x), r);
+                    float m = wm(cv::Point(i, j), cv::Point(y, x), u);
+                    int d = wd(tCur, cv::Point(i, j), cv::Point(y, x));
+                    sum += p * tCur.at<int>(y, x) * s * m * d;
+                    sum *= 1 / k;
+                    tNew.at<int>(i, j) = sum;
+                }
+            }
         }
     }
     return tNew;
@@ -75,6 +79,11 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     cv::Mat t0 = cv::Mat(g0.size(), g0.type());
     std::transform(g0.begin<cv::Vec2b>(), g0.end<cv::Vec2b>(),
                    t0.begin<cv::Vec2b>(), perpendicular_normalize);
+
+    cv::Mat tCur = t0;
+    for (int i = 0; i < 2; i++) {
+        cv::Mat tNew = ETFFilter(tCur, 3, 1, 5);
+    }
 
     return image;
 }
