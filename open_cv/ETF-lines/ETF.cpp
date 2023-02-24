@@ -47,24 +47,20 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     cv ::Mat image;
     image = read(path, img);
     assert(!image.empty());
-    if (image.type() != 0) {
+    if (image.type() != CV_8UC3) {
         if (image.channels() == 4) {
-            cv::cvtColor(image, image, cv::COLOR_RGBA2GRAY);
-        } else if (image.channels() == 3) {
-            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+            cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
+        } else if (image.channels() == 1) {
+            cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
         }
-        image.convertTo(image, 0);
+        image.convertTo(image, CV_8UC3);
     }
 
-    for (int i = 0; i < image.rows; i++) {
-        for (int j = 0; j < image.rows; j++) {
-            float sum_i;
-            float sum_j;
-            // for each pixel in the neighborhood
-        }
-    }
-    if (saving) {
-        save(image, path, "-ETF");
-    }
+    g0 g_zero;
+    g_zero = sobel_mag_angle(path, image, false);
+    
+    // calculate t0
+    // calculate g0 with a sobel operator
+
     return image;
 }

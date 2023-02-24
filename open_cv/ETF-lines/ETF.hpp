@@ -7,6 +7,7 @@
 #include "../boiler-plate/invert.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
+#include "sobel_operator.hpp"
 
 int ws(cv::Point2d x, cv::Point2d y, int r);
 float g(cv::Point);
