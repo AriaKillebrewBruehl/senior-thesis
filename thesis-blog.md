@@ -13,6 +13,7 @@ Thesis meeting questions
 - what does it mean if a vector just has magnitude and direction and no anchor point? or is the anchor point just the (i, j) spot on the grid where that data is?
 
 - if we normailze then we just give every vector a magnitude of 1 right?
+  - so why do we need gHat to be the normalized gradient _magnitude_? wouldn't this always be 1?
 
 # 02.16.2023
 
