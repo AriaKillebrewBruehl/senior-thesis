@@ -83,7 +83,12 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     cv::Mat tCur = t0;
     for (int i = 0; i < 2; i++) {
         cv::Mat tNew = ETFFilter(tCur, 3, 1, 5);
+        tCur = tNew;
     }
 
-    return image;
+    if (saving) {
+        save(tCur, path, "-ETF");
+    }
+
+    return tCur;
 }
