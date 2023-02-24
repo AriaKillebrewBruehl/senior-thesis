@@ -2,75 +2,79 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.24.2023
+
+Thesis meeting questions
+
+- is my approach for getting magnitude and direction from sobel correct?
+
+  - it looks like the angle may already be perpendicular to the line? should we b perpendicular to the line or parallel to it?
+
+- what does it mean if a vector just has magnitude and direction and no anchor point? or is the anchor point just the (i, j) spot on the grid where that data is?
+
+- if we normailze then we just give every vector a magnitude of 1 right?
+
 # 02.16.2023
-
-
 
 Kang et al. steps
 
-- [ ] For each pixel-centered kernel 
+- [ ] For each pixel-centered kernel
 
-  - [ ] Perform a nonlinear vector smoothing such that the salient edge directions are preserved while weak edges are directed to follow the neighboring dominant ones 
+  - [ ] Perform a nonlinear vector smoothing such that the salient edge directions are preserved while weak edges are directed to follow the neighboring dominant ones
 
-    - [ ] To preserve sharp corners encourage smoothing among the edges with similar orientations 
+    - [ ] To preserve sharp corners encourage smoothing among the edges with similar orientations
 
   - [ ] $t^{new}(x) = \frac{1}{k} \sum_{y \in \Omega(x)} \phi(x, y)t^{cur}(y)w_s(w, y)w_m(x, y)w_d(x,y)$
 
     - [ ] $\Omega(x)$ denotes the neighborhood of $x$
 
-    - [ ] $k$ is the vector normalizing term 
+    - [ ] $k$ is the vector normalizing term
 
     - [ ] Spatial weight function $w_s(x, y) = 1$ if $||x-y|| < r$, $0$ otherwise
 
-      - [ ] Radially symmetric box filter of radius $r$ where $r$ is the radius of the kernel $\Omega$ 
+      - [ ] Radially symmetric box filter of radius $r$ where $r$ is the radius of the kernel $\Omega$
 
     - [ ] $w_m$ is the magnitude weight function $w_m(x, y) = \frac{1}{2}(1 + tanh[upeta \cdot (\hat{g}(y) - \hat{g}(x))])$
 
-      - [ ] $\hat{g](z)}$ is the normalized gradient magnitude at $z$ and $\upeta$ control the fall-off rate 
+      - [ ] $\hat{g](z)}$ is the normalized gradient magnitude at $z$ and $\upeta$ control the fall-off rate
         - [ ] They set $\upeta = 1$
 
-    - [ ] $w_d$ if the direction weight function $w_d(x, y) =| t^{cur}(x) \cdot t^{cur}(y)|$ where $t^{cur}(z)$ denotes the current normalized tangent vector at $z$ 
+    - [ ] $w_d$ if the direction weight function $w_d(x, y) =| t^{cur}(x) \cdot t^{cur}(y)|$ where $t^{cur}(z)$ denotes the current normalized tangent vector at $z$
 
       - [ ] Reverse the direction of $t^{cur}(y)$ before smoothing using the sign function $\phi(x, y) \in {1, -1}$
 
         - [ ] $\phi(x, y) = 1$ if $t^{cur}(x) \cdot t^{cur}(y) >0, -1$ otherwise
 
-         
-
-  - [ ] $t^0(x)$ is obtained by taking perpendicular vectors from the initial gradient map $g^0(x)$ of the input image 
-    - [ ] Normalized before use 
-    - [ ] $g^0(x)$ is computed by employing Sobel operator 
+  - [ ] $t^0(x)$ is obtained by taking perpendicular vectors from the initial gradient map $g^0(x)$ of the input image
+    - [ ] Normalized before use
+    - [ ] $g^0(x)$ is computed by employing Sobel operator
 
 Steps that need to be taken to go from current method to Son et. al
 
-- [ ] Change current edge detection to flow base line drawing from King et al. 
-  - [ ] This gives the tangential direction at each feature pixel 
-- [x] Finding isophotes 
-  - [ ] Add isophotes to the feature line map 
-- [ ] Determine direction vectors for while (non-feature) pixels with scattered data interpolation to the vectors at feature pixels 
-  - [ ] Multi level B-spline interpolation 
-    - [ ] Before this convert direction vectors to 2x2 structure tensors ate avoid cancel-our of opposite vectors 
-    - [ ] At non feature pixels an Eigen vector of the interpolated structure serves as the new direction vector 
+- [ ] Change current edge detection to flow base line drawing from King et al.
+  - [ ] This gives the tangential direction at each feature pixel
+- [x] Finding isophotes
+  - [ ] Add isophotes to the feature line map
+- [ ] Determine direction vectors for while (non-feature) pixels with scattered data interpolation to the vectors at feature pixels
+  - [ ] Multi level B-spline interpolation
+    - [ ] Before this convert direction vectors to 2x2 structure tensors ate avoid cancel-our of opposite vectors
+    - [ ] At non feature pixels an Eigen vector of the interpolated structure serves as the new direction vector
 - [ ] Structure grid
-  - [ ] G is a vector-valued image (G: p -> (t0, t1)) where t0 and t1 denote the distances from pixel p to nearest grid lines measured along the two perpendicular local axes 
-    - [ ] D is desired interval between neighboring grid lines then ti in [0, d/2] reflects the periodic nature of the grid 
+  - [ ] G is a vector-valued image (G: p -> (t0, t1)) where t0 and t1 denote the distances from pixel p to nearest grid lines measured along the two perpendicular local axes
+    - [ ] D is desired interval between neighboring grid lines then ti in [0, d/2] reflects the periodic nature of the grid
       - [ ] Same interval is used in tangential and normal feature directions (default is d = 6)
         - [ ] Stipple dots are located at (0, 0) and hatching lines are placed along (t0, 0) or (0, t1)
-  - [ ] G is constructed by running two passes to stripe pattern synthesis along tangential and normal feature directions 
-- [ ] Stripe pattern synthesis 
-  - [ ] Stripe pattern is synthesized via iterative refinement of the distance values in P through local optimization 
+  - [ ] G is constructed by running two passes to stripe pattern synthesis along tangential and normal feature directions
+- [ ] Stripe pattern synthesis
+  - [ ] Stripe pattern is synthesized via iterative refinement of the distance values in P through local optimization
 
-
-
-Things I think could add 
+Things I think could add
 
 - [ ] Kang et al line drawing
 
-- [ ] Maybe try Gaussian smoothing the grayscale tone map T to reduce noise and avoid abrupt tone changes 
+- [ ] Maybe try Gaussian smoothing the grayscale tone map T to reduce noise and avoid abrupt tone changes
 
-- [ ] ###### Try pixel based dot rendering 
-
-
+- [ ] ###### Try pixel based dot rendering
 
 # 02.13.2023
 
@@ -471,20 +475,20 @@ Okay so basically jfa is super super slow if the image is larger.
 Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm
 
     image = read(img);
-    
+
     for (i < MAX_KERNEL_LENGTH) {
         apply bilateral filter to image;
     }
-    
+
     image = convert-to-CIELab;
-    
+
     // luminance quatization and remove a and b
     // now color in image represents luminance
     processColors(image);
-    
+
     image = grayscale(image);
     image = threshold(image);
-    
+
     return image;
 
 This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
@@ -578,34 +582,34 @@ Here is the final algorithm:
         set any pixel that is not equal to i to black;
         return isolated;
     }
-    
+
     threshold {
         read in image;
-    
+
         convert to binary;
-    
+
         cv::Mat labels;
         cv::Mat stats;
         cv::Mat centroids;
         int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids);
-    
+
         std::unordered_map<int, bool> remove;
-    
+
         for each component except the background  {
             comp = just the component;
             isolated = isolate(comp, i);
             skel = skeleton(isolated);
             remove[i] = !meetsThreshold(skel, theshhold);
         }
-    
+
         for each pixel in the labeled image {
             color = pixel;
-    
+
             if remove[color] {
                 pixel = 0;
             }
         }
-    
+
     }
 
 <p align = "center">
