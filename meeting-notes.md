@@ -1,5 +1,50 @@
 ## Meeting Notes
 
+# 02.24.2023
+
+T assigns a vector to every spot in the image and X is a location in the image, associated with the vector is a direction
+
+normalize can mean either getting a weighted average or compute a vector and then divide by the magnitude so you get a unit vector
+not sure which one it is
+could also be suppose you compute the gradient throughout the whole grid
+keep the range of the gradient magnitudes between 0 and 1, this might be correct for g_hat (can't be the unit one for g-hat otherwise we'd always have 0)
+also unclear what tanh is
+
+- they take a collection of old vectors, take a weighted sum of them
+- are we including ourselves in our neighborhood
+
+- ws is spatial weight of 0/1, limits the neighborhood
+
+- wm compares the gradient at those two locations
+
+get pretty image by getting x and y sobel filter and then
+
+- g-hat is the magnitude of the vector g once it is normalized
+
+  - so then when have have g-hat - g-hat those are just two scalara
+
+- approximate gradient comepenents in x and y using sobel filters
+- then compute the magnitude of the two vectors
+- then find min and max of these
+- then normalize things so that they are between 0 and 1 (this would be the normalized gradient magnitude)
+- then if t is not unit then k is the sum in eq 1 missing the tcur(y)
+
+- they seem to say if you don't update t then g never evolves, if you iteravly apply their update then you can get a change to g
+
+- initial t is the gradient but then the magnitude is between 0 and 1
+- mathematical way of taking the gradient over the height field, then are a lot of different height fields that have the same gradients
+
+- initial t is just the normalized gradient, then you do the wieghting to refigure the t, then we have a smoother version of the t, then we have something like an ETF
+
+  - but how do we update the gradient of the image, inverting the sobel filter?
+
+- to get the pictures they use the C and L 1993 technique, can we find a working implementation of that?
+
+- compute normalized gradient in x and y using sobel filter
+- then take sqrt of sum of square (magnitude) and then scale everything form 0 to 1 and then make that the u and v for anne then see what png i get out
+- see if this looks like the flow of our images
+- this would give initial normalized gradient vector field, then do some step of t and look at new output image and see if that works
+
 # 02/10
 
 writing:
