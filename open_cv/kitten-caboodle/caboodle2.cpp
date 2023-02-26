@@ -24,7 +24,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     std::cout << "extracted isophotes from image" << std::endl;
 
     // step 3: offset map
-    cv::Mat map = fullMap("", edges, "", isophotes, 6.0, false);
+    cv::Mat map = fullMap("", edges, "", isophotes, 6.0, true, false);
     std::cout << "extracted offset map from image" << std::endl;
 
     // step 4: generate final dot placement
