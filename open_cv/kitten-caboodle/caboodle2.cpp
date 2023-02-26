@@ -34,7 +34,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     // step 5: place circles!
     cv::Mat rendered = placeDots("", adjusted, "", image, 20, true);
     std::cout << "sized dots" << std::endl;
-    save(rendered, path, "-rendered-20");
+    save(rendered, path, "-rendered");
 
     return rendered;
 }
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
     cv::Mat isophotes;
     cv::Mat isophotes_extracted;
     cv::Mat offset_map;
-    cv::Mat offset_map_display;
+    cv::Mat offset_map_visual;
     cv::Mat adjusted_dots;
     cv::Mat rendered;
     int thresh;
@@ -239,11 +239,11 @@ OFFSET_MAP : {
                  "program.\n ";
 
     l = 6.0;
-    offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
+    offset_map = fullMap("", edges, "", isophotes_extracted, l, true, false);
+    offset_map_visual =
+        fullMap("", edges, "", isophotes_extracted, l, false, false);
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
-    offset_map.convertTo(offset_map_display, CV_16SC1);
-    std::cout << type2str(offset_map.type()) << offset_map.type() << std::endl;
-    cv::imshow("Hedcut Demo - Offset Map", offset_map_display);
+    cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
         char key = (char)cv::waitKey(0);
         if (key == 27) {
@@ -269,9 +269,11 @@ OFFSET_MAP : {
         if (key == 'L') {
             thresh += 0.25;
         }
-        offset_map = fullMap("", edges, "", isophotes_extracted, l, false);
-        offset_map.convertTo(offset_map_display, CV_16SC1);
-        cv::imshow("Hedcut Demo - Offset Map", offset_map_display);
+        offset_map =
+            fullMap("", edges, "", isophotes_extracted, l, true, false);
+        offset_map_visual =
+            fullMap("", edges, "", isophotes_extracted, l, false, false);
+        cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
 
