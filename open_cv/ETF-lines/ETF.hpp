@@ -15,4 +15,15 @@ float wm(cv::Point2d x, cv::Point2d y, int u);
 int wd(cv::Mat T, cv::Point2d x, cv::Point2d y);
 int phi(cv::Mat T, cv::Point2d x, cv::Point2d y);
 cv::Mat ETFFilter(cv::Mat Tcur, int r, int u, int k);
+
+/*
+ cv::Mat normalizeMatrix(cv::Mat m, int direction)
+ Normalize a matrix representing the sobel operator
+ applied in either X or Y direction. Output matrix
+ will have values in the range [0, 1]. If m is
+ the sobel operator applied in the X direction use
+ `direction = 1`, use `directon = 0` for sobel operator
+ applied in the Y direciton.
+ */
+cv::Mat normalizeMatrix(cv::Mat m, int direction);
 cv::Mat ETF(std::string path, cv::Mat img, bool saving);
