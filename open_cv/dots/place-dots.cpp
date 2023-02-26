@@ -44,7 +44,6 @@ cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
     if (saving) {
         save(rendered, pathSeeds, "-rendered");
     }
-    std::cout << "saved" << std::endl;
 
     return rendered;
 }
