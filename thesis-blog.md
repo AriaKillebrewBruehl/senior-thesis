@@ -4,6 +4,20 @@
 
 # 02.24.2023
 
+Understanding the Difference Between T and G
+
+- `t` is the edge tangent which is perpendicular to the image gradient `g`
+  - so then if you have `t` you can get to `g` by going perpendicular in the clockwise direction??
+  - so maybe g-hat doesn't change because the vector length never changes they just get rotated?
+
+Understanding Licplot code
+
+- `u` and `v` are arrays of values, so to see what I get I just need two arrays of values
+  - how we pass these arrays from c++ opencv to python idk
+    - just do this by reading in a single channel image with pillow
+    - `u` and `v` are 2D arrays
+  - but this means I should have separate arrays for `Gx` and `Gy`
+
 Thesis meeting questions
 
 - is my approach for getting magnitude and direction from sobel correct?
@@ -13,7 +27,10 @@ Thesis meeting questions
 - what does it mean if a vector just has magnitude and direction and no anchor point? or is the anchor point just the (i, j) spot on the grid where that data is?
 
 - if we normailze then we just give every vector a magnitude of 1 right?
+
   - so why do we need gHat to be the normalized gradient _magnitude_? wouldn't this always be 1?
+
+- a lot of issues coming up from the fact that these are 2 channel images, is that the correct way to be representing them? what is the image format were working with?
 
 # 02.16.2023
 
