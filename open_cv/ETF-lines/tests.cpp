@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            sobel_mag_angle(argv[i], image, true);
+            ETF(argv[i], image, true);
         }
     }
 }
