@@ -32,9 +32,9 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     std::cout << "finalized dot placement for image" << std::endl;
 
     // step 5: place circles!
-    cv::Mat rendered = placeDots("", adjusted, "", image, 12, true);
+    cv::Mat rendered = placeDots("", adjusted, "", image, 20, true);
     std::cout << "sized dots" << std::endl;
-    save(rendered, path, "-rendered");
+    save(rendered, path, "-rendered-20");
 
     return rendered;
 }
@@ -323,7 +323,7 @@ PLACE_CIRCLES : {
            "12 px).\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
            "save current image.\nPress 'ESC' to exit program.\n";
 
-    max_size = 20;
+    max_size = 15;
     rendered = placeDots("", adjusted_dots, "", image, max_size, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
@@ -347,10 +347,10 @@ PLACE_CIRCLES : {
             save(rendered, image_path, tag);
         }
         if (key == 'd') {
-            thresh--;
+            max_size--;
         }
         if (key == 'D') {
-            thresh++;
+            max_size++;
         }
         rendered = placeDots("", adjusted_dots, "", image, max_size, false);
         cv::imshow("Hedcut Demo - Rendered", rendered);
