@@ -20,8 +20,6 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
     isos = read(pathIsos, imgIsos);
     assert(!isos.empty());
 
-    // assert(isos.depth() == 0);
-
     cv::Mat inverted_isos = invert(isos);
 
     if (inverted_isos.type() != 4) {
