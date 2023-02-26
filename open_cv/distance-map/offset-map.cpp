@@ -13,7 +13,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, float l, bool saving,
         dists.convertTo(dists, 0);
     }
 
-    cv::Mat map = cv::Mat(dists.rows, dists.cols, CV_8UC1, cv::Scalar(255));
+    cv::Mat map = cv::Mat(dists.rows, dists.cols, CV_32SC1, cv::Scalar(255));
     int w = 1;
     for (int i = 0; i < map.rows; i++) {
         for (int j = 0; j < map.cols; j++) {
@@ -27,7 +27,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, float l, bool saving,
                 // if recording secitons give pixel id
                 // otherwise keep white
                 if (sections) {
-                    map.at<int32_t>(i, j) = id;
+                    map.at<int32_t>(i, j) = id + 1;
                 }
             }
         }
