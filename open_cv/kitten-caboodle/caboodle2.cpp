@@ -47,12 +47,15 @@ int main(int argc, char** argv) {
         "with no breaks at runtime)}");
 
     std::cout
-        << "This program renders an input photograph as a hedcut drawing\n\n";
-    std::cout << "\nPress 'N' / 'n' to move to edge detection step in hedcut "
-                 "process.\nPress "
-                 "'ESC' to exit program.\nPress 'R' to reset values at "
-                 "any step\n";
-    parser.printMessage();
+        << "This program renders an input photograph as a hedcut drawing\n\n"
+           "At any stage: \n"
+           "  press 'B' / 'b' to move to previous step in hedcut "
+           "process\n"
+           "   press 'N' / 'n' to move to next step in hedcut "
+           "process\n"
+           "   press 'R' / 'r' to reset parameters to default values\n"
+           "   press 'S' / 's' to save current image\n"
+           "   press 'ESC' to exit program\n";
 
     // 1) read in input
     cv::Mat image;
@@ -70,28 +73,39 @@ int main(int argc, char** argv) {
     }
 
     // setup variables
+    bool auto_save = false;
     cv::Mat edges;
+    int thresh_edges = 300;
     cv::Mat isophotes;
+    int thresh_iso_highlights = 5;
     cv::Mat isophotes_extracted;
+    int thresh_isophotes = 50;
     cv::Mat offset_map;
     cv::Mat offset_map_visual;
+    int l = 6.0;
     cv::Mat adjusted_dots;
     cv::Mat rendered;
-    int thresh;
-    float l;
-    int max_size;
+    int max_size = 15;
 
 SET_UP : {
+    std::cout << "Beginning hedcut generation proccess\n"
+                 "Press:\n"
+                 "  'G' / 'g' to process image with no breaks\n"
+                 "  'A' / 'a' to auto save on each step\n";
     for (;;) {
         cv::imshow("Hedcut Demo - Initial Input", image);
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
+        if (key == 'a' || key == 'A') {
+            auto_save = true;
+        }
         if (key == 'g' || key == 'G' || go) {
             cv::Mat rendered = caboodle(image_path, image, true);
             cv::imshow("Hedcut Demo - Rendered", rendered);
-            std::cout << "\nPress any key to exit program.\n";
+            std::cout << "\nFinal rendering autosaved.\nPress any key to exit "
+                         "program.\n";
             char key2 = (char)cv::waitKey(0);
             if (key2) {
                 return EXIT_SUCCESS;
@@ -105,18 +119,21 @@ SET_UP : {
 
 // 2) loop over edge detection, allow tuning of threshold paramenter
 EDGE_EXTRACTION : {
-    std::cout
-        << "Beginning edge detection proccess\nPress 'T' / 't'to increase / "
-           "decrease threshold parameter by 25 px for edge detection (initial "
-           "value is 300 px).\nPress 'N' / 'n' to move to isophote detection "
-           "step.\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
-           "save current image.\nPress 'ESC' to exit program.\n";
+    std::cout << "Beginning edge detection proccess\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 300 px)";
 
-    thresh = 300;
-    edges = extractEdges("", image, thresh, false);
+    thresh_edges = 300;
+    edges = extractEdges("", image, thresh_edges, false);
     cv::destroyWindow("Hedcut Demo - Initial Input");
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
+        if (auto_save) {
+            std::string tag = "-edges-" + std::to_string(thresh_edges);
+            save(edges, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -129,36 +146,38 @@ EDGE_EXTRACTION : {
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'r' || key == 'R') {
-            thresh = 300;
+            thresh_edges = 300;
         }
         if (key == 's' || key == 'S') {
-            std::string tag = "-edges-" + std::to_string(thresh);
+            std::string tag = "-edges-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
         if (key == 't') {
-            thresh -= 25;
+            thresh_edges -= 25;
         }
         if (key == 'T') {
-            thresh += 25;
+            thresh_edges += 25;
         }
-        edges = extractEdges("", image, thresh, false);
+        edges = extractEdges("", image, thresh_edges, false);
         cv::imshow("Hedcut Demo - Extracted Edges", edges);
     }
 }
-// 3) accept edge image and being isophotes, allow tuning of portion of
+// 3) accept edge image and begin isophotes detection
 ISOPHOTE_DETECTION : {
-    std::cout
-        << "Beginning isophote detection proccess\nPress 'I' / 'i' to increase "
-           "/ decrease fraction of isophotes taken to 1/n (initial "
-           "value is 1/5).\nPress 'N' / 'n' to move to isophote extraction "
-           "step.\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
-           "save current image.\nPress 'ESC' to exit program.\n ";
+    std::cout << "Beginning isophote detection proccess\n\n"
+                 "Press:\n"
+                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "taken to 1/n (initial value is 1/5)\n ";
 
-    thresh = 5;
-    isophotes = getIsophotes("", image, thresh, true);
+    isophotes = getIsophotes("", image, thresh_iso_highlights, true);
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
+        if (auto_save) {
+            std::string tag =
+                "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
+            save(isophotes, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -171,36 +190,38 @@ ISOPHOTE_DETECTION : {
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'r' || key == 'R') {
-            thresh = 5;
+            thresh_iso_highlights = 5;
         }
         if (key == 's' || key == 'S') {
-            std::string tag = "-detected-isophotes-" + std::to_string(thresh);
+            std::string tag =
+                "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
             save(isophotes, image_path, tag);
         }
         if (key == 'i') {
-            thresh--;
+            thresh_iso_highlights--;
         }
         if (key == 'I') {
-            thresh++;
+            thresh_iso_highlights++;
         }
-        isophotes = getIsophotes("", image, thresh, false);
+        isophotes = getIsophotes("", image, thresh_iso_highlights, false);
         cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     }
 }
-
+// 4) accept isohpotes and begin isophote extraction
 ISOPHOTE_EXTRACTION : {
-    std::cout
-        << "Beginning isophote extraction proccess\nPress 'T' / 't' to "
-           "increase / decrease threshold parameter by 10 px for edge "
-           "detection (initial value is 50 px).\nPress 'N' / 'n' to move to"
-           " offsetmap step.\nPress 'R' to reset values at any step.\nPress "
-           "'S' / 's' to save current image.\nPress 'ESC' to exit program.\n";
+    std::cout << "Beginning isophote extraction proccess\n"
+                 "Press:\n"
+                 "   'T' / 't' to increase / decrease threshold parameter by "
+                 "10 px for edge detection (initial value is 50 px)\n";
 
-    thresh = 50;
-    isophotes_extracted = extractEdges("", isophotes, thresh, false);
+    isophotes_extracted = extractEdges("", isophotes, thresh_isophotes, false);
     cv::destroyWindow("Hedcut Demo - Detected Isophotes");
     cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
+        if (auto_save) {
+            std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
+            save(isophotes_extracted, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -213,38 +234,41 @@ ISOPHOTE_EXTRACTION : {
             goto OFFSET_MAP;
         }
         if (key == 'r' || key == 'R') {
-            thresh = 50;
+            thresh_isophotes = 50;
         }
         if (key == 's' || key == 'S') {
-            std::string tag = "-isophotes-" + std::to_string(thresh);
+            std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
             save(isophotes_extracted, image_path, tag);
         }
         if (key == 't') {
-            thresh -= 10;
+            thresh_isophotes -= 10;
         }
         if (key == 'T') {
-            thresh += 10;
+            thresh_isophotes += 10;
         }
-        cv::Mat map = extractEdges("", isophotes, thresh, false);
+        cv::Mat map = extractEdges("", isophotes, thresh_isophotes, false);
         cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     }
 }
-
+// 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
-    std::cout << "Beginning offset map proccess\nPress 'L' / 'l' to "
-                 "increase / decrease offset lane distance by 0.5 px "
-                 "(initial value is 6.0 px).\nPress 'N' / 'n' to move to dot "
-                 "adjusting step.\nPress 'R' to reset values at any step.\n"
-                 "Press 'S'/ 's' to save current image.\nPress 'ESC' to exit "
-                 "program.\n ";
+    std::cout
+        << "Beginning offset map proccess\n"
+           "Press:\n"
+           "   'L' / 'l' to increase / decrease offset lane distance by 0.5 px "
+           "(initial value is 6.0 px)\n";
 
-    l = 6.0;
     offset_map = fullMap("", edges, "", isophotes_extracted, l, true, false);
     offset_map_visual =
         fullMap("", edges, "", isophotes_extracted, l, false, false);
+    offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
+        if (auto_save) {
+            std::string tag = "-offset-map-" + std::to_string(l);
+            save(offset_map, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -264,30 +288,32 @@ OFFSET_MAP : {
             save(offset_map, image_path, tag);
         }
         if (key == 'l') {
-            thresh -= 0.25;
+            l -= 0.25;
         }
         if (key == 'L') {
-            thresh += 0.25;
+            l += 0.25;
         }
         offset_map =
             fullMap("", edges, "", isophotes_extracted, l, true, false);
         offset_map_visual =
             fullMap("", edges, "", isophotes_extracted, l, false, false);
+        offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
         cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
-
+// 6) accept offset map and begin dot adjusting
 ADJUST_DOTS : {
-    std::cout
-        << "Beginning dot adjusting process.\nPress 'N' / 'n' to move to  "
-           "circle placement. \nPress 'R' to reset values at any step.\nPress "
-           "'S'/ 's' to save current image.\nPress 'ESC' to exit program.\n";
+    std::cout << "Beginning dot adjusting process.\n";
 
     adjusted_dots = dots("", offset_map, false);
     std::cout << "Finished adjusting dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
+        if (auto_save) {
+            std::string tag = "-adjusted";
+            save(adjusted_dots, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -303,33 +329,26 @@ ADJUST_DOTS : {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
-        // // if (key == 'r' || 'R') {
-        // //     l = 6.0;
-        // // }
-        // // if (key == 'l') {
-        // //     thresh -= 0.25;
-        // // }
-        // // if (key == 'L') {
-        // //     thresh += 0.25;
-        // }
         adjusted_dots = dots("", offset_map, false);
         std::cout << "Finished adjusting dots" << std::endl;
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
-
+// 7) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
-    std::cout
-        << "Beginning circle placement process.\nPress 'D' / 'd' to "
-           "increase / decrease maximum circle size by 1 (initial value is "
-           "12 px).\nPress 'R' to reset values at any step.\nPress 'S'/ 's' to "
-           "save current image.\nPress 'ESC' to exit program.\n";
+    std::cout << "Beginning circle placement process.\n"
+                 "Press:\n"
+                 "   'D' / 'd' to increase / decrease maximum circle size by 1 "
+                 "(initial value is 12 px)\n";
 
-    max_size = 15;
     rendered = placeDots("", adjusted_dots, "", image, max_size, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
+        if (auto_save) {
+            std::string tag = "-rendered-" + std::to_string(max_size);
+            save(rendered, image_path, tag);
+        }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -342,7 +361,7 @@ PLACE_CIRCLES : {
             save(rendered, image_path, "-rendered");
         }
         if (key == 'r' || key == 'R') {
-            max_size = 12;
+            max_size = 15;
         }
         if (key == 's' || key == 'S') {
             std::string tag = "-rendered-" + std::to_string(max_size);
