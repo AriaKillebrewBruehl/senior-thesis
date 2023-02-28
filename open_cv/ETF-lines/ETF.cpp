@@ -22,7 +22,8 @@ int phi(cv::Point x, cv::Point y) {
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int nbrhood) {
+cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat1b gHat, int r, int eta,
+                  int nbrhood) {
     // cv::Mat gNew = sobel_mag_angle("", tCur, false);
     // std::cout << "got g new" << std::endl;
     cv::Mat tNewX = cv::Mat::zeros(tCurX.size(), tCurX.type());
@@ -132,14 +133,11 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     cv::Mat1b t0X = g0Y_normalized * -1;
     cv::Mat1b t0Y = g0X_normalized;
 
-    // cv::Mat1b gHat = normalizedGradientMagnitude(g0_merged);
+    // compute normalized gradient magnitude of g0
+    cv::Mat1b gHat = normalizedGradientMagnitude(g0_merged);
 
-    /*
-    // calculate t0 by taking perpendicular vectors (CC) from g0
-
-    cv::Mat tCur = t0;
     for (int i = 0; i < 2; i++) {
-        cv::Mat tNew = ETFFilter(tCur, 3, 1, 5);
+        cv::Mat tNew = ETFFilter(t0X, t0Y, gHat, 3, 1, 5);
         std::cout << "here" << std::endl;
         tCur = tNew;
     }
@@ -151,11 +149,9 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         }
     }
 
-    i
-    */
     if (saving) {
-        // save(t0X, path, "-ETF-X");
-        // save(t0Y, path, "-ETF-Y");
+        save(t0X, path, "-ETF-X");
+        save(t0Y, path, "-ETF-Y");
     }
 
     return image;
