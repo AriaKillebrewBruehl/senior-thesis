@@ -1,6 +1,6 @@
 #include "sobel_operator.hpp"
 
-cv::Mat sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
+cv::Mat2b sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
     assert(!image.empty());
@@ -34,31 +34,19 @@ cv::Mat sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     // get gradient in y direction
     cv::Sobel(src_gray, grad_y, ddepth, 0, 1, ksize, scale, delta,
               cv::BORDER_DEFAULT);
-    std::cout << grad_x << std::endl;
-    std::cout << grad_y << std::endl;
+    // std::cout << "grad_x: " << std::endl << grad_x << std::endl;
+    // std::cout << "grad_y: " << std::endl << grad_y << std::endl;
     // converting back to CV_8U
     cv::convertScaleAbs(grad_x, grad_x);
     cv::convertScaleAbs(grad_y, grad_y);
 
-    cv::Mat g_zero = cv::Mat(grad_x.size(), CV_8UC2);
-    // cv::Mat sobelMagnitude = cv::Mat::zeros(grad_x.size(), CV_16FC1);
-    // cv::Mat sobelAngles = cv::Mat::zeros(grad_x.size(), CV_16FC1);
-    for (int i = 0; i < grad_x.rows; i++) {
-        for (int j = 0; j < grad_x.cols; j++) {
-            float x = (float)grad_x.at<uchar>(i, j);
-            float y = (float)grad_y.at<uchar>(i, j);
-            float mag = sqrt(x * x + y * y);
-            g_zero.at<cv::Vec2b>(i, j)[0] = mag;
-            float theta = atan(y / x);
-            g_zero.at<cv::Vec2b>(i, j)[1] = theta;
-        }
-    }
+    cv::Mat channels[2] = {grad_x, grad_y};
+    cv::Mat merged;
+    cv::merge(channels, 2, merged);
 
     if (saving) {
-        save(g_zero, path, "-sobel-mag-dir");
+        save(grad_x, path, "sobel-X");
+        save(grad_y, path, "sobel-Y");
     }
-
-    std::cout << g_zero << std::endl << std::endl;
-
-    return g_zero;
+    return merged;
 }
