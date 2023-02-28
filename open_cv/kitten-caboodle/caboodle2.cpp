@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     std::cout
         << "This program renders an input photograph as a hedcut drawing\n\n"
            "At any stage: \n"
-           "  press 'B' / 'b' to move to previous step in hedcut "
+           "   press 'B' / 'b' to move to previous step in hedcut "
            "process\n"
            "   press 'N' / 'n' to move to next step in hedcut "
            "process\n"
@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
     int max_size = 15;
 
 SET_UP : {
-    std::cout << "Beginning hedcut generation proccess\n"
+    std::cout << "\nBeginning hedcut generation proccess\n"
                  "Press:\n"
                  "  'G' / 'g' to process image with no breaks\n"
                  "  'A' / 'a' to auto save on each step\n";
@@ -116,14 +116,13 @@ SET_UP : {
         }
     }
 }
-
 // 2) loop over edge detection, allow tuning of threshold paramenter
 EDGE_EXTRACTION : {
-    std::cout << "Beginning edge detection proccess\n\n"
+    std::cout << "\nBeginning edge detection proccess\n\n"
                  "Press:\n"
                  "   'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
-                 "value is 300 px)";
+                 "value is 300 px)\n";
 
     thresh_edges = 300;
     edges = extractEdges("", image, thresh_edges, false);
@@ -164,7 +163,7 @@ EDGE_EXTRACTION : {
 }
 // 3) accept edge image and begin isophotes detection
 ISOPHOTE_DETECTION : {
-    std::cout << "Beginning isophote detection proccess\n\n"
+    std::cout << "\nBeginning isophote detection proccess\n\n"
                  "Press:\n"
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
@@ -209,7 +208,7 @@ ISOPHOTE_DETECTION : {
 }
 // 4) accept isohpotes and begin isophote extraction
 ISOPHOTE_EXTRACTION : {
-    std::cout << "Beginning isophote extraction proccess\n"
+    std::cout << "\nBeginning isophote extraction proccess\n"
                  "Press:\n"
                  "   'T' / 't' to increase / decrease threshold parameter by "
                  "10 px for edge detection (initial value is 50 px)\n";
@@ -253,7 +252,7 @@ ISOPHOTE_EXTRACTION : {
 // 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
     std::cout
-        << "Beginning offset map proccess\n"
+        << "\nBeginning offset map proccess\n"
            "Press:\n"
            "   'L' / 'l' to increase / decrease offset lane distance by 0.5 px "
            "(initial value is 6.0 px)\n";
@@ -303,7 +302,7 @@ OFFSET_MAP : {
 }
 // 6) accept offset map and begin dot adjusting
 ADJUST_DOTS : {
-    std::cout << "Beginning dot adjusting process.\n";
+    std::cout << "\nBeginning dot adjusting process.\n";
 
     adjusted_dots = dots("", offset_map, false);
     std::cout << "Finished adjusting dots" << std::endl;
@@ -336,7 +335,7 @@ ADJUST_DOTS : {
 }
 // 7) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
-    std::cout << "Beginning circle placement process.\n"
+    std::cout << "\nBeginning circle placement process.\n"
                  "Press:\n"
                  "   'D' / 'd' to increase / decrease maximum circle size by 1 "
                  "(initial value is 12 px)\n";
