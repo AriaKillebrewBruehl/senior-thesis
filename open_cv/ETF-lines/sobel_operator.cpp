@@ -34,8 +34,6 @@ cv::Mat2b sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     // get gradient in y direction
     cv::Sobel(src_gray, grad_y, ddepth, 0, 1, ksize, scale, delta,
               cv::BORDER_DEFAULT);
-    // std::cout << "grad_x: " << std::endl << grad_x << std::endl;
-    // std::cout << "grad_y: " << std::endl << grad_y << std::endl;
     // converting back to CV_8U
     cv::convertScaleAbs(grad_x, grad_x);
     cv::convertScaleAbs(grad_y, grad_y);
