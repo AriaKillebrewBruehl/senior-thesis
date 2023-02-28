@@ -65,7 +65,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat1b gHat, int r, int eta,
 
 cv::Mat1b normalizedGradientMagnitude(cv::Mat m) {
     assert(m.channels() == 2);
-    cv::Mat magnitude;
+    cv::Mat magnitude = cv::Mat(m.size(), CV_8UC1);
     std::transform(m.begin<cv::Vec2b>(), m.end<cv::Vec2b>(),
                    magnitude.begin<uchar>(), [](cv::Vec2b p) -> uchar {
                        uchar x = p[0];
@@ -90,7 +90,7 @@ cv::Mat1b normalizeMatrix(cv::Mat m) {
     uchar max_val = max.at<uchar>(0, 0);
     uchar min_val = min.at<uchar>(0, 0);
 
-    cv::Mat normalized;
+    cv::Mat normalized = cv::Mat(m.size(), m.type());
     std::transform(m.begin<uchar>(), m.end<uchar>(), normalized.begin<uchar>(),
                    [max_val, min_val](uchar p) -> uchar {
                        p -= min_val;
@@ -135,12 +135,13 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
 
     // compute normalized gradient magnitude of g0
     cv::Mat1b gHat = normalizedGradientMagnitude(g0_merged);
-
+    std::cout << "called nGM" << std::endl;
     cv::Mat tCurX = t0X;
     cv::Mat tCurY = t0Y;
     cv::Mat tNew;
     for (int i = 0; i < 2; i++) {
         tNew = ETFFilter(tCurX, tCurY, gHat, 3, 1, 5);
+        std::cout << "called ETFF" << std::endl;
         cv::Mat t_channels[2];
         cv::split(tNew, t_channels);
         cv::Mat tCurX = t_channels[0];
