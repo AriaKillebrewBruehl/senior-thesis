@@ -10,15 +10,13 @@ int ws(cv::Vec2i x, cv::Vec2i y, int r) {
 // TO-DO: write this
 float g(cv::Point) { return 1; }
 
-float wm(cv::Vec2i x, cv::Vec2i y, int eta) {
+float wm(cv::Point x, cv::Point y, int eta) {
     return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
 }
 
-int wd(cv::Mat T, cv::Point2d x, cv::Point2d y) {
-    return abs(T.at<int>(x) * T.at<int>(y));
-}
+int wd(cv::Vec2i x, cv::Vec2i y) { return abs(T.at<int>(x) * T.at<int>(y)); }
 
-int phi(cv::Vec2i x, cv::Vec2i y) {
+int phi(cv::Point x, cv::Point y) {
     int dot = x.dot(y);
     if (dot > 0) {
         return 1;
