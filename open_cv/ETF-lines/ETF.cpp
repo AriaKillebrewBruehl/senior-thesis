@@ -32,7 +32,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int nbrhood) {
 
     for (int i = 0; i < tCurX.rows; i++) {
         for (int j = 0; j < tCurX.rows; j++) {
-            cv::Vec2f sum = cv::Vec2f::zeros;
+            cv::Vec2f sum = cv::Vec2f(0, 0);
             float k;
             cv::Point x = cv::Point(i, j);
             cv::Vec2i vX =
@@ -50,13 +50,18 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int nbrhood) {
                     float m = wm(x, y, eta);
                     int d = wd(vX, vY);
                     sum += float(p) * vY * float(s) * m * float(d);
+                    k += float(p) * float(s) * m * float(d);
                 }
             }
             sum *= 1 / k;
-            tNew.at<int>(i, j) = sum;
+            tNewX.at<int>(i, j) = sum[0];
+            tNewX.at<int>(i, j) = sum[1];
         }
     }
-    return tNew;
+    cv::Mat channels[2] = {tNewX, tNewY};
+    cv::Mat merged;
+    cv::merge(channels, 2, merged);
+    return merged;
 }
 
 cv::Mat normalizeMatrix(cv::Mat m, int direction) {
