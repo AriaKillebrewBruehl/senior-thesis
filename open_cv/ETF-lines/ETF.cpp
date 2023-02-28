@@ -47,7 +47,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
                 for (int x = 0; x < nbrhood; x++) {
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-                    int p = phi(tCurX, cv::Point(i, j), cv::Point(y, x));
+                    int p = phi(tCurX, tCurY, cv::Point(i, j), cv::Point(y, x));
                     std::cout << "got p" << std::endl;
                     int s = ws(cv::Point(i, j), cv::Point(y, x), r);
                     std::cout << "got s" << std::endl;
