@@ -42,9 +42,14 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
     for (int i = 0; i < tCurX.rows; i++) {
         for (int j = 0; j < tCurX.rows; j++) {
             float sum;
+            cv::Vec2i x =
+                cv::Vec2i(tCurX.at<int32_t>(i, j), tCurY.at<int32_t>(i, j));
             // for each pixel in the neighborhood
-            for (int y = 0; y < nbrhood; y++) {
-                for (int x = 0; x < nbrhood; x++) {
+            for (int a = 0; a < nbrhood; a++) {
+                for (int b = 0; b < nbrhood; b++) {
+                    cv::Vec2i y = cv::Vec2i(tCurX.at<int32_t>(a, b),
+                                            tCurY.at<int32_t>(a, b));
+
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
                     int p = phi(tCurX, tCurY, cv::Point(i, j), cv::Point(y, x));
