@@ -18,27 +18,36 @@ int wd(cv::Mat T, cv::Point2d x, cv::Point2d y) {
     return abs(T.at<int>(x) * T.at<int>(y));
 }
 
-int phi(cv::Mat T, cv::Point2d x, cv::Point2d y) {
-    if (T.at<int>(x) * T.at<int>(y) > 0) {
+int phi(cv::Mat tX, cv::Mat tY, cv::Point2d a, cv::Point2d b) {
+    int ax = tX.at<int32_t>(a);
+    int ay = tY.at<int32_t>(a);
+    int bx = tX.at<int32_t>(b);
+    int by = tY.at<int32_t>(b);
+
+    int dot = (ax * bx + ay * by);
+
+    if (dot > 0) {
         return 1;
     }
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k) {
-    cv::Mat gNew = sobel_mag_angle("", tCur, false);
-    std::cout << "got g new" << std::endl;
-    cv::Mat tNew = cv::Mat::zeros(tCur.size(), tCur.type());
-    std::cout << "got g new" << std::endl;
-    for (int i = 0; i < tCur.rows; i++) {
-        for (int j = 0; j < tCur.rows; j++) {
+cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
+                  int nbrhood) {
+    // cv::Mat gNew = sobel_mag_angle("", tCur, false);
+    // std::cout << "got g new" << std::endl;
+    cv::Mat tNewX = cv::Mat::zeros(tCurX.size(), tCurX.type());
+    cv::Mat tNewY = cv::Mat::zeros(tCurY.size(), tCurY.type());
+
+    for (int i = 0; i < tCurX.rows; i++) {
+        for (int j = 0; j < tCurX.rows; j++) {
             float sum;
             // for each pixel in the neighborhood
-            for (int y = 0; y < k; y++) {
-                for (int x = 0; x < k; x++) {
+            for (int y = 0; y < nbrhood; y++) {
+                for (int x = 0; x < nbrhood; x++) {
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-                    int p = phi(tCur, cv::Point(i, j), cv::Point(y, x));
+                    int p = phi(tCurX, cv::Point(i, j), cv::Point(y, x));
                     std::cout << "got p" << std::endl;
                     int s = ws(cv::Point(i, j), cv::Point(y, x), r);
                     std::cout << "got s" << std::endl;
