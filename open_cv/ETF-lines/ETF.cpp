@@ -14,7 +14,7 @@ float wm(cv::Point x, cv::Point y, int eta) {
     return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
 }
 
-int wd(cv::Vec2i x, cv::Vec2i y) { return abs(T.at<int>(x) * T.at<int>(y)); }
+int wd(cv::Vec2i x, cv::Vec2i y) { return abs(x.dot(y)); }
 
 int phi(cv::Point x, cv::Point y) {
     int dot = x.dot(y);
@@ -34,24 +34,22 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int k,
     for (int i = 0; i < tCurX.rows; i++) {
         for (int j = 0; j < tCurX.rows; j++) {
             float sum;
-            cv::Vec2i x =
+            cv::Point x = cv::Point(i, j);
+            cv::Vec2i vX =
                 cv::Vec2i(tCurX.at<int32_t>(i, j), tCurY.at<int32_t>(i, j));
             // for each pixel in the neighborhood
             for (int a = 0; a < nbrhood; a++) {
                 for (int b = 0; b < nbrhood; b++) {
-                    cv::Vec2i y = cv::Vec2i(tCurX.at<int32_t>(a, b),
-                                            tCurY.at<int32_t>(a, b));
+                    cv::Point y = cv::Point(a, b);
+                    cv::Vec2i vY = cv::Vec2i(tCurX.at<int32_t>(a, b),
+                                             tCurY.at<int32_t>(a, b));
 
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-                    int p = phi(x, y);
-                    std::cout << "got p" << std::endl;
+                    int p = phi(vX, vY);
                     int s = ws(x, y, r);
-                    std::cout << "got s" << std::endl;
                     float m = wm(x, y, eta);
-                    std::cout << "got wm" << std::endl;
                     int d = wd(tCur, cv::Point(i, j), cv::Point(y, x));
-                    std::cout << "got wd" << std::endl;
                     sum += p * tCur.at<int>(y, x) * s * m * d;
                 }
             }
