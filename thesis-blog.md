@@ -2,6 +2,10 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.26.2023
+
+- [ ] fix Lloyd realxation to include feature line consideration
+
 # 02.24.2023
 
 Understanding the Difference Between T and G
