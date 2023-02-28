@@ -3,4 +3,4 @@
 
 #include "../boiler-plate/read-save.hpp"
 
-cv::Mat sobel_mag_angle(std::string path, cv::Mat img, bool saving);
+cv::Mat2b sobel_mag_angle(std::string path, cv::Mat img, bool saving);
