@@ -18,14 +18,8 @@ int wd(cv::Mat T, cv::Point2d x, cv::Point2d y) {
     return abs(T.at<int>(x) * T.at<int>(y));
 }
 
-int phi(cv::Mat tX, cv::Mat tY, cv::Point2d a, cv::Point2d b) {
-    int ax = tX.at<int32_t>(a);
-    int ay = tY.at<int32_t>(a);
-    int bx = tX.at<int32_t>(b);
-    int by = tY.at<int32_t>(b);
-
-    int dot = (ax * bx + ay * by);
-
+int phi(cv::Vec2i x, cv::Vec2i y) {
+    int dot = x.dot(y);
     if (dot > 0) {
         return 1;
     }
@@ -52,7 +46,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
 
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-                    int p = phi(tCurX, tCurY, cv::Point(i, j), cv::Point(y, x));
+                    int p = phi(cv::Vec2i x, cv::Vec2i y);
                     std::cout << "got p" << std::endl;
                     int s = ws(cv::Point(i, j), cv::Point(y, x), r);
                     std::cout << "got s" << std::endl;
