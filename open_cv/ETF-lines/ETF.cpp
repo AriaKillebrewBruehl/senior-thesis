@@ -24,8 +24,7 @@ int phi(cv::Point x, cv::Point y) {
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int k,
-                  int nbrhood) {
+cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int nbrhood) {
     // cv::Mat gNew = sobel_mag_angle("", tCur, false);
     // std::cout << "got g new" << std::endl;
     cv::Mat tNewX = cv::Mat::zeros(tCurX.size(), tCurX.type());
@@ -33,7 +32,8 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int k,
 
     for (int i = 0; i < tCurX.rows; i++) {
         for (int j = 0; j < tCurX.rows; j++) {
-            float sum;
+            cv::Vec2f sum = cv::Vec2f::zeros;
+            float k;
             cv::Point x = cv::Point(i, j);
             cv::Vec2i vX =
                 cv::Vec2i(tCurX.at<int32_t>(i, j), tCurY.at<int32_t>(i, j));
@@ -45,12 +45,11 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int k,
                                              tCurY.at<int32_t>(a, b));
 
                     // since gHat is normalized we only need the direction
-                    uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
                     int p = phi(vX, vY);
                     int s = ws(x, y, r);
                     float m = wm(x, y, eta);
-                    int d = wd(tCur, cv::Point(i, j), cv::Point(y, x));
-                    sum += p * tCur.at<int>(y, x) * s * m * d;
+                    int d = wd(vX, vY);
+                    sum += float(p) * vY * float(s) * m * float(d);
                 }
             }
             sum *= 1 / k;
