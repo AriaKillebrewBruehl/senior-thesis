@@ -125,8 +125,8 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     assert(g0Y.type() == CV_8UC1);
 
     // normalize by reducing values to [0, 1]
-    cv::Mat1b g0X_normalized = normalizeMatrix(g0X, 1);
-    cv::Mat1b g0Y_normalized = normalizeMatrix(g0Y, 0);
+    cv::Mat1b g0X_normalized = normalizeMatrix(g0X);
+    cv::Mat1b g0Y_normalized = normalizeMatrix(g0Y);
 
     // initial t0 matrix is the perpendicular (cc) vectors from the initial
     // gradient map g0
@@ -136,23 +136,21 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     // compute normalized gradient magnitude of g0
     cv::Mat1b gHat = normalizedGradientMagnitude(g0_merged);
 
+    cv::Mat tCurX = t0X;
+    cv::Mat tCurY = t0Y;
+    cv::Mat tNew;
     for (int i = 0; i < 2; i++) {
-        cv::Mat tNew = ETFFilter(t0X, t0Y, gHat, 3, 1, 5);
-        std::cout << "here" << std::endl;
-        tCur = tNew;
-    }
-
-    cv::Mat visual = cv::Mat(tCur.size(), CV_8UC1);
-    for (int i = 0; i < tCur.rows; i++) {
-        for (int j = 0; j < tCur.cols; j++) {
-            visual.at<uchar>(i, j) = tCur.at<cv::Vec2b>(i, j)[1];
-        }
+        tNew = ETFFilter(tCurX, tCurY, gHat, 3, 1, 5);
+        cv::Mat t_channels[2];
+        cv::split(tNew, t_channels);
+        cv::Mat tCurX = t_channels[0];
+        cv::Mat tCurY = t_channels[1];
     }
 
     if (saving) {
-        save(t0X, path, "-ETF-X");
-        save(t0Y, path, "-ETF-Y");
+        save(tCurX, path, "-ETF-X");
+        save(tCurX, path, "-ETF-Y");
     }
 
-    return image;
+    return tNew;
 }
