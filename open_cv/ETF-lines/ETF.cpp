@@ -7,11 +7,9 @@ int ws(cv::Vec2i x, cv::Vec2i y, int r) {
     return 0;
 }
 
-// TO-DO: write this
-float g(cv::Point) { return 1; }
-
 float wm(cv::Point x, cv::Point y, int eta) {
-    return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
+    return 1.0;
+    // return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
 }
 
 int wd(cv::Vec2i x, cv::Vec2i y) { return abs(x.dot(y)); }
@@ -64,11 +62,30 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int nbrhood) {
     return merged;
 }
 
-cv::Mat normalizeMatrix(cv::Mat m, int direction) {
-    assert(direction == 0 || direction == 1);
-    cv::Mat max, min;
-    cv::reduce(m, max, direction, cv::REDUCE_MAX);
-    cv::reduce(m, min, direction, cv::REDUCE_MIN);
+cv::Mat1b normalizedGradientMagnitude(cv::Mat m) {
+    assert(m.channels() == 2);
+    cv::Mat magnitude;
+    std::transform(m.begin<cv::Vec2b>(), m.end<cv::Vec2b>(),
+                   magnitude.begin<uchar>(), [](cv::Vec2b p) -> uchar {
+                       uchar x = p[0];
+                       uchar y = p[0];
+                       return uchar(sqrt(x * x + y * y));
+                   });
+
+    cv::Mat1b normalized = normalizeMatrix(magnitude);
+    return normalized;
+}
+
+cv::Mat1b normalizeMatrix(cv::Mat m) {
+    assert(m.channels() == 1);
+    cv::Mat maxCols, max, minCols, min;
+    // reduce along columns
+    cv::reduce(m, maxCols, 0, cv::REDUCE_MAX);
+    cv::reduce(m, minCols, 0, cv::REDUCE_MIN);
+    // reduce along rows
+    cv::reduce(m, max, 0, cv::REDUCE_MAX);
+    cv::reduce(m, min, 0, cv::REDUCE_MIN);
+
     uchar max_val = max.at<uchar>(0, 0);
     uchar min_val = min.at<uchar>(0, 0);
 
@@ -97,22 +114,25 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     }
 
     // initial gradient map
-    cv::Mat g0_merged = sobel_mag_angle(path, image, false);
+    cv::Mat2b g0_merged = sobel_mag_angle(path, image, false);
     // split into X and Y components
     cv::Mat g0_channels[2];
     cv::split(g0_merged, g0_channels);
-    cv::Mat g0X = g0_channels[0];
+    cv::Mat1b g0X = g0_channels[0];
     assert(g0X.type() == CV_8UC1);
-    cv::Mat g0Y = g0_channels[1];
+    cv::Mat1b g0Y = g0_channels[1];
     assert(g0Y.type() == CV_8UC1);
 
     // normalize by reducing values to [0, 1]
-    cv::Mat g0X_normalized = normalizeMatrix(g0X, 1);
-    cv::Mat g0Y_normalized = normalizeMatrix(g0Y, 0);
+    cv::Mat1b g0X_normalized = normalizeMatrix(g0X, 1);
+    cv::Mat1b g0Y_normalized = normalizeMatrix(g0Y, 0);
 
-    // initial t matrix is g0 rotated 90 degrees counter clockwise
-    cv::Mat t0X = g0Y_normalized * -1;
-    cv::Mat t0Y = g0X_normalized;
+    // initial t0 matrix is the perpendicular (cc) vectors from the initial
+    // gradient map g0
+    cv::Mat1b t0X = g0Y_normalized * -1;
+    cv::Mat1b t0Y = g0X_normalized;
+
+    // cv::Mat1b gHat = normalizedGradientMagnitude(g0_merged);
 
     /*
     // calculate t0 by taking perpendicular vectors (CC) from g0
@@ -134,8 +154,8 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     i
     */
     if (saving) {
-        save(t0X, path, "-ETF-X");
-        save(t0Y, path, "-ETF-Y");
+        // save(t0X, path, "-ETF-X");
+        // save(t0Y, path, "-ETF-Y");
     }
 
     return image;
