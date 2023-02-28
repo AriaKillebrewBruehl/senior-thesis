@@ -10,8 +10,8 @@ int ws(cv::Vec2i x, cv::Vec2i y, int r) {
 // TO-DO: write this
 float g(cv::Point) { return 1; }
 
-float wm(cv::Point2d x, cv::Point2d y, int u) {
-    return 1 / 2 * (1 + tanh(u * (g(y) - g(x))));
+float wm(cv::Vec2i x, cv::Vec2i y, int eta) {
+    return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
 }
 
 int wd(cv::Mat T, cv::Point2d x, cv::Point2d y) {
@@ -26,7 +26,7 @@ int phi(cv::Vec2i x, cv::Vec2i y) {
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
+cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int eta, int k,
                   int nbrhood) {
     // cv::Mat gNew = sobel_mag_angle("", tCur, false);
     // std::cout << "got g new" << std::endl;
@@ -50,7 +50,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
                     std::cout << "got p" << std::endl;
                     int s = ws(x, y, r);
                     std::cout << "got s" << std::endl;
-                    float m = wm(cv::Point(i, j), cv::Point(y, x), u);
+                    float m = wm(x, y, eta);
                     std::cout << "got wm" << std::endl;
                     int d = wd(tCur, cv::Point(i, j), cv::Point(y, x));
                     std::cout << "got wd" << std::endl;

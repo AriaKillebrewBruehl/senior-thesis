@@ -11,7 +11,7 @@
 
 int ws(cv::Vec2i x, cv::Vec2i y, int r);
 float g(cv::Point);
-float wm(cv::Point2d x, cv::Point2d y, int u);
+float wm(cv::Vec2i x, cv::Vec2i y, int eta);
 int wd(cv::Mat T, cv::Point2d x, cv::Point2d y);
 int phi(cv::Vec2i x, cv::Vec2i y);
 cv::Mat ETFFilter(cv::Mat Tcur, int r, int u, int k);
