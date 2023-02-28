@@ -9,7 +9,7 @@
 #include "../boiler-plate/type2str.hpp"
 #include "sobel_operator.hpp"
 
-int ws(cv::Point2d x, cv::Point2d y, int r);
+int ws(cv::Vec2i x, cv::Vec2i y, int r);
 float g(cv::Point);
 float wm(cv::Point2d x, cv::Point2d y, int u);
 int wd(cv::Mat T, cv::Point2d x, cv::Point2d y);

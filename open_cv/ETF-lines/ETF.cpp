@@ -1,6 +1,6 @@
 #include "ETF.hpp"
 
-int ws(cv::Point2d x, cv::Point2d y, int r) {
+int ws(cv::Vec2i x, cv::Vec2i y, int r) {
     if (cv::norm(x - y) < r) {
         return 1;
     }
@@ -46,9 +46,9 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, int r, int u, int k,
 
                     // since gHat is normalized we only need the direction
                     uchar gHat = gNew.at<cv::Vec2b>(i, j)[1];
-                    int p = phi(cv::Vec2i x, cv::Vec2i y);
+                    int p = phi(x, y);
                     std::cout << "got p" << std::endl;
-                    int s = ws(cv::Point(i, j), cv::Point(y, x), r);
+                    int s = ws(x, y, r);
                     std::cout << "got s" << std::endl;
                     float m = wm(cv::Point(i, j), cv::Point(y, x), u);
                     std::cout << "got wm" << std::endl;
