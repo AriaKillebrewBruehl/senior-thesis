@@ -7,8 +7,9 @@ int ws(cv::Vec2i x, cv::Vec2i y, int r) {
     return 0;
 }
 
-float wm(cv::Point x, cv::Point y, int eta) {
-    return 1 / 2 * (1 + tanh(eta * (gHat(y) - gHat(x))));
+float wm(cv::Point x, cv::Point y, cv::Mat gHat, int eta) {
+    return 1 / 2 *
+           (1 + tanh(eta * (gHat.at<float32_t>(y) - gHat.at<float32_t>(x))));
 }
 
 int wd(cv::Vec2i x, cv::Vec2i y) { return abs(x.dot(y)); }
@@ -25,6 +26,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat1b gHat, int r, int eta,
                   int nbrhood) {
     assert(tCurX.type() == CV_32FC1);
     assert(tCurY.type() == CV_32FC1);
+    assert(gHat.type() == CV_32FC1);
     cv::Mat tNewX = cv::Mat::zeros(tCurX.size(), tCurX.type());
     cv::Mat tNewY = cv::Mat::zeros(tCurY.size(), tCurY.type());
 
@@ -44,7 +46,7 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat1b gHat, int r, int eta,
 
                     int p = phi(vX, vY);
                     int s = ws(x, y, r);
-                    float m = wm(x, y, eta);
+                    float m = wm(x, y, gHat, eta);
                     int d = wd(vX, vY);
                     sum += float(p) * vY * float(s) * m * float(d);
                     k += float(p) * float(s) * m * float(d);
@@ -71,7 +73,8 @@ cv::Mat normalizedGradientMagnitude(cv::Mat m) {
                        return float32_t(sqrt(x * x + y * y));
                    });
 
-    cv::Mat1b normalized = normalizeMatrix(magnitude);
+    cv::Mat normalized = normalizeMatrix(magnitude);
+    assert(normalized.type() == CV_32FC1);
     return normalized;
 }
 
@@ -170,7 +173,7 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
 
     // compute normalized gradient magnitude of g0
     cv::Mat gHat = normalizedGradientMagnitude(g0_merged);
-    assert(gHat.type() == CV_8UC1);
+    assert(gHat.type() == CV_32FC1);
     cv::Mat tCurX = t0X;
     cv::Mat tCurY = t0Y;
 
