@@ -80,7 +80,7 @@ cv::Mat normalizedGradientMagnitude(cv::Mat m) {
 
 cv::Mat normalizeMatrix(cv::Mat m) {
     assert(m.channels() == 1);
-    cv::Mat maxCols, max, minCols, min;
+    // cv::Mat maxCols, max, minCols, min;
     // // reduce along columns
     // cv::reduce(m, maxCols, 0, cv::REDUCE_MAX);
     // cv::reduce(m, minCols, 0, cv::REDUCE_MIN);
@@ -106,9 +106,11 @@ cv::Mat normalizeMatrix(cv::Mat m) {
 
 cv::Mat scaleUpMatrix(cv::Mat m) {
     assert(m.channels() == 1);
+    assert(m.type() == CV_32FC1);
     cv::Mat scaledUp = cv::Mat(m.size(), CV_8UC1);
-    std::transform(m.begin<schar>(), m.end<schar>(), scaledUp.begin<uchar>(),
-                   [](schar p) -> uchar { return abs(p) * 255; });
+    std::transform(m.begin<float32_t>(), m.end<float32_t>(),
+                   scaledUp.begin<uchar>(),
+                   [](float32_t p) -> uchar { return abs(p) * 255; });
 
     return scaledUp;
 }
@@ -133,11 +135,11 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     // split into X and Y components
     cv::Mat g0_channels[2];
     cv::split(g0_merged, g0_channels);
-    cv::Mat1b g0X = g0_channels[0];
-    // save(g0X, path, "-g0X");
+    cv::Mat g0X = g0_channels[0];
+    save(g0X, path, "-g0X");
     // std::cout << "intitial g0X: \n" << g0X << std::endl;
-    cv::Mat1b g0Y = g0_channels[1];
-    // save(g0Y, path, "-g0Y");
+    cv::Mat g0Y = g0_channels[1];
+    save(g0Y, path, "-g0Y");
     // std::cout << "intitial g0Y: \n" << g0Y << std::endl;
 
     // normalize by reducing values to [0, 1]
@@ -149,25 +151,28 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     assert(g0Y_normalized.type() == CV_32FC1);
     // std::cout << "normalized g0Y: \n" << g0Y_normalized << std::endl;
 
-    // cv::Mat g0X_scaled = scaleUpMatrix(g0X_normalized);
-    // std::cout << "rescaled g0X: \n" << g0Y << std::endl;
-    // cv::Mat g0Y_scaled = scaleUpMatrix(g0Y_normalized);
-    // std::cout << "rescaled g0Y: \n" << g0Y << std::endl;
+    cv::Mat g0X_scaled = scaleUpMatrix(g0X_normalized);
+    save(g0X_scaled, path, "-g0X-norm-scaled");
+    // std::cout << "scaled normalized g0X: \n" << g0X_scaled << std::endl;
+    cv::Mat g0Y_scaled = scaleUpMatrix(g0Y_normalized);
+    save(g0Y_scaled, path, "-g0Y-norm-scaled");
+    // std::cout << "scaled normalized g0Y: \n" << g0Y_scaled << std::endl;
 
     // initial t0 matrix is the perpendicular (cc) vectors from the initial
     // gradient map g0
     cv::Mat t0X = g0Y_normalized * -1;
     assert(t0X.type() == CV_32FC1);
-    // std::cout << "t0X: " << t0X << std::endl;
+    // std::cout << "t0X: \n" << t0X << std::endl;
     cv::Mat t0Y = g0X_normalized;
-    // std::cout << "t0Y: " << t0Y << std::endl;
+    // std::cout << "t0Y: \n" << t0Y << std::endl;
     assert(t0Y.type() == CV_32FC1);
-    // std::string tagX = "-ETF-X-" + std::to_string(10);
-    // std::string tagY = "-ETF-Y-" + std::to_string(10);
-    // cv::Mat tCurXSacled = scaleUpMatrix(t0X);
-    // cv::Mat tCurYSacled = scaleUpMatrix(t0Y);
-    // save(tCurXSacled, path, tagX);
-    // save(tCurXSacled, path, tagY);
+
+    cv::Mat tCurXSacled = scaleUpMatrix(t0X);
+    // std::cout << "scaled t0X: \n" << tCurXSacled << std::endl;
+    cv::Mat tCurYSacled = scaleUpMatrix(t0Y);
+    // std::cout << "scaled t0Y: \n" << tCurYSacled << std::endl;
+    save(tCurXSacled, path, "-ETF-t0X");
+    save(tCurYSacled, path, "-ETF-t0Y");
 
     // compute normalized gradient magnitude of g0
     cv::Mat gHat = normalizedGradientMagnitude(g0_merged);
@@ -182,7 +187,7 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         cv::Mat tCurXSacled = scaleUpMatrix(tCurX);
         cv::Mat tCurYSacled = scaleUpMatrix(tCurY);
         save(tCurXSacled, path, tagX);
-        save(tCurXSacled, path, tagY);
+        save(tCurYSacled, path, tagY);
         tNew = ETFFilter(tCurX, tCurY, gHat, 3, 1, 5);
         cv::Mat t_channels[2];
         cv::split(tNew, t_channels);
@@ -195,5 +200,5 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         save(tCurX, path, "-ETF-Y");
     }
 
-    return tNew;
+    return g0_merged;
 }
