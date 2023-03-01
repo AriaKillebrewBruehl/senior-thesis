@@ -43,8 +43,8 @@ cv::Mat2b sobel_mag_angle(std::string path, cv::Mat img, bool saving) {
     cv::merge(channels, 2, merged);
 
     if (saving) {
-        save(grad_x, path, "sobel-X");
-        save(grad_y, path, "sobel-Y");
+        save(grad_x, path, "-sobel-X");
+        save(grad_y, path, "-sobel-Y");
     }
     return merged;
 }
