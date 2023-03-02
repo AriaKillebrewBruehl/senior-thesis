@@ -2,6 +2,18 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 02.28.2023
+
+_Debugging ETFFilter_
+
+The ouput matrices are (seemingly) all black, which is wrong
+
+- part of this could be the fact that the matrices get normalized so the values are only between 0 and 1
+  - the fix would be writing a function that will scale back up to values between 0 and 255
+- I think another bug is that `cv::Mat1b t0X = g0Y_normalized * -1;` won't work because the matrices are of type `CV_8UC1`.
+  - to fix I need to make them `CV_8SC1`
+  - actually to fix these need to be floats since the normalized matrix has values from 0 -
+
 # 02.26.2023
 
 - [ ] fix Lloyd realxation to include feature line consideration
