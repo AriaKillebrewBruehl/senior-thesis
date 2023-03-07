@@ -13,17 +13,11 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
         return image;
     }
 
-    try {
-        if (image.type() != 0) {
-            throw image.type();
+    if (image.type() != 0) {
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
         }
-    } catch (int t) {
-        std::cout << "ERROR: Input image to skeleton must be of type 8UC1."
-                  << std::endl;
-        std::cout << "ERROR: Provided image was of type " << type2str(t) << "."
-                  << std::endl;
-        cv::Mat empty;
-        return empty;
+        image.convertTo(image, 0);
     }
 
     // convert to binary
@@ -52,7 +46,6 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
             cv::subtract(copy, temp, temp);
             cv::bitwise_or(skel, temp, skel);
             eroded.copyTo(copy);
-
             done = (cv::countNonZero(copy) == 0);
         } while (!done);
     } else {
@@ -60,7 +53,7 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     }
 
     if (saving) {
-        save(image, path, "-skel");
+        save(skel, path, "-skel");
     }
 
     return skel;
