@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     int thresh_isophotes = 50;
     cv::Mat offset_map;
     cv::Mat offset_map_visual;
-    int l = 24.0;
+    int l = 6.0;
     cv::Mat adjusted_dots;
     cv::Mat rendered;
     int max_size = 15;
