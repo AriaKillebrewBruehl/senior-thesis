@@ -25,7 +25,10 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
 add_executable(iso isophotes.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
-add_executable(tests tests.cpp extract-isophotes.cpp isophotes.cpp ../edge-detection/extract-edges.cpp ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/threshold-edges.cpp ../edge-detection/skeleton.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(tests tests.cpp 
+    extract-isophotes.cpp isophotes.cpp 
+    ../edge-detection/extract-edges.cpp ../edge-detection/canny.cpp ../edge-detection/DoG.cpp ../edge-detection/threshold-edges.cpp ../edge-detection/skeleton.cpp 
+    ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/CIEprocess ../boiler-plate/invert)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(iso ${OpenCV_LIBS})
