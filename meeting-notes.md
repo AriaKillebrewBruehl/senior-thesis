@@ -1,5 +1,97 @@
 ## Meeting Notes
 
+# 03.10.2023
+
+Questions for today's meeting:
+
+- [ ] What should be in the NPR section
+  - The motivation for NPR section 
+    - Humans have decided that there is a way to represent the world, as graphics ppl we have tried to mimic this 
+    - Something problematic about us trying to asses our renderings and others 
+- [ ] What should the related work section look like 
+  - Its all good rn 
+- [ ] What should be in the intro versus the background 
+  - Into stays non technical so its good rn 
+- [ ] Analyzing results 
+  - In 2 and 3 there was the vanilla tecnique, but I found that there were things that needed to be changed, here are options to make it better, this is how I got this image versus that image, show different preprocessed versions of Sydney and how the vanilla tool reacts, this saves me from having to perfectly present every little tweak, just kind of talk about the things that I recognized needed to be tweaked, all the changes can go in 4 
+  - Just use core qualities to be able to check off boxes 
+  - Areas of expansion 
+    - American and European rendering in print, who they thought was important to render what white dudes, who is on the printed money that this is modeled after 
+    - Think about what the artistic techniques for rendering ppl would be if the WSJ stuff came from a completely different part of the world, engraving works artistically in its basic form bc the original ppl had white skin and we were trying to depict marble sculptures, IT GOES ALL THE WAY TO THE TOP 
+    - There are biases built into machine learning bc of training data, biases built into our techniques because of the choices we are making in choices to render, biases in the world of illustration and WSJ because of who they choose to depict 
+    - Try technique on seal 
+
+
+
+## qualities of hedcuts
+
+- What are the feature lines
+  - Hair 
+  - chins
+  - Outlines 
+- Mainly just stipples other than clothing 
+- Combination of feature lines 
+  - There are computer graphics papers that try to lay out what the feature lines are that artists should choose 
+
+
+
+- To fix not placing dots in the highlights
+  - There is an x axis of 0-255 and a y axis 
+  - Use the posterization thing that is done is isophotes and avoid the white sections 
+  - Try to tweak to make thing under the cheek bone dark and what is above the cheek bone darker
+    - Do this in photoshop as a preprocess 
+- Also try to get final outline around image 
+  - In fig d of process there is sone inkiness that makes it look better 
+
+
+
+- 4.3 here is what we never got to, here is what I don't like about other pols work 
+- 4.4 these things should be fixed, here are maybe some ideas 
+- Conclusion is just 1 page 
+
+
+
+# 03.03.2023
+
+- **writing**
+  - I have a lot of the nitty gritty things but I don't have an overview 
+  - Need to make this overview 
+  - Related work section 
+  - Overview 
+    - No outside reader is going to want to slog through things if they don't know where it is going 
+    - Thesis is about me presenting what I did , to know what I did they need to know what I now know which is in chapter 1 
+    - Do this in the introduction 
+      - There are hedcuts
+        - Why are hedcuts the way that they are 
+        - Do a deep dive here
+      - There is a community that is interested in making them by and and with a computer 
+      - There are recent AI / ML approaches 
+      - Other just use certain intuitions 
+        - This is what my thesis is doing
+      - In this thesis I show you a prototype of a system I have been building that attempts to mimic aspects of hedcut rendering 
+        - This is how it does it
+        - We followed the work of so and so 
+        - Here is the overall approach 
+          - These figures show that process and the work that we are mimicking 
+          - Show examples of what the literature does and that we are working to mimic and tweak this 
+      - Then the first chapter gives introduciton
+      - The second chapter does this
+      - The third chapter does that 
+      - In general this should give ppl a good idea of what the steps are and what the method is 
+  - Relating this to other peoples work can happen at the beginning or the end 
+  - Also the non photo realistic rendering part should be flushed out more, do this with Jim 
+    - This should be done at the very end and should be steered in the direction of what the goals were 
+    - Someting about illustration the tgets the point across by selecting details, this is something that humans have developed to communicate 
+      - What is the point of the hedcut rather than just a photograph 
+        - Characterizing a person in a timeless way 
+  - In edge detection talk about why it is useful to have stipples follow contours and such 
+- What is being fed is not right 
+  - What we want is something begin the result of their ETF stuff 
+  - Try to find something that will be okay immediately when it gets fed to the program 
+  - What I am getting is just the one contour but instead I want the series of these 
+    - Try to make my image be a gradient version of a 
+  - Try images from graphics that are USGS elevation data 
+
 # 02.24.2023
 
 T assigns a vector to every spot in the image and X is a location in the image, associated with the vector is a direction
