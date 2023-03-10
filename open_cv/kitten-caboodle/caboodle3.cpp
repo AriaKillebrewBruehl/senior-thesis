@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
     const int L = 6.0;
     const int NEGATIVE_SPACE_THRESH = 6;
     const int MAX_SIZE = 15;
-    const int OUTLINE_THRESH = 500;
+    const int OUTLINE_THRESH = 800;
     // setup variables
     bool auto_save = false;
     cv::Mat edges;
@@ -101,10 +101,11 @@ int main(int argc, char** argv) {
     cv::Mat adjusted_dots;
     cv::Mat negative_space;
     int thresh_negative_space = NEGATIVE_SPACE_THRESH;
-    cv::Mat outline;
-    int thresh_outline = OUTLINE_THRESH;
     cv::Mat rendered;
     int max_size = MAX_SIZE;
+    cv::Mat outline;
+    int thresh_outline = OUTLINE_THRESH;
+    cv::Mat final_rendering;
 
 SET_UP : {
     std::cout << "\nBeginning hedcut generation proccess\n"
@@ -509,6 +510,9 @@ OUTLINE : {
             cv::destroyWindow("Hedcut Demo - Outline");
             goto PLACE_CIRCLES;
         }
+        if (key == 'n' || key == 'N') {
+            goto FINAL_RENDERING;
+        }
         if (key == 'r' || key == 'R') {
             thresh_outline = OUTLINE_THRESH;
         }
@@ -517,30 +521,29 @@ OUTLINE : {
             save(edges, image_path, tag);
         }
         if (key == 't') {
-            thresh_edges -= 25;
+            thresh_outline -= 25;
         }
         if (key == 'T') {
-            thresh_edges += 25;
+            thresh_outline += 25;
         }
         outline = extractEdges(image_path, image, thresh_outline, false);
         cv::imshow("Hedcut Demo - Outline", outline);
     }
 }
-    // 11) combine final rendering
-OUTLINE : {
-    std::cout << "\nFinalizing rendering\n\n"
-                 "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
-                 "px for edge detection (initial "
-                 "value is 500 px)\n";
+// 11) combine final rendering
+FINAL_RENDERING : {
+    std::cout << "\nFinalizing rendering\n\n";
 
-    outline = extractEdges(image_path, image, thresh_outline, false);
-    cv::destroyWindow("Hedcut Demo - Rendered");
-    cv::imshow("Hedcut Demo - Outline", outline);
+    cv::destroyWindow("Hedcut Demo - Outline");
+    int scale = 6;
+    cv::Mat enlarged_outline;
+    cv::resize(outline, enlarged_outline, cv::Size(), scale, scale);
+    cv::bitwise_and(rendered, enlarged_outline, final_rendering);
+    cv::imshow("Hedcut Demo - Final Rendering", final_rendering);
     for (;;) {
         if (auto_save) {
-            std::string tag = "-outline-" + std::to_string(thresh_edges);
-            save(edges, image_path, tag);
+            std::string tag = "-final-rendering";
+            save(final_rendering, image_path, tag);
         }
         char key = (char)cv::waitKey(0);
         if (key == 27) {
@@ -548,23 +551,12 @@ OUTLINE : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Outline");
-            goto PLACE_CIRCLES;
-        }
-        if (key == 'r' || key == 'R') {
-            thresh_outline = OUTLINE_THRESH;
+            goto OUTLINE;
         }
         if (key == 's' || key == 'S') {
-            std::string tag = "-outline-" + std::to_string(thresh_edges);
-            save(edges, image_path, tag);
+            std::string tag = "-final-rendering";
+            save(final_rendering, image_path, tag);
         }
-        if (key == 't') {
-            thresh_edges -= 25;
-        }
-        if (key == 'T') {
-            thresh_edges += 25;
-        }
-        outline = extractEdges(image_path, image, thresh_outline, false);
-        cv::imshow("Hedcut Demo - Outline", outline);
     }
 }
 
