@@ -272,7 +272,7 @@ OFFSET_MAP : {
     std::cout
         << "\nBeginning offset map proccess\n"
            "Press:\n"
-           "   'L' / 'l' to increase / decrease offset lane distance by 0.5 px "
+           "   'L' / 'l' to increase / decrease offset lane distance by 1 px "
            "(initial value is 6.0 px)\n";
 
     offset_map = fullMap(image_path, edges, image_path, isophotes_extracted, l,
@@ -321,7 +321,11 @@ OFFSET_MAP : {
 }
 // 6) place dots
 PLACE_DOTS : {
-    std::cout << "\nBeginning dot placing process.\n";
+    std::cout << "\nBeginning dot placement map proccess\n"
+                 "Press:\n"
+                 "   'D' / 'd' to increase / decrease space between dots "
+                 "distance by 1 px "
+                 "(initial value is 6.0 px)\n";
 
     d = l;
     initial_dots = placeSeeds(image_path, offset_map, d, false);
