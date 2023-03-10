@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     // set up default parameter values
     const int EDGE_THRESH = 300;
     const int ISOS_HIGHLIGHT_THRESH = 5;
-    const int ISOS_THRESH = 50;
+    const int ISOS_THRESH = 200;
     const int L = 6.0;
     const int NEGATIVE_SPACE_THRESH = 6;
     const int MAX_SIZE = 15;
@@ -378,7 +378,7 @@ ADJUST_DOTS : {
             goto PLACE_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            goto PLACE_CIRCLES;
+            goto CHOOSE_NEGATIVE;
         }
         if (key == 's' || 'S') {
             std::string tag = "-adjusted";
@@ -437,7 +437,6 @@ CHOOSE_NEGATIVE : {
         cv::imshow("Hedcut Demo - Negative Space", negative_space);
     }
 }
-
 // 9) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
     std::cout << "\nBeginning circle placement process.\n"
@@ -445,8 +444,9 @@ PLACE_CIRCLES : {
                  "   'D' / 'd' to increase / decrease maximum circle size by 1 "
                  "(initial value is 12 px)\n";
 
-    rendered = placeDots(image_path, adjusted_dots, image_path, image, max_size,
-                         false);
+    rendered =
+        placeDotsNegativeSpace(image_path, adjusted_dots, image_path, image,
+                               image_path, negative_space, max_size, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
@@ -478,8 +478,9 @@ PLACE_CIRCLES : {
         if (key == 'D') {
             max_size++;
         }
-        rendered = placeDots(image_path, adjusted_dots, image_path, image,
-                             max_size, false);
+        rendered =
+            placeDotsNegativeSpace(image_path, adjusted_dots, image_path, image,
+                                   image_path, negative_space, max_size, false);
         cv::imshow("Hedcut Demo - Rendered", rendered);
     }
 }
