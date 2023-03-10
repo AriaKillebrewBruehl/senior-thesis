@@ -84,6 +84,7 @@ int main(int argc, char** argv) {
     const int L = 6.0;
     const int NEGATIVE_SPACE_THRESH = 6;
     const int MAX_SIZE = 15;
+    const int OUTLINE_THRESH = 500;
     // setup variables
     bool auto_save = false;
     cv::Mat edges;
@@ -100,6 +101,8 @@ int main(int argc, char** argv) {
     cv::Mat adjusted_dots;
     cv::Mat negative_space;
     int thresh_negative_space = NEGATIVE_SPACE_THRESH;
+    cv::Mat outline;
+    int thresh_outline = OUTLINE_THRESH;
     cv::Mat rendered;
     int max_size = MAX_SIZE;
 
@@ -128,8 +131,6 @@ EDGE_EXTRACTION : {
                  "   'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 300 px)\n";
-
-    thresh_edges = 300;
     edges = extractEdges(image_path, image, thresh_edges, false);
     cv::destroyWindow("Hedcut Demo - Initial Input");
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
@@ -462,8 +463,8 @@ PLACE_CIRCLES : {
             cv::destroyWindow("Hedcut Demo - Rendered");
             goto ADJUST_DOTS;
         }
-        if (key == 's' || key == 'S') {
-            save(rendered, image_path, "-rendered");
+        if (key == 'n' || key == 'N') {
+            goto OUTLINE;
         }
         if (key == 'r' || key == 'R') {
             max_size = MAX_SIZE;
@@ -484,5 +485,88 @@ PLACE_CIRCLES : {
         cv::imshow("Hedcut Demo - Rendered", rendered);
     }
 }
+// 10) accept rendered dots, find image outline
+OUTLINE : {
+    std::cout << "\nBeginning outline detection proccess\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 500 px)\n";
+
+    outline = extractEdges(image_path, image, thresh_outline, false);
+    cv::destroyWindow("Hedcut Demo - Rendered");
+    cv::imshow("Hedcut Demo - Outline", outline);
+    for (;;) {
+        if (auto_save) {
+            std::string tag = "-outline-" + std::to_string(thresh_edges);
+            save(edges, image_path, tag);
+        }
+        char key = (char)cv::waitKey(0);
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Outline");
+            goto PLACE_CIRCLES;
+        }
+        if (key == 'r' || key == 'R') {
+            thresh_outline = OUTLINE_THRESH;
+        }
+        if (key == 's' || key == 'S') {
+            std::string tag = "-outline-" + std::to_string(thresh_edges);
+            save(edges, image_path, tag);
+        }
+        if (key == 't') {
+            thresh_edges -= 25;
+        }
+        if (key == 'T') {
+            thresh_edges += 25;
+        }
+        outline = extractEdges(image_path, image, thresh_outline, false);
+        cv::imshow("Hedcut Demo - Outline", outline);
+    }
+}
+    // 11) combine final rendering
+OUTLINE : {
+    std::cout << "\nFinalizing rendering\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 500 px)\n";
+
+    outline = extractEdges(image_path, image, thresh_outline, false);
+    cv::destroyWindow("Hedcut Demo - Rendered");
+    cv::imshow("Hedcut Demo - Outline", outline);
+    for (;;) {
+        if (auto_save) {
+            std::string tag = "-outline-" + std::to_string(thresh_edges);
+            save(edges, image_path, tag);
+        }
+        char key = (char)cv::waitKey(0);
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Outline");
+            goto PLACE_CIRCLES;
+        }
+        if (key == 'r' || key == 'R') {
+            thresh_outline = OUTLINE_THRESH;
+        }
+        if (key == 's' || key == 'S') {
+            std::string tag = "-outline-" + std::to_string(thresh_edges);
+            save(edges, image_path, tag);
+        }
+        if (key == 't') {
+            thresh_edges -= 25;
+        }
+        if (key == 'T') {
+            thresh_edges += 25;
+        }
+        outline = extractEdges(image_path, image, thresh_outline, false);
+        cv::imshow("Hedcut Demo - Outline", outline);
+    }
+}
+
     return EXIT_SUCCESS;
 }
