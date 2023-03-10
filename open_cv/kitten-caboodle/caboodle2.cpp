@@ -27,11 +27,15 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     cv::Mat map = fullMap(path, edges, path, isophotes, 6.0, true, false);
     std::cout << "extracted offset map from image" << std::endl;
 
-    // step 4: generate final dot placement
-    cv::Mat adjusted = dots(path, map, false);
+    // step 4: generate initial dot placement
+    cv::Mat seeds = placeSeeds(path, map, 6.0, false);
+    std::cout << "finalized initial dot placement for image" << std::endl;
+
+    // step 5: generate final dot placement
+    cv::Mat adjusted = dots(path, map, path, seeds, 6.0, false);
     std::cout << "finalized dot placement for image" << std::endl;
 
-    // step 5: place circles!
+    // step 6: place circles!
     cv::Mat rendered = placeDots(path, adjusted, path, image, 20, true);
     std::cout << "sized dots" << std::endl;
     save(rendered, path, "-rendered");
@@ -76,20 +80,28 @@ int main(int argc, char** argv) {
         cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
     }
 
+    // set up default parameter values
+    const int EDGE_THRESH = 300;
+    const int ISOS_HIGHLIGHT_THRESH = 5;
+    const int ISOS_THRESH = 50;
+    const int L = 6.0;
+    const int MAX_SIZE = 15;
     // setup variables
     bool auto_save = false;
     cv::Mat edges;
-    int thresh_edges = 300;
+    int thresh_edges = EDGE_THRESH;
     cv::Mat isophotes;
-    int thresh_iso_highlights = 5;
+    int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
     cv::Mat isophotes_extracted;
-    int thresh_isophotes = 50;
+    int thresh_isophotes = ISOS_THRESH;
     cv::Mat offset_map;
     cv::Mat offset_map_visual;
-    int l = 6.0;
+    int l = L;
+    cv::Mat initial_dots;
+    int d = l;
     cv::Mat adjusted_dots;
     cv::Mat rendered;
-    int max_size = 15;
+    int max_size = MAX_SIZE;
 
 SET_UP : {
     std::cout << "\nBeginning hedcut generation proccess\n"
@@ -149,7 +161,7 @@ EDGE_EXTRACTION : {
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'r' || key == 'R') {
-            thresh_edges = 300;
+            thresh_edges = EDGE_THRESH;
         }
         if (key == 's' || key == 'S') {
             std::string tag = "-edges-" + std::to_string(thresh_edges);
@@ -192,7 +204,7 @@ ISOPHOTE_DETECTION : {
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'r' || key == 'R') {
-            thresh_iso_highlights = 5;
+            thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
         }
         if (key == 's' || key == 'S') {
             std::string tag =
@@ -238,7 +250,7 @@ ISOPHOTE_EXTRACTION : {
             goto OFFSET_MAP;
         }
         if (key == 'r' || key == 'R') {
-            thresh_isophotes = 50;
+            thresh_isophotes = ISOS_THRESH;
         }
         if (key == 's' || key == 'S') {
             std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
@@ -284,10 +296,10 @@ OFFSET_MAP : {
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
-            goto ADJUST_DOTS;
+            goto PLACE_DOTS;
         }
         if (key == 'r' || key == 'R') {
-            l = 24.0;
+            l = L;
         }
         if (key == 's' || key == 'S') {
             std::string tag = "-offset-map-" + std::to_string(l);
@@ -307,11 +319,55 @@ OFFSET_MAP : {
         cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
-// 6) accept offset map and begin dot adjusting
+// 6) place dots
+PLACE_DOTS : {
+    std::cout << "\nBeginning dot placing process.\n";
+
+    d = l;
+    initial_dots = placeSeeds(image_path, offset_map, d, false);
+    std::cout << "Finished placing dots" << std::endl;
+    cv::destroyWindow("Hedcut Demo - Offset Map");
+    cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
+    for (;;) {
+        if (auto_save) {
+            std::string tag = "-initial-dots";
+            save(initial_dots, image_path, tag);
+        }
+        char key = (char)cv::waitKey(0);
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Initial Dots");
+            goto OFFSET_MAP;
+        }
+        if (key == 'd') {
+            d--;
+        }
+        if (key == 'D') {
+            d++;
+        }
+        if (key == 'n' || key == 'N') {
+            goto ADJUST_DOTS;
+        }
+        if (key == 'r' || key == 'R') {
+            d = L;
+        }
+        if (key == 's' || 'S') {
+            std::string tag = "-initial-dots";
+            save(initial_dots, image_path, tag);
+        }
+        initial_dots = placeSeeds(image_path, offset_map, d, false);
+        std::cout << "Finished placing seed dots" << std::endl;
+        cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
+    }
+}
+// 7) accept initial dots and begin dot adjusting
 ADJUST_DOTS : {
     std::cout << "\nBeginning dot adjusting process.\n";
 
-    adjusted_dots = dots(image_path, offset_map, false);
+    adjusted_dots =
+        dots(image_path, offset_map, image_path, initial_dots, l, false);
     std::cout << "Finished adjusting dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
@@ -326,21 +382,22 @@ ADJUST_DOTS : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Adjusted Dots");
-            goto OFFSET_MAP;
+            goto PLACE_DOTS;
         }
-        if (key == 'n' || 'N') {
+        if (key == 'n' || key == 'N') {
             goto PLACE_CIRCLES;
         }
         if (key == 's' || 'S') {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
-        adjusted_dots = dots(image_path, offset_map, false);
+        adjusted_dots =
+            dots(image_path, offset_map, image_path, initial_dots, d, false);
         std::cout << "Finished adjusting dots" << std::endl;
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
-// 7) accept adjusted dots and place final circles
+// 8) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
     std::cout << "\nBeginning circle placement process.\n"
                  "Press:\n"
@@ -368,7 +425,7 @@ PLACE_CIRCLES : {
             save(rendered, image_path, "-rendered");
         }
         if (key == 'r' || key == 'R') {
-            max_size = 15;
+            max_size = MAX_SIZE;
         }
         if (key == 's' || key == 'S') {
             std::string tag = "-rendered-" + std::to_string(max_size);
