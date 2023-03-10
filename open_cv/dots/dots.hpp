@@ -8,4 +8,5 @@
 
 // Given an offset map return the adjusted seeds for the map.
 // Make sure input is offset map with ids, NOT the visual map!
-cv::Mat dots(std::string path, cv::Mat img, bool saving);
+cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
+             cv::Mat imgSeeds, int d, bool saving);
