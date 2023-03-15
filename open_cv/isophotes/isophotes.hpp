@@ -19,4 +19,8 @@ struct comp {
     }
 };
 
+cv::Mat posterize(std::string path, cv::Mat img,
+                  std::unordered_map<uchar, int>* colors, int bins,
+                  bool saving);
+
 cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving);
