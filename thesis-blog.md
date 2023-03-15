@@ -2,6 +2,76 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 03.14.2023
+
+*First full read of my thesis!*
+
+I have pretty much every part of my thesis written (I think), so today I'm reading over it and will be tracking where edits need to be made. 
+
+
+
+### writing issues
+
+- [x] title
+- [ ] Acknowledgements 
+- [ ] Abstract 
+- [ ] Dedication ?
+- [ ] Fix bibliography issues
+  - [ ] Opencv 2014 citation
+- [ ] Change hedcut list into command for consistency?
+- [x] Thesholding
+- [x] Method for selecting isophotes in section 2.2 
+
+### figure issues 
+
+- [ ] Email randy glass again / WSJ 
+- [x] Currency engraving
+- [x] Half-toning image
+- [ ] 0.7 final rendering after adjustments
+- [ ] Appendix C images
+- [x] 1.2.1 flower drawn in 3 ways
+- [x] 1.4.2 sobel operator
+- [ ] 2.1 canny versus DoG
+- [ ] 2.1 Initial edges detected 
+- [x] 2.1.1 thresholded edges 
+- [x] Add input image to figure 2.4
+- [ ] CLI video
+- [ ] Curly images
+- [x] 4.3 Photorealistic edge detection  
+
+## formatting and layout issues
+
+- [ ] Definitions?
+  - [ ] Channels 
+  - [ ] Depth 
+  - [ ] Seed pixel 
+  - [ ] Sampled function 
+
+# 03.10.2023
+
+### Things in `caboodle` I'd like to change
+
+- [ ] wider spaced dots in final rendering
+  - hmm the hard thing about just reducing the overall number of dots is that it makes things like eyes less good
+    - in real hedcuts the "complicated" features have a lot of dots and the less complicated ones have fewer dots..
+    - so I think we should have the spacing between dots as a function of distance from nearest feature line.
+- [x] avoid dots in highlights of face
+  - this shouldn't be exactly where the isophotes are but close, so maybe just another step to select where we want to leave things out?
+  - we'd use something really similar to what gets the isophote highlights and then what's white we'd avoid stippling
+    - maybe make it so the bins that are created are a little different than the isophotes
+- [ ] add and overall outline
+  - make it "inky"?
+  - scale up input image by factor of 6
+
+# 03.04.2023
+
+to-do this weekend
+
+- [ ] continue debugging ETFFilter
+  - [ ] get licplot demo of lines
+  - [ ] get licplot demo of cricles
+  - [ ] run licplot w Jim gradient image
+
 # 02.28.2023
 
 _Debugging ETFFilter_
@@ -509,20 +579,20 @@ Okay so basically jfa is super super slow if the image is larger.
 Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm
 
     image = read(img);
-
+    
     for (i < MAX_KERNEL_LENGTH) {
         apply bilateral filter to image;
     }
-
+    
     image = convert-to-CIELab;
-
+    
     // luminance quatization and remove a and b
     // now color in image represents luminance
     processColors(image);
-
+    
     image = grayscale(image);
     image = threshold(image);
-
+    
     return image;
 
 This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
@@ -616,38 +686,37 @@ Here is the final algorithm:
         set any pixel that is not equal to i to black;
         return isolated;
     }
-
+    
     threshold {
         read in image;
-
+    
         convert to binary;
-
+    
         cv::Mat labels;
         cv::Mat stats;
         cv::Mat centroids;
         int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids);
-
+    
         std::unordered_map<int, bool> remove;
-
+    
         for each component except the background  {
             comp = just the component;
             isolated = isolate(comp, i);
             skel = skeleton(isolated);
             remove[i] = !meetsThreshold(skel, theshhold);
         }
-
+    
         for each pixel in the labeled image {
             color = pixel;
-
+    
             if remove[color] {
                 pixel = 0;
             }
         }
-
+    
     }
 
 <p align = "center">
-
 <img src="./blog-images/edge-detection/containment-lines.png" alt="drawing" width="200">
 <img src="./blog-images/edge-detection/containment-lines.png-thresh.png" alt="drawing" width="200">
 
