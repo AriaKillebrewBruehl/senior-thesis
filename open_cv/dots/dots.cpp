@@ -34,9 +34,6 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
             seeds = adjust("", offsets, "", dists, false, false);
             t1--;
         }
-        if (t1 == 0 && t2 == 30) {
-            save(seeds, pathSeeds, "-after-t1");
-        }
         if (!t1 && t2) {
             // alternate offset lane constraints
             seeds = adjust("", offsets, "", dists, false, t2 % 2);
