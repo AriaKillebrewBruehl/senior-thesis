@@ -1,6 +1,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#include "../boiler-plate/read-save.hpp"
+
 using namespace cv;
 using namespace std;
 int main(int argc, char** argv) {
@@ -47,7 +49,10 @@ int main(int argc, char** argv) {
         // converting back to CV_8U
         convertScaleAbs(grad_x, abs_grad_x);
         convertScaleAbs(grad_y, abs_grad_y);
+        save(grad_x, imageName, "-Gx");
+        save(grad_y, imageName, "-Gy");
         addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+        save(grad, imageName, "-sobel");
         imshow(window_name, grad);
         char key = (char)waitKey(0);
         if (key == 27) {
