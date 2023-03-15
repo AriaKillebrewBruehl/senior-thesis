@@ -38,6 +38,24 @@ cv::Mat morphClose(cv::Mat img) {
     return img;
 }
 
+cv::Mat grayscale(cv::Mat img) {
+    if (img.channels() == 4) {
+        cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
+    }
+    cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
+    return img;
+}
+
+cv::Mat binary(cv::Mat img) {
+    if (img.channels() == 4) {
+        cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
+    } else if (img.channels() == 3) {
+        cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
+    }
+    cv::threshold(img, img, 10, 255, cv::THRESH_BINARY_INV);
+    return img;
+}
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cerr << "Must pass in image to run DoG on." << std::endl;
@@ -45,12 +63,13 @@ int main(int argc, char** argv) {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
             image = read(argv[i], image);
+            assert(!image.empty());
             // cv::Mat mE = morphErode(image);
             // save(mE, argv[i], "-eroded");
             // cv::Mat mD = morphDilate(image);
             // save(mD, argv[i], "-dilated");
-            cv::Mat mO = morphOpen(image);
-            save(mO, argv[i], "-opened");
+            cv::Mat bin = binary(image);
+            save(bin, argv[i], "-binary");
             // cv::Mat mC = morphClose(image);
             // save(mC, argv[i], "-closed");
         }
