@@ -40,7 +40,6 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     cv::Mat inverted = invert(extracted);
     extracted.convertTo(extracted, CV_8UC1);
     cv::medianBlur(extracted, extracted, 5);
-    save(extracted, path, "-final-blur");
 
     // cv::Mat element =
     //     cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(1, 1));
