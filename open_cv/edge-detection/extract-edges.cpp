@@ -33,10 +33,10 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     // cv::Mat processed = processColors(src, nullptr);
 
     // assert(processed.type() == 0);
-    cv::Mat edges = cannyFilter(path, image, true);
+    cv::Mat edges = cannyFilter(path, image, false);
 
     // extract edges via threshold
-    cv::Mat extracted = threshold(path, edges, thresh, true);
+    cv::Mat extracted = threshold(path, edges, thresh, false);
     cv::Mat inverted = invert(extracted);
     extracted.convertTo(extracted, CV_8UC1);
     cv::medianBlur(extracted, extracted, 5);
