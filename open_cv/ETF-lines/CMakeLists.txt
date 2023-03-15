@@ -27,7 +27,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable(tests tests.cpp 
      sobel_operator.cpp ETF.cpp test_sobel.cpp
      ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/invert.cpp ../boiler-plate/CIEprocess.cpp)
-add_executable(sobel Sobel.cpp)
+add_executable(sobel Sobel.cpp ../boiler-plate/read-save.cpp)
 # tell it to link the executable target against OpenCV
 target_link_libraries(tests ${OpenCV_LIBS})
 target_link_libraries(sobel ${OpenCV_LIBS})
