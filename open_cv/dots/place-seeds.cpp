@@ -1,24 +1,25 @@
 #include "place-seeds.hpp"
 
-cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving) {
-    cv::Mat image;
-    image = read(path, offsetMap);
+cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
+                   std::string pathDists, cv::Mat dists, int d, bool saving) {
+    cv::Mat offset;
+    offset = read(pathOffset, offsetMap);
 
-    assert(!image.empty());
-    if (image.type() != CV_32SC1) {
-        if (image.channels() != 1) {
-            cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+    assert(!offset.empty());
+    if (offset.type() != CV_32SC1) {
+        if (offset.channels() != 1) {
+            cv::cvtColor(offset, offset, cv::COLOR_RGB2GRAY);
         }
-        image.convertTo(image, CV_32SC1);
+        offset.convertTo(offset, CV_32SC1);
     }
 
     // blank map for seed pixels
-    cv::Mat seeds = cv::Mat(image.rows, image.cols, CV_8UC1, cv::Scalar(255));
+    cv::Mat seeds = cv::Mat(offset.rows, offset.cols, CV_8UC1, cv::Scalar(255));
     srand(time(0));
-    for (int i = 0; i < image.rows; i++) {
-        for (int j = 0; j < image.cols; j++) {
+    for (int i = 0; i < offset.rows; i++) {
+        for (int j = 0; j < offset.cols; j++) {
             // feature lines are black
-            if (image.at<int32_t>(i, j) != 0) {
+            if (offset.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
                 if (r <= 1 / double(d * d)) {
                     seeds.at<uchar>(i, j) = uchar(0);
@@ -28,7 +29,7 @@ cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving) {
     }
 
     if (saving) {
-        save(seeds, path, "-seeds");
+        save(seeds, pathOffset, "-seeds");
     }
 
     return seeds;
