@@ -17,7 +17,7 @@ I have pretty much every part of my thesis written (I think), so today I'm readi
 - [ ] Abstract 
 - [ ] Dedication ?
 - [ ] Fix bibliography issues
-  - [ ] Opencv 2014 citation
+  - [x] Opencv 2014 citation
 - [ ] Change hedcut list into command for consistency?
 - [x] Thesholding
 - [x] Method for selecting isophotes in section 2.2 
