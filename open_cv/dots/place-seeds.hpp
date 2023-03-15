@@ -9,3 +9,6 @@ visual map or a map with lines labeled, randomly places seed pixels in black on
 a white image.
 */
 cv::Mat placeSeeds(std::string path, cv::Mat offsetMap, int d, bool saving);
+cv::Mat placeSeedsAdjusted(std::string pathOffset, cv::Mat offsetMap,
+                           std::string pathDists, cv::Mat dists, int d,
+                           bool saving);
