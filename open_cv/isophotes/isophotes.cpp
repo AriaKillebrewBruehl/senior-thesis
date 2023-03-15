@@ -76,8 +76,13 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     // cv::Mat processed = processColors(src, &colors, bins);
 
     std::unordered_map<uchar, int> colors{};
-
     std::priority_queue<color_freq, std::vector<color_freq>, comp> heap;
+    for (int i = 0; i < image.rows; i++) {
+        for (int j = 0; j < image.cols; j++) {
+            uchar c = image.at<uchar>(i, j);
+            colors[c]++;
+        }
+    }
     // generate heap
     for (std::pair<uchar, int> i : colors) {
         heap.push(i);
@@ -93,16 +98,16 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     }
 
     // set all pixels >= t (lighter than t) to white
-    for (int i = 0; i < processed.rows; i++) {
-        for (int j = 0; j < processed.cols; j++) {
-            processed.at<uchar>(i, j) =
-                processed.at<uchar>(i, j) >= t ? uchar(255) : uchar(0);
+    for (int i = 0; i < image.rows; i++) {
+        for (int j = 0; j < image.cols; j++) {
+            image.at<uchar>(i, j) =
+                image.at<uchar>(i, j) >= t ? uchar(255) : uchar(0);
         }
     }
 
     if (saving) {
-        save(processed, path, "-highlights");
+        save(image, path, "-highlights");
     }
 
-    return processed;
+    return image;
 }
