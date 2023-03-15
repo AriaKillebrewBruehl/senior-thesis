@@ -6,3 +6,8 @@
 
 cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
                   cv::Mat imagOrig, int s_max, bool saving);
+
+cv::Mat placeDotsNegativeSpace(std::string pathSeeds, cv::Mat imgSeeds,
+                               std::string pathOrig, cv::Mat imgOrig,
+                               std::string pathNegative, cv::Mat imgNegative,
+                               int s_max, bool saving);
