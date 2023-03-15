@@ -76,7 +76,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     // cv::Mat processed = processColors(src, &colors, bins);
 
     std::unordered_map<uchar, int> colors{};
-    cv::Mat processed = posterize(path, image, &colors, bins, false);
+
     std::priority_queue<color_freq, std::vector<color_freq>, comp> heap;
     // generate heap
     for (std::pair<uchar, int> i : colors) {
