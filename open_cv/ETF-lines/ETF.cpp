@@ -22,8 +22,7 @@ int phi(cv::Point x, cv::Point y) {
     return -1;
 }
 
-cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat gHat, int r, int eta,
-                  int nbrhood) {
+cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat gHat, int r, int eta) {
     assert(tCurX.type() == CV_32FC1);
     assert(tCurY.type() == CV_32FC1);
     assert(gHat.type() == CV_32FC1);
@@ -38,8 +37,8 @@ cv::Mat ETFFilter(cv::Mat tCurX, cv::Mat tCurY, cv::Mat gHat, int r, int eta,
             cv::Vec2i vX =
                 cv::Vec2i(tCurX.at<float32_t>(x), tCurY.at<float32_t>(x));
             // for each pixel in the neighborhood
-            for (int a = 0; a < nbrhood; a++) {
-                for (int b = 0; b < nbrhood; b++) {
+            for (int a = 0; a < r; a++) {
+                for (int b = 0; b < r; b++) {
                     cv::Point y = cv::Point(a, b);
                     cv::Vec2i vY = cv::Vec2i(tCurX.at<float32_t>(y),
                                              tCurY.at<float32_t>(y));
@@ -69,7 +68,7 @@ cv::Mat normalizedGradientMagnitude(cv::Mat m) {
     std::transform(m.begin<cv::Vec2b>(), m.end<cv::Vec2b>(),
                    magnitude.begin<float32_t>(), [](cv::Vec2b p) -> float32_t {
                        uchar x = p[0];
-                       uchar y = p[0];
+                       uchar y = p[1];
                        return float32_t(sqrt(x * x + y * y));
                    });
 
@@ -91,6 +90,8 @@ cv::Mat normalizeMatrix(cv::Mat m) {
     // uchar max_val = max.at<uchar>(0, 0);
     // uchar min_val = min.at<uchar>(0, 0);
 
+    // there could be images where things are already normal and in the
+    // range of 0-1 so you'd need to amplify
     cv::Mat normalized = cv::Mat(m.size(), CV_32FC1);
     std::transform(m.begin<uchar>(), m.end<uchar>(),
                    normalized.begin<float32_t>(),
@@ -177,10 +178,12 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
     // compute normalized gradient magnitude of g0
     cv::Mat gHat = normalizedGradientMagnitude(g0_merged);
     assert(gHat.type() == CV_32FC1);
-    cv::Mat tCurX = t0X;
-    cv::Mat tCurY = t0Y;
+    cv::Mat tCurX = g0X_normalized;
+    cv::Mat tCurY = g0Y_normalized;
 
     cv::Mat tNew;
+    int r = 6;
+    int eta = 1;
     for (int i = 0; i < 2; i++) {
         std::string tagX = "-ETF-X-" + std::to_string(i + 1);
         std::string tagY = "-ETF-Y-" + std::to_string(i + 1);
@@ -188,7 +191,7 @@ cv::Mat ETF(std::string path, cv::Mat img, bool saving) {
         cv::Mat tCurYSacled = scaleUpMatrix(tCurY);
         save(tCurXSacled, path, tagX);
         save(tCurYSacled, path, tagY);
-        tNew = ETFFilter(tCurX, tCurY, gHat, 3, 1, 5);
+        tNew = ETFFilter(tCurX, tCurY, gHat, r, eta);
         cv::Mat t_channels[2];
         cv::split(tNew, t_channels);
         tCurX = t_channels[0];
