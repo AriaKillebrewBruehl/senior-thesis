@@ -1,7 +1,7 @@
 #include "extract-isophotes.hpp"
 
 cv::Mat extractIsophotes(std::string path, cv::Mat img, int edgethresh,
-                         int isothresh, bool saving) {
+                         int isothresh, int bins, bool saving) {
     cv::Mat image;
     image = read(path, img);
     assert(!image.empty());
@@ -16,8 +16,10 @@ cv::Mat extractIsophotes(std::string path, cv::Mat img, int edgethresh,
         image.convertTo(image, 16);
     }
 
+    // get posterized image
+    cv::Mat poster = posterize(path, image, bins, false);
     // get isophote image
-    cv::Mat isos = getIsophotes(path, image, isothresh, false);
+    cv::Mat isos = getIsophotes(path, poster, isothresh, false);
     assert(isos.type() == 0);
 
     // extract edges from isophote image
