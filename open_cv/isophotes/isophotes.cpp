@@ -35,10 +35,7 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     for (std::pair<uchar, int> i : colors) {
         heap.push(i);
     }
-    // take the top thresh colors
-    // int s = (heap.size() <= thresh)
-    //             ? 1
-    //             : std::ceil(float(heap.size()) / float(thresh));
+
     if (thresh > heap.size()) {
         thresh = heap.size();
     }
