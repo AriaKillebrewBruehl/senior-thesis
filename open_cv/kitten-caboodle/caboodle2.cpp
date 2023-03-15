@@ -17,7 +17,7 @@ cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
     std::cout << "extracted edges from image" << std::endl;
 
     // step 2: extract the isophotes of the image
-    cv::Mat isophotes = extractIsophotes(path, image, 10, 5, false);
+    cv::Mat isophotes = extractIsophotes(path, image, 10, 1, false);
     if (isophotes.type() != 0) {
         isophotes.convertTo(isophotes, 0);
     }
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 
     // set up default parameter values
     const int EDGE_THRESH = 300;
-    const int ISOS_HIGHLIGHT_THRESH = 5;
+    const int ISOS_HIGHLIGHT_THRESH = 1;
     const int ISOS_THRESH = 50;
     const int L = 6.0;
     const int MAX_SIZE = 15;
@@ -212,7 +212,9 @@ ISOPHOTE_DETECTION : {
             save(isophotes, image_path, tag);
         }
         if (key == 'i') {
-            thresh_iso_highlights--;
+            if (thresh_iso_highlights != 1) {
+                thresh_iso_highlights--;
+            }
         }
         if (key == 'I') {
             thresh_iso_highlights++;

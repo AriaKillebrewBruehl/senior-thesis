@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
     // set up default parameter values
     const int EDGE_THRESH = 300;
-    const int ISOS_HIGHLIGHT_THRESH = 5;
+    const int ISOS_HIGHLIGHT_THRESH = 1;
     const int ISOS_THRESH = 200;
     const int L = 6.0;
     const int NEGATIVE_SPACE_THRESH = 6;
@@ -203,7 +203,9 @@ ISOPHOTE_DETECTION : {
             save(isophotes, image_path, tag);
         }
         if (key == 'i') {
-            thresh_iso_highlights--;
+            if (thresh_iso_highlights != 1) {
+                thresh_iso_highlights--;
+            }
         }
         if (key == 'I') {
             thresh_iso_highlights++;
