@@ -32,7 +32,8 @@ I have pretty much every part of my thesis written (I think), so today I'm readi
 - [x] 1.2.1 flower drawn in 3 ways
 - [x] 1.4.2 sobel operator
 - [ ] 2.1 canny versus DoG
-- [ ] 2.1 Initial edges detected 
+- [x] 2.1 Initial edges detected 
+- [x] 2.1 closeup of edges
 - [x] 2.1.1 thresholded edges 
 - [x] Add input image to figure 2.4
 - [ ] CLI video
