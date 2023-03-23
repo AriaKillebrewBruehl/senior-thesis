@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 
     // set up default parameter values
     const int EDGE_THRESH = 300;
-    const int ISOS_HIGHLIGHT_THRESH = 1;
+    const int ISOS_HIGHLIGHT_THRESH = 2;
     const int ISOS_THRESH = 50;
     const int L = 6.0;
     const int MAX_SIZE = 15;
