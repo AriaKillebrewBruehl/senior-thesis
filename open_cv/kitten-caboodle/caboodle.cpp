@@ -1,50 +1,5 @@
 #include "caboodle.hpp"
 
-/*
-cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
-    cv::Mat image;
-    image = read(path, img);
-    assert(!image.empty());
-    if (image.channels() == 4) {
-        cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
-    }
-
-    // step 1: extract the edges of the image
-    cv::Mat edges = extractEdges(path, image, 300, false);
-    if (edges.type() != 0) {
-        edges.convertTo(edges, 0);
-    }
-
-    std::cout << "extracted edges from image" << std::endl;
-
-    // step 2: extract the isophotes of the image
-    cv::Mat isophotes = extractIsophotes(path, image, 10, 5, false);
-    if (isophotes.type() != 0) {
-        isophotes.convertTo(isophotes, 0);
-    }
-    std::cout << "extracted isophotes from image" << std::endl;
-
-    // step 3: offset map
-    cv::Mat map = fullMap(path, edges, path, isophotes, 6.0, true, false);
-    std::cout << "extracted offset map from image" << std::endl;
-
-    // step 4: generate initial dot placement
-    cv::Mat seeds = placeSeeds(path, map, 6.0, false);
-    std::cout << "finalized initial dot placement for image" << std::endl;
-
-    // step 5: generate final dot placement
-    cv::Mat adjusted = dots(path, map, path, seeds, 6.0, false);
-    std::cout << "finalized dot placement for image" << std::endl;
-
-    // step 6: place circles!
-    cv::Mat rendered = placeDots(path, adjusted, path, image, 20, true);
-    std::cout << "sized dots" << std::endl;
-    save(rendered, path, "-rendered");
-
-    return rendered;
-}
-*/
-
 int main(int argc, char** argv) {
     cv::CommandLineParser parser(argc, argv, "{@input   ||input image}");
 
@@ -79,7 +34,6 @@ int main(int argc, char** argv) {
 
     // set up default parameter values
     const int EDGE_THRESH = 300;
-    const int BINS = 5;
     const int ISOS_HIGHLIGHT_THRESH = 1;
     const int ISOS_THRESH = 200;
     const int L = 6.0;
@@ -89,8 +43,6 @@ int main(int argc, char** argv) {
     // setup variables
     bool auto_save = false;
     cv::Mat edges;
-    int bins = BINS;
-    cv::Mat poster;
     int thresh_edges = EDGE_THRESH;
     cv::Mat isophotes;
     int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
@@ -103,7 +55,6 @@ int main(int argc, char** argv) {
     cv::Mat initial_dots;
     int d = l;
     cv::Mat adjusted_dots;
-    cv::Mat negative_poster;
     cv::Mat negative_space;
     int thresh_negative_space = NEGATIVE_SPACE_THRESH;
     cv::Mat rendered;
@@ -154,7 +105,7 @@ EDGE_EXTRACTION : {
             goto SET_UP;
         }
         if (key == 'n' || key == 'N') {
-            goto POSTERIZE;
+            goto ISOPHOTE_DETECTION;
         }
         if (key == 'r' || key == 'R') {
             thresh_edges = EDGE_THRESH;
@@ -173,46 +124,6 @@ EDGE_EXTRACTION : {
         cv::imshow("Hedcut Demo - Extracted Edges", edges);
     }
 }
-// 3) accept edge image and begin isophotes detection
-POSTERIZE : {
-    std::cout << "\nBeginning isophote posterization proccess\n\n"
-                 "Press:\n"
-                 "   'P' / 'p' to increase / decrease number of sections in "
-                 "poster (initial value is 5)\n ";
-    poster = posterize(image_path, image, bins, false);
-    cv::destroyWindow("Hedcut Demo - Extracted Edges");
-    cv::imshow("Hedcut Demo - Isophote Posterization", poster);
-    for (;;) {
-        char key = (char)cv::waitKey(0);
-        if (auto_save || key == 's' || key == 'S') {
-            std::string tag = "-isophote-posterization" + std::to_string(bins);
-            save(poster, image_path, tag);
-        }
-        if (key == 27) {
-            return EXIT_SUCCESS;
-        }
-        if (key == 'b' || key == 'B') {
-            cv::destroyWindow("Hedcut Demo - Isophote Posterization");
-            goto EDGE_EXTRACTION;
-        }
-        if (key == 'n' || key == 'N') {
-            goto ISOPHOTE_DETECTION;
-        }
-        if (key == 'r' || key == 'R') {
-            bins = BINS;
-        }
-        if (key == 'p') {
-            if (bins != 1) {
-                bins--;
-            }
-        }
-        if (key == 'P') {
-            bins++;
-        }
-        poster = posterize(image_path, image, bins, false);
-        cv::imshow("Hedcut Demo - Isophote Posterization", poster);
-    }
-}
 
 // 3) accept edge image and begin isophotes detection
 ISOPHOTE_DETECTION : {
@@ -221,7 +132,7 @@ ISOPHOTE_DETECTION : {
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
-    cv::destroyWindow("Hedcut Demo - Isophote Posterixation");
+    cv::destroyWindow("Hedcut Demo - Extracted Edges");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
         if (auto_save) {
@@ -235,7 +146,7 @@ ISOPHOTE_DETECTION : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Detected Isophotes");
-            goto POSTERIZE;
+            goto EDGE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
             goto ISOPHOTE_EXTRACTION;
@@ -430,7 +341,7 @@ ADJUST_DOTS : {
             goto PLACE_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            goto NEG_POSTERIZE;
+            goto CHOOSE_NEGATIVE;
         }
         if (key == 's' || 'S') {
             std::string tag = "-adjusted";
@@ -442,45 +353,7 @@ ADJUST_DOTS : {
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
-NEG_POSTERIZE : {
-    std::cout << "\nBeginning negative space posterization proccess\n\n"
-                 "Press:\n"
-                 "   'P' / 'p' to increase / decrease number of sections in "
-                 "poster (initial value is 5)\n ";
-    negative_poster = posterize(image_path, image, bins, false);
-    cv::destroyWindow("Hedcut Demo - Adjusted Dots");
-    cv::imshow("Hedcut Demo - Negative Space Posterization", negative_poster);
-    for (;;) {
-        char key = (char)cv::waitKey(0);
-        if (auto_save || key == 's' || key == 'S') {
-            std::string tag = "-neg-posterization" + std::to_string(bins);
-            save(poster, image_path, tag);
-        }
-        if (key == 27) {
-            return EXIT_SUCCESS;
-        }
-        if (key == 'b' || key == 'B') {
-            cv::destroyWindow("Hedcut Demo - Negative Posterization");
-            goto ADJUST_DOTS;
-        }
-        if (key == 'n' || key == 'N') {
-            goto CHOOSE_NEGATIVE;
-        }
-        if (key == 'r' || key == 'R') {
-            bins = BINS;
-        }
-        if (key == 'p') {
-            if (bins != 1) {
-                bins--;
-            }
-        }
-        if (key == 'I') {
-            bins++;
-        }
-        negative_poster = posterize(image_path, image, bins, false);
-        cv::imshow("Hedcut Demo - Negative Posterization", negative_poster);
-    }
-}
+
 // 8) accept adjusted dots and choose areas to not place circles
 CHOOSE_NEGATIVE : {
     std::cout << "\nBeginning negative space detection proccess.\nWhite areas "
@@ -489,7 +362,7 @@ CHOOSE_NEGATIVE : {
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     negative_space =
-        getIsophotes(image_path, negative_poster, thresh_negative_space, false);
+        getIsophotes(image_path, image, thresh_negative_space, false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
