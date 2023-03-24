@@ -12,4 +12,4 @@
 #include "isophotes.hpp"
 
 cv::Mat extractIsophotes(std::string path, cv::Mat img, int edgethresh,
-                         int isothresh, int bins, bool saving);
+                         int isothresh, bool saving);
