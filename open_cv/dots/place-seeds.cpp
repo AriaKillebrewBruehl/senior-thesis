@@ -69,16 +69,7 @@ cv::Mat placeSeedsAdjusted(std::string pathOffset, cv::Mat offsetMap,
             // feature lines are black
             if (offset.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
-                int s;
-                int dist = distancess.at<int32_t>(i, j);
-                if (dist < 5) {
-                    s = d * 0.5;
-                } else if (dist < 10) {
-                    s = d * 0.75;
-                } else {
-                    s = d + (dist / 25);
-                }
-                if (r <= 1 / double(s * s)) {
+                if (r <= 1 / double(d * d)) {
                     seeds.at<uchar>(i, j) = uchar(0);
                 }
             }
