@@ -361,7 +361,9 @@ CHOOSE_NEGATIVE : {
             thresh_negative_space = NEGATIVE_SPACE_THRESH;
         }
         if (key == 'i') {
-            thresh_negative_space--;
+            if (thresh_negative_space != 1) {
+                thresh_negative_space--;
+            }
         }
         if (key == 'I') {
             thresh_negative_space++;
