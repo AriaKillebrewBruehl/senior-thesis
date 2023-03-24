@@ -141,10 +141,10 @@ EDGE_EXTRACTION : {
                  "value is 300 px)\n";
 
     thresh_edges = 300;
-    edges = extractEdges(image_path, image, thresh_edges, false);
     cv::destroyWindow("Hedcut Demo - Initial Input");
-    cv::imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
+        edges = extractEdges(image_path, image, thresh_edges, false);
+        cv::imshow("Hedcut Demo - Extracted Edges", edges);
         if (auto_save) {
             std::string tag = "-edges-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
@@ -173,8 +173,6 @@ EDGE_EXTRACTION : {
         if (key == 'T') {
             thresh_edges += 25;
         }
-        edges = extractEdges(image_path, image, thresh_edges, false);
-        cv::imshow("Hedcut Demo - Extracted Edges", edges);
     }
 }
 // 3) accept edge image and begin isophotes detection
@@ -183,10 +181,11 @@ ISOPHOTE_DETECTION : {
                  "Press:\n"
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
-    isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
-    cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
+        isophotes =
+            getIsophotes(image_path, image, thresh_iso_highlights, false);
+        cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
         if (auto_save) {
             std::string tag =
                 "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
@@ -219,9 +218,6 @@ ISOPHOTE_DETECTION : {
         if (key == 'I') {
             thresh_iso_highlights++;
         }
-        isophotes =
-            getIsophotes(image_path, image, thresh_iso_highlights, false);
-        cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     }
 }
 // 4) accept isohpotes and begin isophote extraction
@@ -230,12 +226,11 @@ ISOPHOTE_EXTRACTION : {
                  "Press:\n"
                  "   'T' / 't' to increase / decrease threshold parameter by "
                  "10 px for edge detection (initial value is 50 px)\n";
-
-    isophotes_extracted =
-        extractEdges(image_path, isophotes, thresh_isophotes, false);
     cv::destroyWindow("Hedcut Demo - Detected Isophotes");
-    cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
+        isophotes_extracted =
+            extractEdges(image_path, isophotes, thresh_isophotes, false);
+        cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
         if (auto_save) {
             std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
             save(isophotes_extracted, image_path, tag);
@@ -264,9 +259,6 @@ ISOPHOTE_EXTRACTION : {
         if (key == 'T') {
             thresh_isophotes += 10;
         }
-        isophotes_extracted =
-            extractEdges(image_path, isophotes, thresh_isophotes, false);
-        cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     }
 }
 // 5) accept isophotes and begin offsetmap generation
@@ -276,15 +268,15 @@ OFFSET_MAP : {
            "Press:\n"
            "   'L' / 'l' to increase / decrease offset lane distance by 1 px "
            "(initial value is 6.0 px)\n";
-
-    offset_map = fullMap(image_path, edges, image_path, isophotes_extracted, l,
-                         true, false);
-    offset_map_visual = fullMap(image_path, edges, image_path,
-                                isophotes_extracted, l, false, false);
-    offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
-    cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
+        offset_map = fullMap(image_path, edges, image_path, isophotes_extracted,
+                             l, true, false);
+        offset_map_visual = fullMap(image_path, edges, image_path,
+                                    isophotes_extracted, l, false, false);
+        offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
+
+        cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
         if (auto_save) {
             std::string tag = "-offset-map-" + std::to_string(l);
             save(offset_map_visual, image_path, tag);
@@ -313,12 +305,6 @@ OFFSET_MAP : {
         if (key == 'L') {
             l += 1.0;
         }
-        offset_map = fullMap(image_path, edges, image_path, isophotes_extracted,
-                             l, true, false);
-        offset_map_visual = fullMap(image_path, edges, image_path,
-                                    isophotes_extracted, l, false, false);
-        offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
-        cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
 // 6) place dots
@@ -330,11 +316,11 @@ PLACE_DOTS : {
                  "(initial value is 6.0 px)\n";
 
     d = l;
-    initial_dots = placeSeeds(image_path, offset_map, d, false);
-    std::cout << "Finished placing dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
-    cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
     for (;;) {
+        initial_dots = placeSeeds(image_path, offset_map, d, false);
+        std::cout << "Finished placing dots" << std::endl;
+        cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
         if (auto_save) {
             std::string tag = "-initial-dots";
             save(initial_dots, image_path, tag);
@@ -363,21 +349,17 @@ PLACE_DOTS : {
             std::string tag = "-initial-dots";
             save(initial_dots, image_path, tag);
         }
-        initial_dots = placeSeeds(image_path, offset_map, d, false);
-        std::cout << "Finished placing seed dots" << std::endl;
-        cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
     }
 }
 // 7) accept initial dots and begin dot adjusting
 ADJUST_DOTS : {
     std::cout << "\nBeginning dot adjusting process.\n";
-
-    adjusted_dots =
-        dots(image_path, offset_map, image_path, initial_dots, l, false);
-    std::cout << "Finished adjusting dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
-    cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
+        adjusted_dots =
+            dots(image_path, offset_map, image_path, initial_dots, l, false);
+        std::cout << "Finished adjusting dots" << std::endl;
+        cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
         if (auto_save) {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
@@ -397,10 +379,6 @@ ADJUST_DOTS : {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
-        adjusted_dots =
-            dots(image_path, offset_map, image_path, initial_dots, d, false);
-        std::cout << "Finished adjusting dots" << std::endl;
-        cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
 // 8) accept adjusted dots and place final circles
@@ -409,12 +387,11 @@ PLACE_CIRCLES : {
                  "Press:\n"
                  "   'D' / 'd' to increase / decrease maximum circle size by 1 "
                  "(initial value is 12 px)\n";
-
-    rendered = placeDots(image_path, adjusted_dots, image_path, image, max_size,
-                         false);
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
-    cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
+        rendered = placeDots(image_path, adjusted_dots, image_path, image,
+                             max_size, false);
+        cv::imshow("Hedcut Demo - Rendered", rendered);
         if (auto_save) {
             std::string tag = "-rendered-" + std::to_string(max_size);
             save(rendered, image_path, tag);
@@ -443,9 +420,6 @@ PLACE_CIRCLES : {
         if (key == 'D') {
             max_size++;
         }
-        rendered = placeDots(image_path, adjusted_dots, image_path, image,
-                             max_size, false);
-        cv::imshow("Hedcut Demo - Rendered", rendered);
     }
 }
     return EXIT_SUCCESS;
