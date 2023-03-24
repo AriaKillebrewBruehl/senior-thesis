@@ -92,11 +92,11 @@ EDGE_EXTRACTION : {
     cv::destroyWindow("Hedcut Demo - Initial Input");
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-edges-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -109,10 +109,6 @@ EDGE_EXTRACTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_edges = EDGE_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-edges-" + std::to_string(thresh_edges);
-            save(edges, image_path, tag);
         }
         if (key == 't') {
             thresh_edges -= 25;
@@ -135,12 +131,12 @@ ISOPHOTE_DETECTION : {
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag =
                 "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
             save(isophotes, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -153,11 +149,6 @@ ISOPHOTE_DETECTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag =
-                "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
-            save(isophotes, image_path, tag);
         }
         if (key == 'i') {
             if (thresh_iso_highlights != 1) {
@@ -184,11 +175,11 @@ ISOPHOTE_EXTRACTION : {
     cv::destroyWindow("Hedcut Demo - Detected Isophotes");
     cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
             save(isophotes_extracted, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -201,10 +192,6 @@ ISOPHOTE_EXTRACTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_isophotes = ISOS_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
-            save(isophotes_extracted, image_path, tag);
         }
         if (key == 't') {
             thresh_isophotes -= 10;
@@ -233,11 +220,11 @@ OFFSET_MAP : {
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-offset-map-" + std::to_string(l);
             save(offset_map_visual, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -250,10 +237,6 @@ OFFSET_MAP : {
         }
         if (key == 'r' || key == 'R') {
             l = L;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-offset-map-" + std::to_string(l);
-            save(offset_map_visual, image_path, tag);
         }
         if (key == 'l') {
             l -= 1.0;
@@ -284,11 +267,11 @@ PLACE_DOTS : {
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-initial-dots";
             save(initial_dots, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -308,10 +291,6 @@ PLACE_DOTS : {
         if (key == 'r' || key == 'R') {
             d = L;
         }
-        if (key == 's' || 'S') {
-            std::string tag = "-initial-dots";
-            save(initial_dots, image_path, tag);
-        }
         initial_dots = placeSeedsAdjusted(image_path, offset_map, image_path,
                                           distances, d, false);
         std::cout << "Finished placing seed dots" << std::endl;
@@ -328,11 +307,11 @@ ADJUST_DOTS : {
     cv::destroyWindow("Hedcut Demo - Initial Dots");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || 'S') {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -342,10 +321,6 @@ ADJUST_DOTS : {
         }
         if (key == 'n' || key == 'N') {
             goto CHOOSE_NEGATIVE;
-        }
-        if (key == 's' || 'S') {
-            std::string tag = "-adjusted";
-            save(adjusted_dots, image_path, tag);
         }
         adjusted_dots =
             dots(image_path, offset_map, image_path, initial_dots, d, false);
@@ -366,12 +341,12 @@ CHOOSE_NEGATIVE : {
     cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || 'S') {
             std::string tag =
                 "-negative-space-" + std::to_string(thresh_negative_space);
             save(negative_space, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -384,11 +359,6 @@ CHOOSE_NEGATIVE : {
         }
         if (key == 'r' || key == 'R') {
             thresh_negative_space = NEGATIVE_SPACE_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag =
-                "-negative-space-" + std::to_string(thresh_negative_space);
-            save(negative_space, image_path, tag);
         }
         if (key == 'i') {
             thresh_negative_space--;
@@ -414,11 +384,11 @@ PLACE_CIRCLES : {
     cv::destroyWindow("Hedcut Demo - Negative Space");
     cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-rendered-" + std::to_string(max_size);
             save(rendered, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -431,10 +401,6 @@ PLACE_CIRCLES : {
         }
         if (key == 'r' || key == 'R') {
             max_size = MAX_SIZE;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-rendered-" + std::to_string(max_size);
-            save(rendered, image_path, tag);
         }
         if (key == 'd') {
             max_size--;
@@ -460,11 +426,11 @@ OUTLINE : {
     cv::destroyWindow("Hedcut Demo - Rendered");
     cv::imshow("Hedcut Demo - Outline", outline);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-outline-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -477,10 +443,6 @@ OUTLINE : {
         }
         if (key == 'r' || key == 'R') {
             thresh_outline = OUTLINE_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-outline-" + std::to_string(thresh_edges);
-            save(edges, image_path, tag);
         }
         if (key == 't') {
             thresh_outline -= 25;
@@ -503,21 +465,17 @@ FINAL_RENDERING : {
     cv::bitwise_and(rendered, enlarged_outline, final_rendering);
     cv::imshow("Hedcut Demo - Final Rendering", final_rendering);
     for (;;) {
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-final-rendering";
             save(final_rendering, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Outline");
             goto OUTLINE;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-final-rendering";
-            save(final_rendering, image_path, tag);
         }
     }
 }
