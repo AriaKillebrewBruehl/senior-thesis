@@ -74,7 +74,14 @@ SET_UP : {
             return EXIT_SUCCESS;
         }
         if (key == 'a' || key == 'A') {
-            auto_save = true;
+            auto_save = !auto_save;
+            std::cout << "AUTO SAVE IS";
+            if (auto_save) {
+                std::cout << " ON. Hit 'a' to turn off.";
+            } else {
+                std::cout << " OFF. Hit 'a' to turn on.";
+            }
+            std::cout << std::endl;
         }
         if (key == 'n' || key == 'N') {
             goto EDGE_EXTRACTION;
@@ -260,7 +267,7 @@ PLACE_DOTS : {
                  "distance by 1 px "
                  "(initial value is 6.0 px)\n";
 
-    d = l * 1.5;
+    d = l;
     initial_dots = placeSeedsAdjusted(image_path, offset_map, image_path,
                                       distances, d, false);
     std::cout << "Finished placing dots" << std::endl;
@@ -308,7 +315,7 @@ ADJUST_DOTS : {
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
         char key = (char)cv::waitKey(0);
-        if (auto_save || key == 's' || 'S') {
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
@@ -342,7 +349,7 @@ CHOOSE_NEGATIVE : {
     cv::imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
         char key = (char)cv::waitKey(0);
-        if (auto_save || key == 's' || 'S') {
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag =
                 "-negative-space-" + std::to_string(thresh_negative_space);
             save(negative_space, image_path, tag);
@@ -396,7 +403,7 @@ PLACE_CIRCLES : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Rendered");
-            goto ADJUST_DOTS;
+            goto CHOOSE_NEGATIVE;
         }
         if (key == 'n' || key == 'N') {
             goto OUTLINE;
@@ -476,7 +483,7 @@ FINAL_RENDERING : {
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
-            cv::destroyWindow("Hedcut Demo - Outline");
+            cv::destroyWindow("Hedcut Demo - Final Rendering");
             goto OUTLINE;
         }
     }
