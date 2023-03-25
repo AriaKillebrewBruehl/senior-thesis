@@ -2,10 +2,12 @@
 
 inline uchar reduceVal(const uchar val, int bins) {
     int bin_size = 255 / bins;
-    // if (val > 255 - bin_size) {
-    //     return 255;
-    // } else {
-    return uchar(val / bin_size) * bin_size;
+    int top_bin = bin_size + 255 % bins;
+    if (val > 255 - top_bin) {
+        return 255;
+    } else {
+        return uchar(((val / bin_size) + 1) * bin_size);
+    }
     // if (val < 192) return uchar(val / 64.0 + 0.5) * 64;
     // }
 }
