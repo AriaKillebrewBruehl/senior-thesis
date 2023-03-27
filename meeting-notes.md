@@ -1,5 +1,70 @@
 ## Meeting Notes
 
+# 03.27.2023
+
+- More of a thesis in the sciences a manual for how it all got priced together 
+  - A little of a lab report style at times 
+    - May not need to have that style 
+      - Spend a lot of time defending some choices which may not be necessary 
+        - To make this sound more like a thesis just state it and say why its good, just say I did it and don't worry about defending things 
+          - Opencv has a c++ that makes it perform better and I chose not to use it bc x 
+        - Same thing with choosing opencv rather than writing it myself 
+          - Don't be apologetic 
+- In section of sober filter and things like that 
+  - Describe what a filter and a kernel is and what it means to apply it 
+    - Before going into all the filters describe how kernels and weighted averages work
+      - This is called a filter and I'll present kernels to those filters and this is why they mean 
+- Write an abstract 
+
+
+
+## whole draft notes
+
+- Title: rendering hedcuts, what I'm giving is a tool that is parameterized that allows us to explore the rendering of hedcuts, taking a few existing methods and seeing what the effects were doing one thing or another, I'm acknowledging what they do not which is that it requires so much tweaking 
+- **results** 
+  - Moir when the region is really dark 
+    - Top right man in level 1 results 
+    - When the dots are bigger (darker regions) its more obvious that some of them are closer together than others 
+  - Sydney:
+    - There are so many dots by the chin and they are competing with eachtoher so they don't really have a chance to follow grid lines 
+    - Varying stippling density throughout the image
+      - If things are less dense then to model the same tone you will need to make there radius bigger
+        - Then if there are more dots you don't need as big of a radi
+        - Vary dot density throughout then inform radius based on density 
+          - Can I create a tool that allows us to pain areas where we want more density or not 
+  - Try adding contrast to Phil Nguyen 
+    - His left half is good but his right half looses the contrast 
+  - Top left guy has such dense dots that its not that great 
+  - Obama has too many dots
+    - Try scaling down? 
+  - Curly: I get some of the contour lines but not all of the ones that randy does, this is from the isophote method that doesn't know how to deal with this 
+    - Try lessening the regularity of the lanes to make fewer dots 
+  - I have a linear relationship between dot size and gray scale, should this be a scaled relation? 
+  - In c3 loosing the stylized contours? 
+  - In general input to my algorithm needs better cartoonish contours 
+    - What if I gave my all a more cartoonish face 
+- In a survey of image and video based artist stylization [23] Isenberg gives 
+- 0.3 see the end results give an image of WSJ good AI 
+- 0.6 weird sentence 
+- 0.7 weird reference to appendix 
+- Fig 5 how do you say movie premiers 
+- CYM is subtractive color versus RGB is additive, you remove more light by adding more dye 
+- 16/17 don't overly defend things, just state the facts 
+  - But also give the qualities of the things that I chose 
+- 2.1.1 do we need to give the whole name 
+- \noindent 
+- Instead of user specified say before we changed our tool to be interactive we chose these things 
+  - Allow to be interactively changed 
+- Change 4.9b to 4.9(b) 
+- Minorities and majorites  
+  - Tease out skin tone versus scars 
+  - Be explicit about the value judgement 
+  - I'd like my tool to work for this wide variety of ppl 
+    - Also the artists who do hedcuts by hand probably apply different approaches to x y and z 
+- Move results just to results section 
+
+
+
 # 03.10.2023
 
 Questions for today's meeting:
