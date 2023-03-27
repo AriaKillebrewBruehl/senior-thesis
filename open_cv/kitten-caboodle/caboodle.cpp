@@ -34,7 +34,8 @@ int main(int argc, char** argv) {
 
     // set up default parameter values
     const int EDGE_THRESH = 300;
-    const int ISOS_HIGHLIGHT_THRESH = 1;
+    const int BINS = 5;
+    const int ISOS_HIGHLIGHT_THRESH = 2;
     const int ISOS_THRESH = 200;
     const int L = 6.0;
     const int NEGATIVE_SPACE_THRESH = 1;
@@ -44,6 +45,8 @@ int main(int argc, char** argv) {
     bool auto_save = false;
     cv::Mat edges;
     int thresh_edges = EDGE_THRESH;
+    cv::Mat posterized;
+    int bins = BINS;
     cv::Mat isophotes;
     int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
     cv::Mat isophotes_extracted;
@@ -112,7 +115,7 @@ EDGE_EXTRACTION : {
             goto SET_UP;
         }
         if (key == 'n' || key == 'N') {
-            goto ISOPHOTE_DETECTION;
+            goto POSTERIZE;
         }
         if (key == 'r' || key == 'R') {
             thresh_edges = EDGE_THRESH;
@@ -127,6 +130,46 @@ EDGE_EXTRACTION : {
         cv::imshow("Hedcut Demo - Extracted Edges", edges);
     }
 }
+// 3) accept edge image and posterize input image
+POSTERIZE : {
+    std::cout << "\nBeginning posterization proccess\n\n"
+                 "Press:\n"
+                 "   'P' / 'p' to increase / decrease number of bins for "
+                 "posterization (initial value is 5)\n ";
+    posterized = posterize(image_path, image, bins, false);
+    cv::destroyWindow("Hedcut Demo - Extracted Edges");
+    cv::imshow("Hedcut Demo - Posterized", posterized);
+    for (;;) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
+            std::string tag = "-posterized-" + std::to_string(bins);
+            save(isophotes, image_path, tag);
+        }
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Posterized");
+            goto EDGE_EXTRACTION;
+        }
+        if (key == 'n' || key == 'N') {
+            goto ISOPHOTE_DETECTION;
+        }
+        if (key == 'r' || key == 'R') {
+            bins = BINS;
+        }
+        if (key == 'p') {
+            if (bins != 1) {
+                bins--;
+            }
+        }
+        if (key == 'P') {
+            bins++;
+        }
+        posterized = posterize(image_path, image, bins, false);
+        cv::imshow("Hedcut Demo - Posterized", posterized);
+    }
+}
 
 // 3) accept edge image and begin isophotes detection
 ISOPHOTE_DETECTION : {
@@ -135,7 +178,7 @@ ISOPHOTE_DETECTION : {
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
-    cv::destroyWindow("Hedcut Demo - Extracted Edges");
+    cv::destroyWindow("Hedcut Demo - Posterized");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -149,7 +192,7 @@ ISOPHOTE_DETECTION : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Detected Isophotes");
-            goto EDGE_EXTRACTION;
+            goto POSTERIZE;
         }
         if (key == 'n' || key == 'N') {
             goto ISOPHOTE_EXTRACTION;
