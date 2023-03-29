@@ -2,6 +2,22 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+
+
+# 03.27.2023
+
+
+
+Things to still fix from Jim's notes:
+
+- [x] Overview of light receptor cells 
+- [x] Good ai image
+- [ ] Second image of Sydney rendered 
+- [x] CMY subtractive color 
+- [ ] Kernels and filters 
+- [x] Image processing part 
+- [ ] Figure 3.8 formatting 
+
 # 03.25.2023
 
 After running all versions with my wider set of input images I see a big issue in the posterization process. On subjects with dark skin the initial binary from the posterized image is almost all black, on light skin subjects it is almost all white. So I think the next improvement will be making it so posterization can be customizable.
@@ -617,20 +633,20 @@ Okay so basically jfa is super super slow if the image is larger.
 Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm
 
     image = read(img);
-
+    
     for (i < MAX_KERNEL_LENGTH) {
         apply bilateral filter to image;
     }
-
+    
     image = convert-to-CIELab;
-
+    
     // luminance quatization and remove a and b
     // now color in image represents luminance
     processColors(image);
-
+    
     image = grayscale(image);
     image = threshold(image);
-
+    
     return image;
 
 This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
@@ -724,34 +740,34 @@ Here is the final algorithm:
         set any pixel that is not equal to i to black;
         return isolated;
     }
-
+    
     threshold {
         read in image;
-
+    
         convert to binary;
-
+    
         cv::Mat labels;
         cv::Mat stats;
         cv::Mat centroids;
         int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids);
-
+    
         std::unordered_map<int, bool> remove;
-
+    
         for each component except the background  {
             comp = just the component;
             isolated = isolate(comp, i);
             skel = skeleton(isolated);
             remove[i] = !meetsThreshold(skel, theshhold);
         }
-
+    
         for each pixel in the labeled image {
             color = pixel;
-
+    
             if remove[color] {
                 pixel = 0;
             }
         }
-
+    
     }
 
 <p align = "center">
