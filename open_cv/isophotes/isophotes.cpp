@@ -72,16 +72,17 @@ cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving) {
     }
 
     // set all pixels >= t (lighter than t) to white
-    for (int i = 0; i < image.rows; i++) {
-        for (int j = 0; j < image.cols; j++) {
-            image.at<uchar>(i, j) =
+    cv::Mat isophotes = cv::Mat(image.size(), image.type());
+    for (int i = 0; i < isophotes.rows; i++) {
+        for (int j = 0; j < isophotes.cols; j++) {
+            isophotes.at<uchar>(i, j) =
                 image.at<uchar>(i, j) >= t ? uchar(255) : uchar(0);
         }
     }
 
     if (saving) {
-        save(image, path, "-highlights");
+        save(isophotes, path, "-highlights");
     }
 
-    return image;
+    return isophotes;
 }
