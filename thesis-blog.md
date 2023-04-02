@@ -2,6 +2,14 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+
+
+# 04.02.2023
+
+*OpenCV has exactly what I am looking for yet again :money_mouth_face:* 
+
+Okay I think that the best improvement that could be made to the results is making it so there are regions where the dots are denser and regions where the dots are less dense. I already tried this using distance from feature line but that made things weird. I think a solution would be to allow the user to select the regions where they want dots to be denser. This should be possible with 
+
 # 03.25.2023
 
 After running all versions with my wider set of input images I see a big issue in the posterization process. On subjects with dark skin the initial binary from the posterized image is almost all black, on light skin subjects it is almost all white. So I think the next improvement will be making it so posterization can be customizable.
@@ -617,20 +625,20 @@ Okay so basically jfa is super super slow if the image is larger.
 Okay I came up with a pretty good way to doing isophote extraction. Here is the algorithm
 
     image = read(img);
-
+    
     for (i < MAX_KERNEL_LENGTH) {
         apply bilateral filter to image;
     }
-
+    
     image = convert-to-CIELab;
-
+    
     // luminance quatization and remove a and b
     // now color in image represents luminance
     processColors(image);
-
+    
     image = grayscale(image);
     image = threshold(image);
-
+    
     return image;
 
 This will give back a binary image with only the isophotes. Then you can run DoG on the result and you will have the isophotes!
@@ -724,34 +732,34 @@ Here is the final algorithm:
         set any pixel that is not equal to i to black;
         return isolated;
     }
-
+    
     threshold {
         read in image;
-
+    
         convert to binary;
-
+    
         cv::Mat labels;
         cv::Mat stats;
         cv::Mat centroids;
         int numComps =  cv::connectedComponentsWithStats(image, labels, stats, centroids);
-
+    
         std::unordered_map<int, bool> remove;
-
+    
         for each component except the background  {
             comp = just the component;
             isolated = isolate(comp, i);
             skel = skeleton(isolated);
             remove[i] = !meetsThreshold(skel, theshhold);
         }
-
+    
         for each pixel in the labeled image {
             color = pixel;
-
+    
             if remove[color] {
                 pixel = 0;
             }
         }
-
+    
     }
 
 <p align = "center">
