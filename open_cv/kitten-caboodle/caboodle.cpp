@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
     const int ISOS_HIGHLIGHT_THRESH = 2;
     const int ISOS_THRESH = 200;
     const int L = 6.0;
+    const int NEGATIVE_SPACE_BINS = 5;
     const int NEGATIVE_SPACE_THRESH = 1;
     const int MAX_SIZE = 15;
     const int OUTLINE_THRESH = 800;
@@ -58,6 +59,8 @@ int main(int argc, char** argv) {
     cv::Mat initial_dots;
     int d = l;
     cv::Mat adjusted_dots;
+    cv::Mat negative_posterized;
+    int negative_bins = NEGATIVE_SPACE_BINS;
     cv::Mat negative_space;
     int thresh_negative_space = NEGATIVE_SPACE_THRESH;
     cv::Mat rendered;
@@ -143,7 +146,7 @@ POSTERIZE : {
         char key = (char)cv::waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-posterized-" + std::to_string(bins);
-            save(isophotes, image_path, tag);
+            save(posterized, image_path, tag);
         }
         if (key == 27) {
             return EXIT_SUCCESS;
@@ -171,16 +174,18 @@ POSTERIZE : {
     }
 }
 
-// 3) accept edge image and begin isophotes detection
+// 4) accept posterized image and select isophotes
 ISOPHOTE_DETECTION : {
     std::cout << "\nBeginning isophote detection proccess\n\n"
                  "Press:\n"
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
-    isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
+    isophotes =
+        getIsophotes(image_path, posterized, thresh_iso_highlights, false);
     cv::destroyWindow("Hedcut Demo - Posterized");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
+        std::cout << thresh_iso_highlights << std::endl;
         char key = (char)cv::waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
             std::string tag =
@@ -209,7 +214,7 @@ ISOPHOTE_DETECTION : {
             thresh_iso_highlights++;
         }
         isophotes =
-            getIsophotes(image_path, image, thresh_iso_highlights, false);
+            getIsophotes(image_path, posterized, thresh_iso_highlights, false);
         cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     }
 }
@@ -370,12 +375,54 @@ ADJUST_DOTS : {
             goto PLACE_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            goto CHOOSE_NEGATIVE;
+            goto POSTERIZE_NEGATIVE;
         }
         adjusted_dots =
             dots(image_path, offset_map, image_path, initial_dots, d, false);
         std::cout << "Finished adjusting dots" << std::endl;
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
+    }
+}
+
+POSTERIZE_NEGATIVE : {
+    std::cout << "\nBeginning posterization proccess for negative space\n\n"
+                 "Press:\n"
+                 "   'P' / 'p' to increase / decrease number of bins for "
+                 "posterization (initial value is 5)\n ";
+    negative_posterized = posterize(image_path, image, negative_bins, false);
+    cv::destroyWindow("Hedcut Demo - Adjusted Dots");
+    cv::imshow("Hedcut Demo - Negative Posterized", negative_posterized);
+    for (;;) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
+            std::string tag =
+                "-negative-posterized-" + std::to_string(negative_bins);
+            save(negative_posterized, image_path, tag);
+        }
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Negative Posterized");
+            goto ADJUST_DOTS;
+        }
+        if (key == 'n' || key == 'N') {
+            goto CHOOSE_NEGATIVE;
+        }
+        if (key == 'r' || key == 'R') {
+            negative_bins = NEGATIVE_SPACE_BINS;
+        }
+        if (key == 'p') {
+            if (negative_bins != 1) {
+                negative_bins--;
+            }
+        }
+        if (key == 'P') {
+            negative_bins++;
+        }
+        negative_posterized =
+            posterize(image_path, image, negative_bins, false);
+        cv::imshow("Hedcut Demo - Negative Posterized", negative_posterized);
     }
 }
 
@@ -386,9 +433,9 @@ CHOOSE_NEGATIVE : {
                  "Press:\n"
                  "   'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
-    negative_space =
-        getIsophotes(image_path, image, thresh_negative_space, false);
-    cv::destroyWindow("Hedcut Demo - Adjusted Dots");
+    negative_space = getIsophotes(image_path, negative_posterized,
+                                  thresh_negative_space, false);
+    cv::destroyWindow("Hedcut Demo - Negative Posterize");
     cv::imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -402,7 +449,7 @@ CHOOSE_NEGATIVE : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Negative Space");
-            goto ADJUST_DOTS;
+            goto POSTERIZE_NEGATIVE;
         }
         if (key == 'n' || key == 'N') {
             goto PLACE_CIRCLES;
@@ -418,8 +465,8 @@ CHOOSE_NEGATIVE : {
         if (key == 'I') {
             thresh_negative_space++;
         }
-        negative_space =
-            getIsophotes(image_path, image, thresh_negative_space, false);
+        negative_space = getIsophotes(image_path, negative_posterized,
+                                      thresh_negative_space, false);
         cv::imshow("Hedcut Demo - Negative Space", negative_space);
     }
 }
