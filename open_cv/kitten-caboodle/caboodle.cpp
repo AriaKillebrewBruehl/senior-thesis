@@ -4,9 +4,7 @@ void mouseHandler(int event, int x, int y, int, void*) {
     assert(!mouse_src.empty());
     if (event == cv::EVENT_LBUTTONDOWN || event == cv::EVENT_RBUTTONDOWN ||
         event == cv::EVENT_MBUTTONDOWN) {
-        std::cout << "left down" << std::endl;
         if (flag == 0) {
-            if (var == 0) img1 = mouse_src.clone();
             point = cv::Point(x, y);
             circle(img1, point, 2, cv::Scalar(0, 0, 255), -1, 8, 0);
             pts.push_back(point);
@@ -240,22 +238,16 @@ ISOPHOTE_EXTRACTION : {
 DETAIL_SELECTION : {
     std::cout << "\nBeginning detail selection proccess\n"
                  "Press:\n"
-                 "\tleft mouse button - set a point to create mask shape\n"
-                 "\tright mouse button - create mask from points\n"
-                 "\tmiddle mouse button - reset\n"
-                 "IF ON A MAC WITH NO MOUSE BUTTONS:\n"
-                 "\tuse 'l' to press down on left mouse button\n"
-                 "\tuse 'L' to lift left mouse button\n"
-                 "\tuse 'r' to press down on right mouse button\n"
-                 "\tuse 'R' to lift right mouse button\n"
-                 "\tuse 'm' or 'M' to press middle mouse button\n";
+                 "\tany mouse button to set points to create mask shape\n"
+                 "\t'a' / 'A' to add a new section\n"
+                 "\t'D' / 'd' to select detail area\n";
     ;
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     mouse_src = image;
+    img1 = mouse_src.clone();
     cv::namedWindow("Hedcut Demo - Select Details", cv::WINDOW_AUTOSIZE);
     cv::setMouseCallback("Hedcut Demo - Select Details", mouseHandler, NULL);
     cv::imshow("Hedcut Demo - Select Details", mouse_src);
-    std::cout << "hello" << std::endl;
     for (;;) {
         char key = (char)cv::waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
@@ -272,17 +264,31 @@ DETAIL_SELECTION : {
         if (key == 'n' || key == 'N') {
             goto OFFSET_MAP;
         }
+        if (key == 'a' || key == 'A') {
+            // save current section
+            sections.push_back(pts);
+            // reset variables
+            flag = 0;
+            pts.clear();
+            var = 0;
+        }
         if (key == 'd' || key == 'D') {
+            if (!pts.empty()) {
+                sections.push_back(pts);
+                pts.clear();
+            }
             flag = 1;
             img1 = mouse_src.clone();
-            if (var != 0) {
-                cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+            for (std::vector<cv::Point> s : sections) {
+                cv::polylines(img1, s, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
             }
             imshow("Hedcut Demo - Select Details", img1);
+            std::cout << "Press any key to continue\n";
+            cv::waitKey(0);
             flag = var;
             final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
             mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
-            cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
+            cv::fillPoly(mask, sections, cv::Scalar(255, 255, 255), 8, 0);
             cv::bitwise_and(mouse_src, mouse_src, final, mask);
             cv::imshow("Hedcut Demo - Select Details", final);
         }
@@ -298,7 +304,7 @@ DETAIL_SELECTION : {
 }
 // 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
-    // assert(!final.empty());
+    assert(!final.empty());
     std::cout << "\nBeginning offset map proccess\n"
                  "Press:\n"
                  "   'L' / 'l' to increase / decrease offset lane distance "
