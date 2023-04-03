@@ -8,7 +8,17 @@
 
 *OpenCV has exactly what I am looking for yet again :money_mouth_face:* 
 
-Okay I think that the best improvement that could be made to the results is making it so there are regions where the dots are denser and regions where the dots are less dense. I already tried this using distance from feature line but that made things weird. I think a solution would be to allow the user to select the regions where they want dots to be denser. This should be possible with 
+Okay I think that the best improvement that could be made to the results is making it so there are regions where the dots are denser and regions where the dots are less dense. I already tried this using distance from feature line but that made things weird. I think a solution would be to allow the user to select the regions where they want dots to be denser. This should be possible with `setMouseCallback()`. And even though Mac is stupid and doesn't let you right click properly I can do this w key presses!! 
+
+
+
+Here is what I need to do:
+
+- Have a step where the user gets to select a "more detailed" region. This can be done w the mouse clicks as in the `OpenCV` demo. I will set all the pixels in this selected region to white. Then I can use this image to know if a pixel is in the "more detailed" region. 
+- I **don't** think changing dot density is all I want to do
+  - I think I want to make the offset lines more dense in the "more detailed" region and less dense in the other regions 
+  - Then I want to use the offset line spacing to inform dot density (and maybe add a little extra density to the "more detailed" region just to make it really detailed)
+  - Def want to add a way to go back with the detail selection 
 
 # 03.25.2023
 
