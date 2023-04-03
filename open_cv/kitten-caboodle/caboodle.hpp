@@ -17,6 +17,7 @@
 cv::Mat mouse_src, img1, mask, final;
 cv::Point point;
 std::vector<cv::Point> pts;
+std::vector<std::vector<cv::Point>> sections;
 int drag = 0;
 int var = 0;
 int flag = 0;
