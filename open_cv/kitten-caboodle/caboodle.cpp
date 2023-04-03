@@ -1,25 +1,69 @@
 #include "caboodle.hpp"
 
+void mouseHandler(int event, int x, int y, int, void*) {
+    char key = (char)cv::waitKey(0);
+    if ((event == cv::EVENT_LBUTTONDOWN || key == 'l') && !drag) {
+        if (flag == 0) {
+            if (var == 0) img1 = mouse_src.clone();
+            point = cv::Point(x, y);
+            circle(img1, point, 2, cv::Scalar(0, 0, 255), -1, 8, 0);
+            pts.push_back(point);
+            var++;
+            drag = 1;
+            if (var > 1)
+                line(img1, pts[var - 2], point, cv::Scalar(0, 0, 255), 2, 8, 0);
+            imshow("Hedcut Demo - Detail Selection", img1);
+        }
+    }
+    if ((event == cv::EVENT_LBUTTONUP || key == 'L') && drag) {
+        cv::imshow("Hedcut Demo - Detail Selection", img1);
+        drag = 0;
+    }
+    if (event == cv::EVENT_RBUTTONDOWN || key == 'r') {
+        flag = 1;
+        img1 = mouse_src.clone();
+        if (var != 0) {
+            cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+        }
+        imshow("Hedcut Demo - Detail Selection", img1);
+    }
+    if (event == cv::EVENT_RBUTTONUP || key == 'R') {
+        flag = var;
+        final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
+        mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
+        cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
+        cv::bitwise_and(mouse_src, mouse_src, final, mask);
+        cv::imshow("Hedcut Demo - Detail Selection Result", final);
+    }
+    if (event == cv::EVENT_MBUTTONDOWN || key == 'm' || key == 'M') {
+        std::cout << "4" << std::endl;
+        pts.clear();
+        var = 0;
+        drag = 0;
+        flag = 0;
+        cv::imshow("Hedcut Demo - Detail Selection", mouse_src);
+    }
+}
+
 int main(int argc, char** argv) {
     cv::CommandLineParser parser(argc, argv, "{@input   ||input image}");
 
     std::cout
         << "This program renders an input photograph as a hedcut drawing\n\n"
            "At any stage: \n"
-           "   press 'B' / 'b' to move to previous step in hedcut "
+           "\tpress 'B' / 'b' to move to previous step in hedcut "
            "process\n"
-           "   press 'N' / 'n' to move to next step in hedcut "
+           "\tpress 'N' / 'n' to move to next step in hedcut "
            "process\n"
-           "   press 'R' / 'r' to reset parameters to default values\n"
-           "   press 'S' / 's' to save current image\n"
-           "   press 'ESC' to exit program\n"
+           "\tpress 'R' / 'r' to reset parameters to default values\n"
+           "\tpress 'S' / 's' to save current image\n"
+           "\tpress 'ESC' to exit program\n"
            "!!!\n"
            "PLEASE NOTE THIS IS A SLOW PROGRAM (particularly the dot adjusting "
            "step) DO NOT SPAM THE KEYS IF YOU SEE NO CHANGE\n"
            "!!!\n";
 
     // 1) read in input
-    cv::Mat image;
     cv::String image_path = parser.get<cv::String>("@input");
 
     image = read(image_path, image);
@@ -32,47 +76,10 @@ int main(int argc, char** argv) {
         cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
     }
 
-    // set up default parameter values
-    const int EDGE_THRESH = 300;
-    const int BINS = 5;
-    const int ISOS_HIGHLIGHT_THRESH = 2;
-    const int ISOS_THRESH = 200;
-    const int L = 6.0;
-    const int NEGATIVE_SPACE_BINS = 5;
-    const int NEGATIVE_SPACE_THRESH = 1;
-    const int MAX_SIZE = 15;
-    const int OUTLINE_THRESH = 800;
-    // setup variables
-    bool auto_save = false;
-    cv::Mat edges;
-    int thresh_edges = EDGE_THRESH;
-    cv::Mat posterized;
-    int bins = BINS;
-    cv::Mat isophotes;
-    int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
-    cv::Mat isophotes_extracted;
-    int thresh_isophotes = ISOS_THRESH;
-    cv::Mat distances;
-    cv::Mat offset_map;
-    cv::Mat offset_map_visual;
-    int l = L;
-    cv::Mat initial_dots;
-    int d = l;
-    cv::Mat adjusted_dots;
-    cv::Mat negative_posterized;
-    int negative_bins = NEGATIVE_SPACE_BINS;
-    cv::Mat negative_space;
-    int thresh_negative_space = NEGATIVE_SPACE_THRESH;
-    cv::Mat rendered;
-    int max_size = MAX_SIZE;
-    cv::Mat outline;
-    int thresh_outline = OUTLINE_THRESH;
-    cv::Mat final_rendering;
-
 SET_UP : {
     std::cout << "\nBeginning hedcut generation proccess\n"
                  "Press:\n"
-                 "  'A' / 'a' to auto save on each step\n";
+                 "\t'A' / 'a' to auto save on each step\n";
     for (;;) {
         cv::imshow("Hedcut Demo - Initial Input", image);
         char key = (char)cv::waitKey(0);
@@ -98,7 +105,7 @@ SET_UP : {
 EDGE_EXTRACTION : {
     std::cout << "\nBeginning edge detection proccess\n\n"
                  "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "\tT' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 300 px)\n";
     edges = extractEdges(image_path, image, thresh_edges, false);
@@ -137,7 +144,7 @@ EDGE_EXTRACTION : {
 POSTERIZE : {
     std::cout << "\nBeginning posterization proccess\n\n"
                  "Press:\n"
-                 "   'P' / 'p' to increase / decrease number of bins for "
+                 "\t'P' / 'p' to increase / decrease number of bins for "
                  "posterization (initial value is 5)\n ";
     posterized = posterize(image_path, image, bins, false);
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
@@ -173,12 +180,11 @@ POSTERIZE : {
         cv::imshow("Hedcut Demo - Posterized", posterized);
     }
 }
-
 // 4) accept posterized image and select isophotes
 ISOPHOTE_DETECTION : {
     std::cout << "\nBeginning isophote detection proccess\n\n"
                  "Press:\n"
-                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "\t'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     isophotes =
         getIsophotes(image_path, posterized, thresh_iso_highlights, false);
@@ -218,11 +224,11 @@ ISOPHOTE_DETECTION : {
         cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     }
 }
-// 4) accept isohpotes and begin isophote extraction
+// 5) accept isohpotes and begin isophote extraction
 ISOPHOTE_EXTRACTION : {
     std::cout << "\nBeginning isophote extraction proccess\n"
                  "Press:\n"
-                 "   'T' / 't' to increase / decrease threshold parameter by "
+                 "\t'T' / 't' to increase / decrease threshold parameter by "
                  "10 px for edge detection (initial value is 50 px)\n";
 
     isophotes_extracted =
@@ -243,7 +249,7 @@ ISOPHOTE_EXTRACTION : {
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'n' || key == 'N') {
-            goto OFFSET_MAP;
+            goto DETAIL_SELECTION;
         }
         if (key == 'r' || key == 'R') {
             thresh_isophotes = ISOS_THRESH;
@@ -259,6 +265,26 @@ ISOPHOTE_EXTRACTION : {
         cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     }
 }
+// 6) select regions that will be more detailed
+DETAIL_SELECTION : {
+    std::cout << "\nBeginning detail selection proccess\n"
+                 "Press:\n"
+                 "\tleft mouse button - set a point to create mask shape\n"
+                 "\tright mouse button - create mask from points\n"
+                 "\tmiddle mouse button - reset\n"
+                 "IF ON A MAC WITH NO MOUSE BUTTONS:\n"
+                 "\tuse 'l' to press down on left mouse button\n"
+                 "\tuse 'L' to lift left mouse button\n"
+                 "\tuse 'r' to press down on right mouse button\n"
+                 "\tuse 'R' to lift right mouse button\n"
+                 "\tuse 'm' or 'M' to press middle mouse button";
+    ;
+    cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
+    mouse_src = image;
+    cv::setMouseCallback("Select Details", mouseHandler, NULL);
+    cv::imshow("Hedcut Demo - Thot Shit", final);
+}
+
 // 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
     std::cout
@@ -285,7 +311,7 @@ OFFSET_MAP : {
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Offset Map");
-            goto ISOPHOTE_EXTRACTION;
+            goto DETAIL_SELECTION;
         }
         if (key == 'n' || key == 'N') {
             goto PLACE_DOTS;
@@ -383,7 +409,6 @@ ADJUST_DOTS : {
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
-
 POSTERIZE_NEGATIVE : {
     std::cout << "\nBeginning posterization proccess for negative space\n\n"
                  "Press:\n"
@@ -425,7 +450,6 @@ POSTERIZE_NEGATIVE : {
         cv::imshow("Hedcut Demo - Negative Posterized", negative_posterized);
     }
 }
-
 // 8) accept adjusted dots and choose areas to not place circles
 CHOOSE_NEGATIVE : {
     std::cout << "\nBeginning negative space detection proccess.\nWhite areas "
