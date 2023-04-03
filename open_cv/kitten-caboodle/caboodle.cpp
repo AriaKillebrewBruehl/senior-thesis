@@ -16,40 +16,6 @@ void mouseHandler(int event, int x, int y, int, void*) {
             imshow("Hedcut Demo - Select Details", img1);
         }
     }
-    // if ((event == cv::EVENT_LBUTTONUP || key == 'L') && drag) {
-    //     std::cout << "left up" << std::endl;
-    //     cv::imshow("Hedcut Demo - Select Details", img1);
-
-    // }
-    // if (event == cv::EVENT_RBUTTONDOWN || key == 'r') {
-    //     std::cout << "right down" << std::endl;
-    //     flag = 1;
-    //     img1 = mouse_src.clone();
-    //     if (var != 0) {
-    //         cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
-    //     }
-    //     imshow("Hedcut Demo - Select Details", img1);
-    // }
-    // if (event == cv::EVENT_RBUTTONUP || key == 'R') {
-    //     std::cout << "right up" << std::endl;
-    //     flag = var;
-    //     final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
-    //     mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
-    //     cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
-    //     cv::bitwise_and(mouse_src, mouse_src, final, mask);
-    //     cv::imshow("Hedcut Demo - Select Details", final);
-    // }
-    // if (event == cv::EVENT_MBUTTONDOWN || key == 'm' || key == 'M') {
-    //     std::cout << "middle down" << std::endl;
-    //     pts.clear();
-    //     var = 0;
-    //     drag = 0;
-    //     flag = 0;
-    //     cv::imshow("Hedcut Demo - Select Details", mouse_src);
-    // }
-    // if (key == 'n' || key == 'N') {
-    //     done = true;
-    // }
 }
 
 int main(int argc, char** argv) {
