@@ -1,48 +1,55 @@
 #include "caboodle.hpp"
 
 void mouseHandler(int event, int x, int y, int, void*) {
-    char key = (char)cv::waitKey(0);
-    if ((event == cv::EVENT_LBUTTONDOWN || key == 'l') && !drag) {
+    assert(!mouse_src.empty());
+    if (event == cv::EVENT_LBUTTONDOWN || event == cv::EVENT_RBUTTONDOWN ||
+        event == cv::EVENT_MBUTTONDOWN) {
+        std::cout << "left down" << std::endl;
         if (flag == 0) {
             if (var == 0) img1 = mouse_src.clone();
             point = cv::Point(x, y);
             circle(img1, point, 2, cv::Scalar(0, 0, 255), -1, 8, 0);
             pts.push_back(point);
             var++;
-            drag = 1;
             if (var > 1)
                 line(img1, pts[var - 2], point, cv::Scalar(0, 0, 255), 2, 8, 0);
-            imshow("Hedcut Demo - Detail Selection", img1);
+            imshow("Hedcut Demo - Select Details", img1);
         }
     }
-    if ((event == cv::EVENT_LBUTTONUP || key == 'L') && drag) {
-        cv::imshow("Hedcut Demo - Detail Selection", img1);
-        drag = 0;
-    }
-    if (event == cv::EVENT_RBUTTONDOWN || key == 'r') {
-        flag = 1;
-        img1 = mouse_src.clone();
-        if (var != 0) {
-            cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
-        }
-        imshow("Hedcut Demo - Detail Selection", img1);
-    }
-    if (event == cv::EVENT_RBUTTONUP || key == 'R') {
-        flag = var;
-        final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
-        mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
-        cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
-        cv::bitwise_and(mouse_src, mouse_src, final, mask);
-        cv::imshow("Hedcut Demo - Detail Selection Result", final);
-    }
-    if (event == cv::EVENT_MBUTTONDOWN || key == 'm' || key == 'M') {
-        std::cout << "4" << std::endl;
-        pts.clear();
-        var = 0;
-        drag = 0;
-        flag = 0;
-        cv::imshow("Hedcut Demo - Detail Selection", mouse_src);
-    }
+    // if ((event == cv::EVENT_LBUTTONUP || key == 'L') && drag) {
+    //     std::cout << "left up" << std::endl;
+    //     cv::imshow("Hedcut Demo - Select Details", img1);
+
+    // }
+    // if (event == cv::EVENT_RBUTTONDOWN || key == 'r') {
+    //     std::cout << "right down" << std::endl;
+    //     flag = 1;
+    //     img1 = mouse_src.clone();
+    //     if (var != 0) {
+    //         cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+    //     }
+    //     imshow("Hedcut Demo - Select Details", img1);
+    // }
+    // if (event == cv::EVENT_RBUTTONUP || key == 'R') {
+    //     std::cout << "right up" << std::endl;
+    //     flag = var;
+    //     final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
+    //     mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
+    //     cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
+    //     cv::bitwise_and(mouse_src, mouse_src, final, mask);
+    //     cv::imshow("Hedcut Demo - Select Details", final);
+    // }
+    // if (event == cv::EVENT_MBUTTONDOWN || key == 'm' || key == 'M') {
+    //     std::cout << "middle down" << std::endl;
+    //     pts.clear();
+    //     var = 0;
+    //     drag = 0;
+    //     flag = 0;
+    //     cv::imshow("Hedcut Demo - Select Details", mouse_src);
+    // }
+    // if (key == 'n' || key == 'N') {
+    //     done = true;
+    // }
 }
 
 int main(int argc, char** argv) {
@@ -65,13 +72,11 @@ int main(int argc, char** argv) {
 
     // 1) read in input
     cv::String image_path = parser.get<cv::String>("@input");
-
     image = read(image_path, image);
     if (image.empty()) {
         printf("Error opening image: %s\n", image_path.c_str());
         return EXIT_FAILURE;
     }
-
     if (image.channels() == 4) {
         cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
     }
@@ -277,21 +282,62 @@ DETAIL_SELECTION : {
                  "\tuse 'L' to lift left mouse button\n"
                  "\tuse 'r' to press down on right mouse button\n"
                  "\tuse 'R' to lift right mouse button\n"
-                 "\tuse 'm' or 'M' to press middle mouse button";
+                 "\tuse 'm' or 'M' to press middle mouse button\n";
     ;
     cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     mouse_src = image;
-    cv::setMouseCallback("Select Details", mouseHandler, NULL);
-    cv::imshow("Hedcut Demo - Thot Shit", final);
+    cv::namedWindow("Hedcut Demo - Select Details", cv::WINDOW_AUTOSIZE);
+    cv::setMouseCallback("Hedcut Demo - Select Details", mouseHandler, NULL);
+    cv::imshow("Hedcut Demo - Select Details", mouse_src);
+    std::cout << "hello" << std::endl;
+    for (;;) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
+            std::string tag = "-details";
+            save(mouse_src, image_path, tag);
+        }
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            cv::destroyWindow("Hedcut Demo - Select Details");
+            goto ISOPHOTE_EXTRACTION;
+        }
+        if (key == 'n' || key == 'N') {
+            goto OFFSET_MAP;
+        }
+        if (key == 'd' || key == 'D') {
+            flag = 1;
+            img1 = mouse_src.clone();
+            if (var != 0) {
+                cv::polylines(img1, pts, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+            }
+            imshow("Hedcut Demo - Select Details", img1);
+            flag = var;
+            final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
+            mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
+            cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255), 8, 0);
+            cv::bitwise_and(mouse_src, mouse_src, final, mask);
+            cv::imshow("Hedcut Demo - Select Details", final);
+        }
+        if (key == 'r' || key == 'R') {
+            std::cout << "middle down" << std::endl;
+            pts.clear();
+            var = 0;
+            drag = 0;
+            flag = 0;
+            cv::imshow("Hedcut Demo - Select Details", mouse_src);
+        }
+    }
 }
-
 // 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
-    std::cout
-        << "\nBeginning offset map proccess\n"
-           "Press:\n"
-           "   'L' / 'l' to increase / decrease offset lane distance by 1 px "
-           "(initial value is 6.0 px)\n";
+    // assert(!final.empty());
+    std::cout << "\nBeginning offset map proccess\n"
+                 "Press:\n"
+                 "   'L' / 'l' to increase / decrease offset lane distance "
+                 "by 1 px "
+                 "(initial value is 6.0 px)\n";
 
     distances =
         distanceMap(image_path, edges, image_path, isophotes_extracted, false);
@@ -333,6 +379,7 @@ OFFSET_MAP : {
         cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
+
 // 6) place dots
 PLACE_DOTS : {
     std::cout << "\nBeginning dot placement map proccess\n"
