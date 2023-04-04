@@ -7,46 +7,50 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
     offset = read(pathOffset, offsetMap);
 
     assert(!offset.empty());
-    if (offset.type() != CV_32SC1) {
+    if (offset.type() != CV_8UC1) {
         if (offset.channels() == 3) {
             cv::cvtColor(offset, offset, cv::COLOR_RGB2GRAY);
         } else if (offset.channels() == 4) {
             cv::cvtColor(offset, offset, cv::COLOR_RGBA2GRAY);
         }
-        offset.convertTo(offset, CV_32SC1);
+        offset.convertTo(offset, CV_8UC1);
     }
+    cv::imshow("Place Seeds Input - Offset Map", offset);
 
     cv::Mat details;
     details = read(pathDetails, imgDetails);
 
     assert(!details.empty());
-    if (details.type() != CV_32SC1) {
+    if (details.type() != CV_8UC1) {
         if (details.channels() == 3) {
             cv::cvtColor(details, details, cv::COLOR_RGB2GRAY);
         } else if (details.channels() == 4) {
             cv::cvtColor(details, details, cv::COLOR_RGBA2GRAY);
         }
-        details.convertTo(details, CV_32SC1);
+        details.convertTo(details, CV_8UC1);
     }
+    cv::imshow("Place Seeds Input - Details", details);
 
     // blank map for seed pixels
-    cv::Mat seeds = cv::Mat(offset.rows, offset.cols, CV_8UC1, cv::Scalar(255));
+    cv::Mat seeds = cv::Mat(offset.size(), CV_8UC1, cv::Scalar(255));
     srand(time(0));
-    for (int i = 0; i < offset.rows; i++) {
-        for (int j = 0; j < offset.cols; j++) {
+    for (int i = 0; i < seeds.rows; i++) {
+        for (int j = 0; j < seeds.cols; j++) {
             // feature lines are black
-            if (offset.at<int32_t>(i, j) != 0) {
+            if (offset.at<uchar>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
+                int s = d;
                 if (details.at<uchar>(i, j) == 255) {
                     // detailed sections are while
-                    d *= 2;
+                    s /= 4;
                 }
-                if (r <= 1 / double(d * d)) {
+                if (r <= 1 / double(s * s)) {
                     seeds.at<uchar>(i, j) = uchar(0);
                 }
             }
         }
     }
+    cv::imshow("Place Seeds Output - Seeds", seeds);
 
     if (saving) {
         save(seeds, pathOffset, "-seeds");
