@@ -248,6 +248,7 @@ DETAIL_SELECTION : {
     cv::namedWindow("Hedcut Demo - Select Details", cv::WINDOW_AUTOSIZE);
     cv::setMouseCallback("Hedcut Demo - Select Details", mouseHandler, NULL);
     cv::imshow("Hedcut Demo - Select Details", mouse_src);
+    bool finalized = false;
     for (;;) {
         char key = (char)cv::waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
@@ -258,10 +259,33 @@ DETAIL_SELECTION : {
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
+            // reset variables
+            pts.clear();
+            sections.clear();
+            var = 0;
+            drag = 0;
+            flag = 0;
             cv::destroyWindow("Hedcut Demo - Select Details");
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
+            if (!finalized) {
+                if (!pts.empty()) {
+                    sections.push_back(pts);
+                    pts.clear();
+                }
+                flag = 1;
+                img1 = mouse_src.clone();
+                for (std::vector<cv::Point> s : sections) {
+                    cv::polylines(img1, s, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+                }
+                flag = var;
+                final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
+                mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
+                cv::fillPoly(mask, sections, cv::Scalar(255, 255, 255), 8, 0);
+                cv::bitwise_and(mouse_src, mouse_src, final, mask);
+                cv::imshow("Hedcut Demo - Select Details", final);
+            }
             goto OFFSET_MAP;
         }
         if (key == 'a' || key == 'A') {
@@ -288,13 +312,15 @@ DETAIL_SELECTION : {
             cv::fillPoly(mask, sections, cv::Scalar(255, 255, 255), 8, 0);
             cv::bitwise_and(mouse_src, mouse_src, final, mask);
             cv::imshow("Hedcut Demo - Select Details", final);
+            finalized = true;
         }
         if (key == 'r' || key == 'R') {
-            std::cout << "middle down" << std::endl;
             pts.clear();
+            sections.clear();
             var = 0;
             drag = 0;
             flag = 0;
+            finalized = false;
             cv::imshow("Hedcut Demo - Select Details", mouse_src);
         }
     }
