@@ -26,7 +26,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists,
         details.convertTo(details, 0);
     }
 
-    cv::Mat map = cv::Mat(dists.rows, dists.cols, CV_32SC1, cv::Scalar(255));
+    cv::Mat map = cv::Mat(dists.size(), CV_32SC1, cv::Scalar(255));
     int w = 1;
     for (int i = 0; i < map.rows; i++) {
         for (int j = 0; j < map.cols; j++) {
@@ -34,7 +34,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists,
             int line = l;
             if (details.at<uchar>(i, j) == 255) {
                 // white areas require more detail
-                line /= 2;
+                line /= 4;
             }
             float delta = ceil(d / line) * line - d;
             int id = ceil(d / line);
