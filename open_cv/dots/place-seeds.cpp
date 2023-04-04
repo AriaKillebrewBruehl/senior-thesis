@@ -15,7 +15,6 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
         }
         offset.convertTo(offset, CV_8UC1);
     }
-    cv::imshow("Place Seeds Input - Offset Map", offset);
 
     cv::Mat details;
     details = read(pathDetails, imgDetails);
@@ -29,7 +28,6 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
         }
         details.convertTo(details, CV_8UC1);
     }
-    cv::imshow("Place Seeds Input - Details", details);
 
     // blank map for seed pixels
     cv::Mat seeds = cv::Mat(offset.size(), CV_8UC1, cv::Scalar(255));
@@ -50,7 +48,6 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
             }
         }
     }
-    cv::imshow("Place Seeds Output - Seeds", seeds);
 
     if (saving) {
         save(seeds, pathOffset, "-seeds");
