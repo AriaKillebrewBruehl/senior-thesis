@@ -282,9 +282,6 @@ DETAIL_SELECTION : {
             for (std::vector<cv::Point> s : sections) {
                 cv::polylines(img1, s, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
             }
-            imshow("Hedcut Demo - Select Details", img1);
-            std::cout << "Press any key to continue\n";
-            cv::waitKey(0);
             flag = var;
             final = cv::Mat::zeros(mouse_src.size(), CV_8UC3);
             mask = cv::Mat::zeros(mouse_src.size(), CV_8UC1);
@@ -313,10 +310,12 @@ OFFSET_MAP : {
 
     distances =
         distanceMap(image_path, edges, image_path, isophotes_extracted, false);
-    offset_map = offsetMap(image_path, distances, l, false, true);
-    offset_map_visual = offsetMap(image_path, distances, l, false, false);
+    offset_map =
+        offsetMap(image_path, distances, image_path, mask, l, false, true);
+    offset_map_visual =
+        offsetMap(image_path, distances, image_path, mask, l, false, false);
     offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
-    cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
+    cv::destroyWindow("Hedcut Demo - Select Details");
     cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -343,10 +342,10 @@ OFFSET_MAP : {
         if (key == 'L') {
             l += 1.0;
         }
-        offset_map = fullMap(image_path, edges, image_path, isophotes_extracted,
-                             l, true, false);
-        offset_map_visual = fullMap(image_path, edges, image_path,
-                                    isophotes_extracted, l, false, false);
+        offset_map =
+            offsetMap(image_path, distances, image_path, mask, l, false, true);
+        offset_map_visual =
+            offsetMap(image_path, distances, image_path, mask, l, false, false);
         offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
         cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
@@ -361,8 +360,8 @@ PLACE_DOTS : {
                  "(initial value is 6.0 px)\n";
 
     d = l;
-    initial_dots = placeSeedsAdjusted(image_path, offset_map, image_path,
-                                      distances, d, false);
+    initial_dots =
+        placeSeeds(image_path, offset_map, image_path, mask, d, false);
     std::cout << "Finished placing dots" << std::endl;
     cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
@@ -391,8 +390,8 @@ PLACE_DOTS : {
         if (key == 'r' || key == 'R') {
             d = L;
         }
-        initial_dots = placeSeedsAdjusted(image_path, offset_map, image_path,
-                                          distances, d, false);
+        initial_dots =
+            placeSeeds(image_path, offset_map, image_path, mask, d, false);
         std::cout << "Finished placing seed dots" << std::endl;
         cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
     }
