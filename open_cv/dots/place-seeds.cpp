@@ -1,16 +1,32 @@
 #include "place-seeds.hpp"
 
-cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap, int d,
+cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
+                   std::string pathDetails, cv::Mat imgDetails, int d,
                    bool saving) {
     cv::Mat offset;
     offset = read(pathOffset, offsetMap);
 
     assert(!offset.empty());
     if (offset.type() != CV_32SC1) {
-        if (offset.channels() != 1) {
+        if (offset.channels() == 3) {
             cv::cvtColor(offset, offset, cv::COLOR_RGB2GRAY);
+        } else if (offset.channels() == 4) {
+            cv::cvtColor(offset, offset, cv::COLOR_RGBA2GRAY);
         }
         offset.convertTo(offset, CV_32SC1);
+    }
+
+    cv::Mat details;
+    details = read(pathDetails, imgDetails);
+
+    assert(!details.empty());
+    if (details.type() != CV_32SC1) {
+        if (details.channels() == 3) {
+            cv::cvtColor(details, details, cv::COLOR_RGB2GRAY);
+        } else if (details.channels() == 4) {
+            cv::cvtColor(details, details, cv::COLOR_RGBA2GRAY);
+        }
+        details.convertTo(details, CV_32SC1);
     }
 
     // blank map for seed pixels
@@ -21,6 +37,10 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap, int d,
             // feature lines are black
             if (offset.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
+                if (details.at<uchar>(i, j) == 255) {
+                    // detailed sections are while
+                    d *= 2;
+                }
                 if (r <= 1 / double(d * d)) {
                     seeds.at<uchar>(i, j) = uchar(0);
                 }
