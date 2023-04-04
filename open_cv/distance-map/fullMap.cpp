@@ -35,6 +35,8 @@ cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
 
     cv::Mat distances =
         distanceMap(pathEdges, inverted_edges, pathIsos, inverted_isos, false);
-    cv::Mat oMap = offsetMap(pathEdges, distances, l, saving, offset_sections);
+    cv::Mat details = cv::Mat::zeros(distances.size(), CV_8UC1);
+    cv::Mat oMap = offsetMap(pathEdges, distances, "", details, l, saving,
+                             offset_sections);
     return oMap;
 }
