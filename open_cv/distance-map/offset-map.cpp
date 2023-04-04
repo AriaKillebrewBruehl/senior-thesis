@@ -31,6 +31,10 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists,
     for (int i = 0; i < map.rows; i++) {
         for (int j = 0; j < map.cols; j++) {
             float d = float(dists.at<uchar>(i, j));
+            if (details.at<uchar>(i, j) == 255) {
+                // white areas require more detail
+                d *= 2;
+            }
             float delta = ceil(d / l) * l - d;
             int id = ceil(d / l);
             // add offset line
