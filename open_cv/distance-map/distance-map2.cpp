@@ -8,8 +8,10 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
     assert(!edges.empty());
 
     if (edges.type() == 0) {
-        if (edges.channels() != 1) {
+        if (edges.channels() == 3) {
             cv::cvtColor(edges, edges, cv::COLOR_RGB2GRAY);
+        } else if (edges.channels() == 4) {
+            cv::cvtColor(edges, edges, cv::COLOR_RGBA2GRAY);
         }
         edges.convertTo(edges, 0);
     }
@@ -19,13 +21,24 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
     assert(!isos.empty());
 
     if (isos.type() == 0) {
-        if (isos.channels() != 1) {
+        if (isos.channels() == 3) {
             cv::cvtColor(isos, isos, cv::COLOR_RGB2GRAY);
+        } else if (isos.channels() == 4) {
+            cv::cvtColor(isos, isos, cv::COLOR_RGBA2GRAY);
         }
         isos.convertTo(isos, 0);
     }
-
+    // we at least need to have edges
+    int nonZeroEdges = cv::countNonZero(edges);
+    assert(nonZeroEdges != 0);
+    assert(nonZeroEdges != (edges.rows * edges.cols));
     cv::Mat edgedists = sample_seeds(edges, pathEdges, false, false);
+
+    int nonZeroIsos = cv::countNonZero(isos);
+    if (nonZeroIsos == 0 || nonZeroIsos == (isos.rows * isos.cols)) {
+        // if there are no isophotes, just return the edge distances
+        return edgedists;
+    }
     cv::Mat isosdists = sample_seeds(isos, pathIsos, false, false);
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_32SC1);
