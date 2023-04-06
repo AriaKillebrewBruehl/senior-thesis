@@ -2,7 +2,48 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+# 04.06.2023 
 
+## Katie Thesis Notes 
+
+- Section headings make me answer one question per paragraph rather than having a bigger flow 
+- Maybe just don't have "What Are Hedcuts"
+- Make it clearer that WSJ didn't think half toning was good 
+  - Establish that this is what everyone else was doing
+  - The WSJ didn't like the look of it and wanted to create their own brand so they developed hedcuts which were more artistic 
+- That and than on page 2 
+- The portraits show in -> the portraits shown in (2)
+- In 0.2.1 why am I trying to make a NPR of a hedcut 
+  - Why did I pick a hedcut versus something else 
+  - What is my motivation for NPR 
+- (4) sailboat as one versus two words 
+- In "The Ethical Question"
+  - More generally what are the ethical questions with AI art
+  - What is "the ethical question"
+  - How is the WSJ generating hedcuts with AI
+  - I'm not saying there is a problem with AI its a problem ownership and consenting what gets done with your work 
+  - What am I claiming eithicality on, the WSJ AI or AI art more in general 
+  - Make broader claims about ownership and consent in more general AI art 
+- Related work should go earlier when I talk about NPR hedcuts 
+  - What is this section doing for my argument 
+  - Move this up!!! 
+
+
+
+- In channels say I'll explain why 255 in the death channel 
+- (14) fig 1.4a should be CV_8UC3
+- (14) additive 
+- Why talk ab BGR if it doesn't change things 
+
+
+
+- Do more "as seen in Figure ..."
+  - But also sometimes this can get clunky 
+  - An example
+
+# 04.03.2023 
+
+Now that I have a way to 
 
 # 04.02.2023
 
