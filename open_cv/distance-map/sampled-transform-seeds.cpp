@@ -4,12 +4,13 @@ cv::Mat3i get_seeds(cv::Mat img) {
     assert(!img.empty());
     assert(img.channels() == 1);
     if (img.type() != 4) {
-        if (img.channels() != 1) {
+        if (img.channels() == 3) {
             cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
+        } else if (img.channels() == 4) {
+            cv::cvtColor(img, img, cv::COLOR_RGBA2GRAY);
         }
         img.convertTo(img, 4);
     }
-
     cv::Mat3i map = cv::Mat::zeros(img.rows, img.cols, CV_32SC3);
 
     for (int i = 0; i < img.rows; i++) {
@@ -227,8 +228,10 @@ cv::Mat sample_seeds(cv::Mat img, std::string path, bool saving, bool seeds) {
 
     assert(!image.empty());
     if (image.type() != 4) {
-        if (image.channels() != 1) {
+        if (image.channels() == 3) {
             cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        } else if (image.channels() == 4) {
+            cv::cvtColor(image, image, cv::COLOR_RGBA2GRAY);
         }
         image.convertTo(image, 4);
     }
