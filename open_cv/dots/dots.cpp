@@ -6,8 +6,10 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
     assert(!offsets.empty());
 
     if (offsets.type() != 4) {
-        if (offsets.channels() != 1) {
+        if (offsets.channels() == 3) {
             cv::cvtColor(offsets, offsets, cv::COLOR_RGB2GRAY);
+        } else if (offsets.channels() == 4) {
+            cv::cvtColor(offsets, offsets, cv::COLOR_RGBA2GRAY);
         }
         offsets.convertTo(offsets, 4);
     }
@@ -16,7 +18,9 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
     assert(!seeds.empty());
 
     if (seeds.type() != 4) {
-        if (seeds.channels() != 1) {
+        if (seeds.channels() == 3) {
+            cv::cvtColor(seeds, seeds, cv::COLOR_RGB2GRAY);
+        } else if (seeds.channels() == 4) {
             cv::cvtColor(seeds, seeds, cv::COLOR_RGB2GRAY);
         }
         seeds.convertTo(seeds, 4);
