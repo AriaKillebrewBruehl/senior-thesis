@@ -28,8 +28,17 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
         }
         isos.convertTo(isos, 0);
     }
-
+    // we at least need to have edges
+    int nonZeroEdges = cv::countNonZero(edges);
+    assert(nonZeroEdges != 0);
+    assert(nonZeroEdges != (edges.rows * edges.cols));
     cv::Mat edgedists = sample_seeds(edges, pathEdges, false, false);
+
+    int nonZeroIsos = cv::countNonZero(isos);
+    if (nonZeroIsos == 0 || nonZeroIsos == (isos.rows * isos.cols)) {
+        // if there are no isophotes, just return the edge distances
+        return edgedists;
+    }
     cv::Mat isosdists = sample_seeds(isos, pathIsos, false, false);
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_32SC1);
