@@ -2,14 +2,17 @@
 
 cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
                     std::string pathIsos, cv::Mat imgIsos, bool saving) {
+    std::cout << "creating distance map" << std::endl;
     // read images and resize
     cv::Mat edges;
     edges = read(pathEdges, imgEdges);
     assert(!edges.empty());
 
     if (edges.type() == 0) {
-        if (edges.channels() != 1) {
+        if (edges.channels() == 3) {
             cv::cvtColor(edges, edges, cv::COLOR_RGB2GRAY);
+        } else if (edges.channels() == 4) {
+            cv::cvtColor(edges, edges, cv::COLOR_RGBA2GRAY);
         }
         edges.convertTo(edges, 0);
     }
@@ -19,14 +22,20 @@ cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
     assert(!isos.empty());
 
     if (isos.type() == 0) {
-        if (isos.channels() != 1) {
+        if (isos.channels() == 3) {
             cv::cvtColor(isos, isos, cv::COLOR_RGB2GRAY);
+        } else if (isos.channels() == 4) {
+            cv::cvtColor(isos, isos, cv::COLOR_RGBA2GRAY);
         }
         isos.convertTo(isos, 0);
     }
+    std::cout << "edges passed to dm2: \n" << edges << std::endl;
 
+    std::cout << "isophotes passed to dm2: \n" << isos << std::endl;
     cv::Mat edgedists = sample_seeds(edges, pathEdges, false, false);
+    std::cout << "got edge distance" << std::endl;
     cv::Mat isosdists = sample_seeds(isos, pathIsos, false, false);
+    std::cout << "got isos distance" << std::endl;
 
     cv::Mat distances = cv::Mat::zeros(edges.rows, edges.cols, CV_32SC1);
 
