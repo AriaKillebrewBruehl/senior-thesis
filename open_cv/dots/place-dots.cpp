@@ -95,6 +95,11 @@ cv::Mat placeDotsNegativeSpace(std::string pathSeeds, cv::Mat imgSeeds,
         negative_space.convertTo(negative_space, 0);
     }
     assert(negative_space.type() == 0);
+    int negativeZeros = cv::countNonZero(negative_space);
+    if (negativeZeros == (negative_space.rows * negative_space.cols)) {
+        // if all of negative_space is white then invert it
+        cv::bitwise_not(negative_space, negative_space);
+    }
 
     cv::Mat details = read(pathDetails, imgDetails);
     assert(!details.empty());
@@ -107,7 +112,13 @@ cv::Mat placeDotsNegativeSpace(std::string pathSeeds, cv::Mat imgSeeds,
         }
         details.convertTo(details, 0);
     }
+
     assert(details.type() == 0);
+    int detailZeros = cv::countNonZero(details);
+    if (detailZeros == (details.rows * details.cols)) {
+        // if all of details is white then invert it
+        cv::bitwise_not(details, details);
+    }
 
     int scale = 6;
     cv::Mat rendered = cv::Mat(image.rows * scale, image.cols * scale, CV_8UC1,
