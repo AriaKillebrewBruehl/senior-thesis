@@ -14,8 +14,10 @@ cv::Mat skeleton(std::string path, cv::Mat img, bool saving) {
     }
 
     if (image.type() != 0) {
-        if (image.channels() != 1) {
+        if (image.channels() == 3) {
             cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        } else if (image.channels() == 4) {
+            cv::cvtColor(image, image, cv::COLOR_RGBA2GRAY);
         }
         image.convertTo(image, 0);
     }
