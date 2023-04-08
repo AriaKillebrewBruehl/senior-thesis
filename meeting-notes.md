@@ -1,5 +1,35 @@
 ## Meeting Notes
 
+# 04.07.2023
+
+- Is the mapping of grey to stipple dot correct?
+  - Gamma correction 
+- I need to figure out the raid of dots as a function of tone and density 
+  - If the final image was blurred we could see grayscale differences 
+- I want the radius of the dot to be the square or square root of things
+  - Have dot radius also be a factor of density 
+- Try stippling a bunch of different levels of pure gray
+  - Then compute the avg gray of original image and output image 
+    - Sum up all white and divide by the number of pixels 
+  - Then play with different stipple raidi and see how this 
+  - Fixed density calibrate radi to get tone 
+    - Density versus radi 
+      - Want uniform tone across this 
+- For sag we need a text file that describes the center of a all the circles and their sizes 
+- Play with density things 
+  - Density vs tone and radi vs tone 
+- Have component that prints out dot centers and radi to a .txt 
+
+For eye detail try binning and then making pure black / white / mix (half toning) and then add that in 
+
+- So selecting some things that just get halftones 
+- Play around with number of iterations
+  - Add these image to thesis 
+  - For different densities of dots do we need to iterate longer 
+  - 
+
+
+
 # 03.10.2023
 
 Questions for today's meeting:
