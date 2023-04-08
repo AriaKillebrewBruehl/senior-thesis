@@ -1,7 +1,6 @@
 #include "caboodle.hpp"
 
 void mouseHandler(int event, int x, int y, int, void*) {
-    assert(!mouse_src.empty());
     if (event == cv::EVENT_LBUTTONDOWN || event == cv::EVENT_RBUTTONDOWN ||
         event == cv::EVENT_MBUTTONDOWN) {
         if (flag == 0) {
@@ -12,6 +11,22 @@ void mouseHandler(int event, int x, int y, int, void*) {
             if (var > 1)
                 line(img1, pts[var - 2], point, cv::Scalar(0, 0, 255), 2, 8, 0);
             imshow("Hedcut Demo - Select Details", img1);
+        }
+    }
+}
+
+void mouseHandler2(int event, int x, int y, int, void*) {
+    if (event == cv::EVENT_LBUTTONDOWN || event == cv::EVENT_RBUTTONDOWN ||
+        event == cv::EVENT_MBUTTONDOWN) {
+        if (flag2 == 0) {
+            point2 = cv::Point(x, y);
+            circle(img12, point2, 2, cv::Scalar(0, 0, 255), -1, 8, 0);
+            pts2.push_back(point2);
+            var2++;
+            if (var2 > 1)
+                line(img12, pts2[var2 - 2], point2, cv::Scalar(0, 0, 255), 2, 8,
+                     0);
+            imshow("Hedcut Demo - Select 2", img12);
         }
     }
 }
@@ -249,7 +264,6 @@ DETAIL_SELECTION : {
     img1 = mouse_src.clone();
     cv::namedWindow("Hedcut Demo - Select Details", cv::WINDOW_AUTOSIZE);
     cv::setMouseCallback("Hedcut Demo - Select Details", mouseHandler, NULL);
-    std::cout << "set mouse callback" << std::endl;
     cv::imshow("Hedcut Demo - Select Details", mouse_src);
     bool finalized = false;
     for (;;) {
@@ -589,14 +603,18 @@ PLACE_CIRCLES : {
         cv::imshow("Hedcut Demo - Rendered", rendered);
     }
 }
-// 10) accept rendered dots, find image outline
+// // 10) accept rendered dots, find image outline
+// OUTLINE : {
+//     std::cout << "\nBeginning outline detection proccess\n\n"
+//                  "Press:\n"
+//                  "   'T' / 't'to increase / decrease threshold parameter by
+//                  25 " "px for edge detection (initial " "value is 500 px)\n";
 OUTLINE : {
     std::cout << "\nBeginning outline detection proccess\n\n"
                  "Press:\n"
                  "   'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 500 px)\n";
-
     outline = extractEdges(image_path, image, thresh_outline, false);
     cv::imshow("Hedcut Demo - Outline", outline);
     for (;;) {
@@ -614,7 +632,7 @@ OUTLINE : {
         }
         if (key == 'n' || key == 'N') {
             // cv::destroyWindow("Hedcut Demo - Outline");
-            goto FINAL_RENDERING;
+            goto ADDITIONAL_DETAILS;
         }
         if (key == 'r' || key == 'R') {
             thresh_outline = OUTLINE_THRESH;
@@ -629,15 +647,113 @@ OUTLINE : {
         cv::imshow("Hedcut Demo - Outline", outline);
     }
 }
+// 10) accept rendered dots, find image outline
+ADDITIONAL_DETAILS : {
+    std::cout << "\nBeginning outline detection proccess\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 500 px)\n";
+
+    thresh_outline = OUTLINE_THRESH;
+    additional_details = extractEdges(image_path, image, thresh_outline, false);
+    mouse_src2 = additional_details;
+    img12 = mouse_src2.clone();
+    cv::namedWindow("Hedcut Demo - Select 2", cv::WINDOW_AUTOSIZE);
+    cv::setMouseCallback("Hedcut Demo - Select 2", mouseHandler2, NULL);
+    cv::imshow("Hedcut Demo - Select 2", mouse_src2);
+    bool finalized = false;
+    for (;;) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
+            std::string tag = "-details";
+            save(mouse_src2, image_path, tag);
+        }
+        if (key == 27) {
+            return EXIT_SUCCESS;
+        }
+        if (key == 'b' || key == 'B') {
+            // reset variables
+            pts2.clear();
+            sections2.clear();
+            var2 = 0;
+            drag2 = 0;
+            flag2 = 0;
+            cv::destroyWindow("Hedcut Demo - 2");
+            goto OUTLINE;
+        }
+        if (key == 'n' || key == 'N') {
+            if (!finalized) {
+                if (!pts2.empty()) {
+                    sections2.push_back(pts2);
+                    pts2.clear();
+                }
+                flag2 = 1;
+                img12 = mouse_src2.clone();
+                for (std::vector<cv::Point> s : sections2) {
+                    cv::polylines(img12, s, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+                }
+                flag2 = var2;
+                final2 = cv::Mat::zeros(mouse_src2.size(), CV_8UC3);
+                mask2 = cv::Mat::zeros(mouse_src2.size(), CV_8UC1);
+                cv::fillPoly(mask2, sections2, cv::Scalar(255, 255, 255), 8, 0);
+                cv::bitwise_and(mouse_src2, mouse_src2, final, mask2);
+                cv::bitwise_not(final2, final2, mask2);
+                cv::bitwise_not(final2, final2);
+                cv::imshow("Hedcut Demo - Select 2", final2);
+            }
+            // cv::destroyWindow("Hedcut Demo - Select Details");
+            goto FINAL_RENDERING;
+        }
+        if (key == 'a' || key == 'A') {
+            // save current section
+            sections2.push_back(pts2);
+            // reset variables
+            flag2 = 0;
+            pts2.clear();
+            var2 = 0;
+        }
+        if (key == 'd' || key == 'D') {
+            if (!pts2.empty()) {
+                sections2.push_back(pts2);
+                pts2.clear();
+            }
+            flag2 = 1;
+            img12 = mouse_src2.clone();
+            for (std::vector<cv::Point> s : sections2) {
+                cv::polylines(img12, s, 1, cv::Scalar(0, 0, 0), 2, 8, 0);
+            }
+            flag2 = var2;
+            final2 = cv::Mat::zeros(mouse_src2.size(), CV_8UC3);
+            mask2 = cv::Mat::zeros(mouse_src2.size(), CV_8UC1);
+            cv::fillPoly(mask2, sections2, cv::Scalar(255, 255, 255), 8, 0);
+            cv::bitwise_and(mouse_src2, mouse_src2, final2, mask2);
+            cv::bitwise_not(final2, final2, mask2);
+            cv::bitwise_not(final2, final2);
+            cv::imshow("Hedcut Demo - Select 2", final2);
+            finalized = true;
+        }
+        if (key == 'r' || key == 'R') {
+            pts2.clear();
+            sections2.clear();
+            var2 = 0;
+            drag2 = 0;
+            flag2 = 0;
+            finalized = false;
+            img12 = mouse_src2.clone();
+            cv::imshow("Hedcut Demo - Select 2", mouse_src2);
+        }
+    }
+}
 // 11) combine final rendering
 FINAL_RENDERING : {
     std::cout << "\nFinalizing rendering\n\n";
 
     cv::destroyWindow("Hedcut Demo - Outline");
-    int scale = 6;
-    cv::Mat enlarged_outline;
     cv::resize(outline, enlarged_outline, cv::Size(), scale, scale);
+    cv::resize(final2, enlarged_details, cv::Size(), scale, scale);
     cv::bitwise_and(rendered, enlarged_outline, final_rendering);
+    cv::bitwise_and(final_rendering, enlarged_details, final_rendering);
     cv::imshow("Hedcut Demo - Final Rendering", final_rendering);
     for (;;) {
         char key = (char)cv::waitKey(0);
