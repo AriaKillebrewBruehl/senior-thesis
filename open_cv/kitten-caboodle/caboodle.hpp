@@ -14,7 +14,7 @@
 #include "../isophotes/extract-isophotes.hpp"
 
 // set up variables for mouseHandler
-cv::Mat mouse_src, img1, mask, final;
+cv::Mat mouse_src, img1, mask, mask_outline, final;
 cv::Point point;
 std::vector<cv::Point> pts;
 std::vector<std::vector<cv::Point>> sections;
@@ -22,6 +22,16 @@ int drag = 0;
 int var = 0;
 int flag = 0;
 void mouseHandler(int, int, int, int, void *);
+
+// set up variables for mouseHandler
+cv::Mat mouse_src2, img12, mask2, final2;
+cv::Point point2;
+std::vector<cv::Point> pts2;
+std::vector<std::vector<cv::Point>> sections2;
+int drag2 = 0;
+int var2 = 0;
+int flag2 = 0;
+void mouseHandler2(int, int, int, int, void *);
 
 // set up default parameter values
 const int EDGE_THRESH = 300;
@@ -60,6 +70,10 @@ cv::Mat rendered;
 int max_size = MAX_SIZE;
 cv::Mat outline;
 int thresh_outline = OUTLINE_THRESH;
+cv::Mat additional_details;
+int scale = 6;
+cv::Mat enlarged_outline;
+cv::Mat enlarged_details;
 cv::Mat final_rendering;
 
 cv::Mat caboodle(std::string path, cv::Mat img, bool saving);
