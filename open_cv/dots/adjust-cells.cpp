@@ -70,12 +70,10 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                 // if p is part of an offset line
                 if (offsets.at<int32_t>(row, col) == 0) {
                     // wi = min{D(xi)/Dw,1}
-                    // w = dists_w_seeds.at<cv::Vec3i>(row, col)[0] >= 100
-                    //         ? 1.0
-                    //         : float(dists_w_seeds.at<cv::Vec3i>(row, col)[0])
-                    //         /
-                    //               100.0;
-                    w = 0;
+                    w = dists_w_seeds.at<cv::Vec3i>(row, col)[0] >= 100
+                            ? 1.0
+                            : float(dists_w_seeds.at<cv::Vec3i>(row, col)[0]) /
+                                  100.0;
                 } else {
                     // if there is an offset line separating the current pixel
                     // and its seed
