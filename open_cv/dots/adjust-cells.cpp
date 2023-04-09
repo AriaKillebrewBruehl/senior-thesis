@@ -20,15 +20,6 @@ seed_map generate_map(cv::Mat image) {
             }
         }
     }
-    // for (auto pair : map) {
-    //     std::cout << "(" << pair.first.first << ", " << pair.first.second
-    //               << "): [";
-    //     for (auto p : pair.second) {
-    //         std::cout << "(" << p.first << ", " << p.second << "), ";
-    //     }
-    //     std::cout << "]" << std::endl;
-    //     std::cout << std::endl;
-    // }
     return map;
 }
 
@@ -46,14 +37,14 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         offsets.convertTo(offsets, CV_32SC1);
     }
 
-    cv::Mat dists_w_seeds = read(path_dists_w_seeds, img_dists_w_seeds);
-    assert(!dists_w_seeds.empty());
-    assert(dists_w_seeds.type() == 20);
+    cv::Mat voronoi = read(path_dists_w_seeds, img_dists_w_seeds);
+    assert(!voronoi.empty());
+    assert(voronoi.type() == 20);
 
-    seed_map map = generate_map(dists_w_seeds);
+    seed_map map = generate_map(voronoi);
 
-    cv::Mat adjusted = cv::Mat(dists_w_seeds.rows, dists_w_seeds.cols, CV_8UC1,
-                               cv::Scalar(255));
+    cv::Mat adjusted =
+        cv::Mat(voronoi.rows, voronoi.cols, CV_8UC1, cv::Scalar(255));
     for (auto const &pair : map) {
         int32_t seed_row = pair.first.first;
         int32_t seed_col = pair.first.second;
@@ -62,6 +53,7 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         float col_sum = 0;
         float w = 1.0;
         float ro = 0;
+        int32_t seed_section;
 
         for (auto const &p : pair.second) {
             int32_t row = p.first;
@@ -70,16 +62,17 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                 // if p is part of an offset line
                 if (offsets.at<int32_t>(row, col) == 0) {
                     // wi = min{D(xi)/Dw,1}
-                    w = dists_w_seeds.at<cv::Vec3i>(row, col)[0] >= 100
+                    w = voronoi.at<cv::Vec3i>(row, col)[0] >= 100
                             ? 1.0
-                            : float(dists_w_seeds.at<cv::Vec3i>(row, col)[0]) /
-                                  100.0;
+                            : float(voronoi.at<cv::Vec3i>(row, col)[0]) / 100.0;
                 } else {
                     // if there is an offset line separating the current pixel
                     // and its seed
-                    int32_t seed_section =
-                        offsets.at<int32_t>(seed_row, seed_col);
+                    seed_section = offsets.at<int32_t>(seed_row, seed_col);
                     int32_t pixel_section = offsets.at<int32_t>(row, col);
+                    std::cout << "seed section: " << seed_section << std::endl;
+                    std::cout << "pixel section: " << pixel_section
+                              << std::endl;
                     if (pixel_section != seed_section) {
                         w = 0;
                     }
@@ -94,7 +87,14 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         }
         int32_t final_row = int(row_sum / ro);
         int32_t final_col = int(col_sum / ro);
-        // std::cout << "prev row: " << seed_row << " prev col: " << seed_col
+        int32_t final_section = offsets.at<int32_t>(final_row, final_col);
+        // if (seed_section != final_section) {
+        //     std::cout << "seed switched sections from: " << seed_section
+        //               << " to: " << final_section << std::endl;
+        // }
+
+        // std::cout << "prev row: " << seed_row << " prev col: " <<
+        // seed_col
         //           << std::endl;
         // std::cout << "row sum: " << row_sum << " col sum: " << col_sum
         //           << std::endl;
