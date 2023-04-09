@@ -38,6 +38,7 @@ cv::Mat placeDots(std::string pathSeeds, cv::Mat imgSeeds, std::string pathOrig,
                 float t = float(image.at<uchar>(i, j)) / 255.0;
                 float s = s_max * std::pow((1 - t), gamma);
                 if (s >= 1.0) {
+                    s *= scale;
                     cv::circle(rendered, cv::Point2d(j * scale, i * scale),
                                int(s), cv::Scalar(0), -1);
                 }
