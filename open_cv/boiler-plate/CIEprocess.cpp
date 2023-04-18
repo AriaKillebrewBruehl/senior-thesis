@@ -5,7 +5,6 @@ inline uchar reduceVal(const uchar val) {
     return 255;
 }
 
-// return a grayscale version of the image with only the L component
 cv::Mat processColors(cv::Mat img) {
     assert(!img.empty());
 
