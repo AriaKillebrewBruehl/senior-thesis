@@ -20,15 +20,6 @@ seed_map generate_map(cv::Mat image) {
             }
         }
     }
-    // for (auto pair : map) {
-    //     std::cout << "(" << pair.first.first << ", " << pair.first.second
-    //               << "): [";
-    //     for (auto p : pair.second) {
-    //         std::cout << "(" << p.first << ", " << p.second << "), ";
-    //     }
-    //     std::cout << "]" << std::endl;
-    //     std::cout << std::endl;
-    // }
     return map;
 }
 
@@ -92,13 +83,6 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         }
         int32_t final_row = int(row_sum / ro);
         int32_t final_col = int(col_sum / ro);
-        // std::cout << "prev row: " << seed_row << " prev col: " << seed_col
-        //           << std::endl;
-        // std::cout << "row sum: " << row_sum << " col sum: " << col_sum
-        //           << std::endl;
-        // std::cout << "final row: " << final_row << " final col: " <<
-        // final_col
-        //           << std::endl;
         adjusted.at<uchar>(final_row, final_col) = uchar(0);
     }
     if (saving) {
