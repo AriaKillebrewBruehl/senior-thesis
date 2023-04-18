@@ -72,10 +72,10 @@ cv::Mat placeSeedsAdjusted(std::string pathOffset, cv::Mat offsetMap,
         offset.convertTo(offset, CV_32SC1);
     }
 
-    cv::Mat distancess;
-    distancess = read(pathDists, dists);
+    cv::Mat distances;
+    distances = read(pathDists, dists);
 
-    assert(!distancess.empty());
+    assert(!distances.empty());
 
     // blank map for seed pixels
     cv::Mat seeds = cv::Mat(offset.rows, offset.cols, CV_8UC1, cv::Scalar(255));
@@ -86,7 +86,7 @@ cv::Mat placeSeedsAdjusted(std::string pathOffset, cv::Mat offsetMap,
             if (offset.at<int32_t>(i, j) != 0) {
                 double r = ((double)rand()) / RAND_MAX;
                 int s;
-                int dist = distancess.at<int32_t>(i, j);
+                int dist = distances.at<int32_t>(i, j);
                 if (dist < 5) {
                     s = d * 0.5;
                 } else if (dist < 10) {
