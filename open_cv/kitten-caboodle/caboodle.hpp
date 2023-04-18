@@ -13,21 +13,24 @@
 #include "../edge-detection/extract-edges.hpp"
 #include "../isophotes/extract-isophotes.hpp"
 
+using namespace std;
+using namespace cv;
+
 // set up variables for mouseHandler
-cv::Mat mouse_src, img1, mask, mask_outline, final;
-cv::Point point;
-std::vector<cv::Point> pts;
-std::vector<std::vector<cv::Point>> sections;
+Mat mouse_src, img1, mask, mask_outline, final;
+Point point;
+vector<Point> pts;
+vector<vector<Point>> sections;
 int drag = 0;
 int var = 0;
 int flag = 0;
 void mouseHandler(int, int, int, int, void *);
 
 // set up variables for mouseHandler
-cv::Mat mouse_src2, img12, mask2, final2;
-cv::Point point2;
-std::vector<cv::Point> pts2;
-std::vector<std::vector<cv::Point>> sections2;
+Mat mouse_src2, img12, mask2, final2;
+Point point2;
+vector<Point> pts2;
+vector<vector<Point>> sections2;
 int drag2 = 0;
 int var2 = 0;
 int flag2 = 0;
@@ -38,42 +41,42 @@ const int EDGE_THRESH = 300;
 const int BINS = 5;
 const int ISOS_HIGHLIGHT_THRESH = 2;
 const int ISOS_THRESH = 200;
-const int L = 6.0;
+const int L = 12.0;
 const int NEGATIVE_SPACE_BINS = 5;
 const int NEGATIVE_SPACE_THRESH = 1;
 const int MAX_SIZE = 15;
 const int OUTLINE_THRESH = 800;
 // setup variables
-cv::Mat image;
+Mat image;
 bool auto_save = false;
-cv::Mat edges;
+Mat edges;
 int thresh_edges = EDGE_THRESH;
-cv::Mat posterized;
+Mat posterized;
 int bins = BINS;
-cv::Mat isophotes;
+Mat isophotes;
 int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
-cv::Mat isophotes_extracted;
+Mat isophotes_extracted;
 int thresh_isophotes = ISOS_THRESH;
-cv::Mat details;
-cv::Mat distances;
-cv::Mat offset_map;
-cv::Mat offset_map_visual;
+Mat details;
+Mat distances;
+Mat offset_map;
+Mat offset_map_visual;
 int l = L;
-cv::Mat initial_dots;
+Mat initial_dots;
 int d = l;
-cv::Mat adjusted_dots;
-cv::Mat negative_posterized;
+Mat adjusted_dots;
+Mat negative_posterized;
 int negative_bins = NEGATIVE_SPACE_BINS;
-cv::Mat negative_space;
+Mat negative_space;
 int thresh_negative_space = NEGATIVE_SPACE_THRESH;
-cv::Mat rendered;
+Mat rendered;
 int max_size = MAX_SIZE;
-cv::Mat outline;
+Mat outline;
 int thresh_outline = OUTLINE_THRESH;
-cv::Mat additional_details;
+Mat additional_details;
 int scale = 6;
-cv::Mat enlarged_outline;
-cv::Mat enlarged_details;
-cv::Mat final_rendering;
+Mat enlarged_outline;
+Mat enlarged_details;
+Mat final_rendering;
 
-cv::Mat caboodle(std::string path, cv::Mat img, bool saving);
+Mat caboodle(string path, Mat img, bool saving);
