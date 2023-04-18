@@ -2,29 +2,82 @@
 
 ## _Basically a place where I will dump all my thoughts about the process and my feelings about thesis-life_
 
+
+
+# 03.27.2023
+
+
+
+Things to still fix from Jim's notes:
+
+- [x] Overview of light receptor cells 
+- [x] Good ai image
+- [ ] Second image of Sydney rendered 
+- [x] CMY subtractive color 
+- [ ] Kernels and filters 
+- [x] Image processing part 
+- [ ] Figure 3.8 formatting 
+
+# 03.25.2023
+
+After running all versions with my wider set of input images I see a big issue in the posterization process. On subjects with dark skin the initial binary from the posterized image is almost all black, on light skin subjects it is almost all white. So I think the next improvement will be making it so posterization can be customizable.
+
+# 03.22.2023
+
+Hmm it looks like there's no nice data base of the images in Rosin et al. and I think it would be easier for me to just find my own based on the criteria they cite.
+
+### General Criteria:
+
+- the image set should contain a range of different face types. Furthermore, the images should present a broad collection of complications, capturing the range of conditions and environments where people photograph faces.
+- The image set should be small enough that evaluating it manually is feasible. • As a consequence of the tension between the first two principles, the benchmark should be organised into multiple levels of difficulty
+- The first level should correspond to the sorts of photographs used by existing portrait stylisation methods.
+- The gap in difficulty between level n and level n + 1 should not be too great.
+
+#### Level 1 Criteria:
+
+- [ ] Adult face sin strict frontal views
+- [ ] Neutral expression
+- [ ] Clean backgrounds
+- [ ] No ornamentation or facial hair
+
+#### Level 2 Criteria:
+
+- Same as level one but with
+- [ ] Facial hair
+- [ ] Mild facial expressions
+- [ ] A bit of jewelry
+- [ ] More varied backgrounds
+
+#### Level 3 / 4 Criteria
+
+- Relax contraints on
+- [ ] Background clutter
+- [ ] Lighting
+- [ ] Expressions
+- [ ] Poses
+- [ ] Age range
+
 # 03.14.2023
 
-*First full read of my thesis!*
+_First full read of my thesis!_
 
-I have pretty much every part of my thesis written (I think), so today I'm reading over it and will be tracking where edits need to be made. 
-
-
+I have pretty much every part of my thesis written (I think), so today I'm reading over it and will be tracking where edits need to be made.
 
 ### writing issues
 
 - [x] title
-- [ ] Acknowledgements 
-- [ ] Abstract 
+- [ ] Acknowledgements
+- [ ] Abstract
 - [ ] Dedication ?
 - [ ] Fix bibliography issues
   - [x] Opencv 2014 citation
 - [ ] Change hedcut list into command for consistency?
 - [x] Thesholding
-- [x] Method for selecting isophotes in section 2.2 
+- [x] Method for selecting isophotes in section 2.2
 
-### figure issues 
+### figure issues
 
-- [ ] Email randy glass again / WSJ 
+- [ ] Email randy glass again / WSJ
 - [x] Currency engraving
 - [x] Half-toning image
 - [ ] 0.7 final rendering after adjustments
@@ -32,21 +85,21 @@ I have pretty much every part of my thesis written (I think), so today I'm readi
 - [x] 1.2.1 flower drawn in 3 ways
 - [x] 1.4.2 sobel operator
 - [ ] 2.1 canny versus DoG
-- [x] 2.1 Initial edges detected 
+- [x] 2.1 Initial edges detected
 - [x] 2.1 closeup of edges
-- [x] 2.1.1 thresholded edges 
+- [x] 2.1.1 thresholded edges
 - [x] Add input image to figure 2.4
 - [ ] CLI video
 - [ ] Curly images
-- [x] 4.3 Photorealistic edge detection  
+- [x] 4.3 Photorealistic edge detection
 
 ## formatting and layout issues
 
 - [ ] Definitions?
-  - [ ] Channels 
-  - [ ] Depth 
-  - [ ] Seed pixel 
-  - [ ] Sampled function 
+  - [ ] Channels
+  - [ ] Depth
+  - [ ] Seed pixel
+  - [ ] Sampled function
 
 # 03.10.2023
 
