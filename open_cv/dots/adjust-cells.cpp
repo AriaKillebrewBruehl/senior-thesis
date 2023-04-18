@@ -70,9 +70,6 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
                     // and its seed
                     seed_section = offsets.at<int32_t>(seed_row, seed_col);
                     int32_t pixel_section = offsets.at<int32_t>(row, col);
-                    std::cout << "seed section: " << seed_section << std::endl;
-                    std::cout << "pixel section: " << pixel_section
-                              << std::endl;
                     if (pixel_section != seed_section) {
                         w = 0;
                     }
@@ -88,19 +85,6 @@ cv::Mat adjust(std::string path_offset, cv::Mat img_offset,
         int32_t final_row = int(row_sum / ro);
         int32_t final_col = int(col_sum / ro);
         int32_t final_section = offsets.at<int32_t>(final_row, final_col);
-        // if (seed_section != final_section) {
-        //     std::cout << "seed switched sections from: " << seed_section
-        //               << " to: " << final_section << std::endl;
-        // }
-
-        // std::cout << "prev row: " << seed_row << " prev col: " <<
-        // seed_col
-        //           << std::endl;
-        // std::cout << "row sum: " << row_sum << " col sum: " << col_sum
-        //           << std::endl;
-        // std::cout << "final row: " << final_row << " final col: " <<
-        // final_col
-        //           << std::endl;
         adjusted.at<uchar>(final_row, final_col) = uchar(0);
     }
     if (saving) {
