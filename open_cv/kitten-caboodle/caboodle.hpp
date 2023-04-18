@@ -13,14 +13,13 @@
 #include "../edge-detection/extract-edges.hpp"
 #include "../isophotes/extract-isophotes.hpp"
 
-using namespace std;
 using namespace cv;
 
 // set up variables for mouseHandler
 Mat mouse_src, img1, mask, mask_outline, final;
 Point point;
-vector<Point> pts;
-vector<vector<Point>> sections;
+std::vector<Point> pts;
+std::vector<std::vector<Point>> sections;
 int drag = 0;
 int var = 0;
 int flag = 0;
@@ -29,8 +28,8 @@ void mouseHandler(int, int, int, int, void *);
 // set up variables for mouseHandler
 Mat mouse_src2, img12, mask2, final2;
 Point point2;
-vector<Point> pts2;
-vector<vector<Point>> sections2;
+std::vector<Point> pts2;
+std::vector<std::vector<Point>> sections2;
 int drag2 = 0;
 int var2 = 0;
 int flag2 = 0;
@@ -79,4 +78,4 @@ Mat enlarged_outline;
 Mat enlarged_details;
 Mat final_rendering;
 
-Mat caboodle(string path, Mat img, bool saving);
+Mat caboodle(std::string path, Mat img, bool saving);

@@ -33,7 +33,7 @@ void mouseHandler2(int event, int x, int y, int, void*) {
 int main(int argc, char** argv) {
     CommandLineParser parser(argc, argv, "{@input   ||input image}");
 
-    cout
+    std::cout
         << "This program renders an input photograph as a hedcut drawing\n\n"
            "At any stage: \n"
            "\tpress 'B' / 'b' to move to previous step in hedcut "
@@ -60,9 +60,9 @@ int main(int argc, char** argv) {
     }
 
 SET_UP : {
-    cout << "\nBeginning hedcut generation proccess\n"
-            "Press:\n"
-            "\t'A' / 'a' to auto save on each step\n";
+    std::cout << "\nBeginning hedcut generation proccess\n"
+                 "Press:\n"
+                 "\t'A' / 'a' to auto save on each step\n";
     for (;;) {
         imshow("Hedcut Demo - Initial Input", image);
         char key = (char)waitKey(0);
@@ -71,13 +71,13 @@ SET_UP : {
         }
         if (key == 'a' || key == 'A') {
             auto_save = !auto_save;
-            cout << "AUTO SAVE IS";
+            std::cout << "AUTO SAVE IS";
             if (auto_save) {
-                cout << " ON. Hit 'a' to turn off.";
+                std::cout << " ON. Hit 'a' to turn off.";
             } else {
-                cout << " OFF. Hit 'a' to turn on.";
+                std::cout << " OFF. Hit 'a' to turn on.";
             }
-            cout << endl;
+            std::cout << std::endl;
         }
         if (key == 'n' || key == 'N') {
             // destroyWindow("Hedcut Demo - Initial Input");
@@ -87,17 +87,17 @@ SET_UP : {
 }
 // 2) loop over edge detection, allow tuning of threshold paramenter
 EDGE_EXTRACTION : {
-    cout << "\nBeginning edge detection proccess\n\n"
-            "Press:\n"
-            "\tT' / 't'to increase / decrease threshold parameter by 25 "
-            "px for edge detection (initial "
-            "value is 300 px)\n";
+    std::cout << "\nBeginning edge detection proccess\n\n"
+                 "Press:\n"
+                 "\tT' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 300 px)\n";
     edges = extractEdges(image_path, image, thresh_edges, false);
     imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-edges-" + to_string(thresh_edges);
+            std::string tag = "-edges-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
         if (key == 27) {
@@ -126,16 +126,16 @@ EDGE_EXTRACTION : {
 }
 // 3) accept edge image and posterize input image
 POSTERIZE : {
-    cout << "\nBeginning posterization proccess\n\n"
-            "Press:\n"
-            "\t'P' / 'p' to increase / decrease number of bins for "
-            "posterization (initial value is 5)\n ";
+    std::cout << "\nBeginning posterization proccess\n\n"
+                 "Press:\n"
+                 "\t'P' / 'p' to increase / decrease number of bins for "
+                 "posterization (initial value is 5)\n ";
     posterized = posterize(image_path, image, bins, false);
     imshow("Hedcut Demo - Posterized", posterized);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-posterized-" + to_string(bins);
+            std::string tag = "-posterized-" + std::to_string(bins);
             save(posterized, image_path, tag);
         }
         if (key == 27) {
@@ -166,19 +166,19 @@ POSTERIZE : {
 }
 // 4) accept posterized image and select isophotes
 ISOPHOTE_DETECTION : {
-    cout << "\nBeginning isophote detection proccess\n\n"
-            "Press:\n"
-            "\t'I' / 'i' to increase / decrease fraction of isophotes "
-            "taken to 1/n (initial value is 1/5)\n ";
+    std::cout << "\nBeginning isophote detection proccess\n\n"
+                 "Press:\n"
+                 "\t'I' / 'i' to increase / decrease fraction of isophotes "
+                 "taken to 1/n (initial value is 1/5)\n ";
     isophotes =
         getIsophotes(image_path, posterized, thresh_iso_highlights, false);
     imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
-        cout << thresh_iso_highlights << endl;
+        std::cout << thresh_iso_highlights << std::endl;
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag =
-                "-detected-isophotes-" + to_string(thresh_iso_highlights);
+            std::string tag =
+                "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
             save(isophotes, image_path, tag);
         }
         if (key == 27) {
@@ -210,10 +210,10 @@ ISOPHOTE_DETECTION : {
 }
 // 5) accept isohpotes and begin isophote extraction
 ISOPHOTE_EXTRACTION : {
-    cout << "\nBeginning isophote extraction proccess\n"
-            "Press:\n"
-            "\t'T' / 't' to increase / decrease threshold parameter by "
-            "10 px for edge detection (initial value is 50 px)\n";
+    std::cout << "\nBeginning isophote extraction proccess\n"
+                 "Press:\n"
+                 "\t'T' / 't' to increase / decrease threshold parameter by "
+                 "10 px for edge detection (initial value is 50 px)\n";
 
     isophotes_extracted =
         extractEdges(image_path, isophotes, thresh_isophotes, false);
@@ -221,7 +221,7 @@ ISOPHOTE_EXTRACTION : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-isophotes-" + to_string(thresh_isophotes);
+            std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
             save(isophotes_extracted, image_path, tag);
         }
         if (key == 27) {
@@ -252,11 +252,11 @@ ISOPHOTE_EXTRACTION : {
 }
 // 6) select regions that will be more detailed
 DETAIL_SELECTION : {
-    cout << "\nBeginning detail selection proccess\n"
-            "Press:\n"
-            "\tany mouse button to set points to create mask shape\n"
-            "\t'a' / 'A' to add a new section\n"
-            "\t'D' / 'd' to select detail area\n";
+    std::cout << "\nBeginning detail selection proccess\n"
+                 "Press:\n"
+                 "\tany mouse button to set points to create mask shape\n"
+                 "\t'a' / 'A' to add a new section\n"
+                 "\t'D' / 'd' to select detail area\n";
     ;
     destroyWindow("Hedcut Demo - Extracted Isophotes");
     mouse_src = image;
@@ -268,7 +268,7 @@ DETAIL_SELECTION : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-details";
+            std::string tag = "-details";
             save(mouse_src, image_path, tag);
         }
         if (key == 27) {
@@ -292,7 +292,7 @@ DETAIL_SELECTION : {
                 }
                 flag = 1;
                 img1 = mouse_src.clone();
-                for (vector<Point> s : sections) {
+                for (std::vector<Point> s : sections) {
                     polylines(img1, s, 1, Scalar(0, 0, 0), 2, 8, 0);
                 }
                 flag = var;
@@ -320,7 +320,7 @@ DETAIL_SELECTION : {
             }
             flag = 1;
             img1 = mouse_src.clone();
-            for (vector<Point> s : sections) {
+            for (std::vector<Point> s : sections) {
                 polylines(img1, s, 1, Scalar(0, 0, 0), 2, 8, 0);
             }
             flag = var;
@@ -346,11 +346,11 @@ DETAIL_SELECTION : {
 // 5) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
     assert(!final.empty());
-    cout << "\nBeginning offset map proccess\n"
-            "Press:\n"
-            "   'L' / 'l' to increase / decrease offset lane distance "
-            "by 1 px "
-            "(initial value is 6.0 px)\n";
+    std::cout << "\nBeginning offset map proccess\n"
+                 "Press:\n"
+                 "   'L' / 'l' to increase / decrease offset lane distance "
+                 "by 1 px "
+                 "(initial value is 6.0 px)\n";
 
     distances =
         distanceMap(image_path, edges, image_path, isophotes_extracted, false);
@@ -367,7 +367,7 @@ OFFSET_MAP : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-offset-map-" + to_string(l);
+            std::string tag = "-offset-map-" + std::to_string(l);
             save(offset_map_visual, image_path, tag);
         }
         if (key == 27) {
@@ -400,21 +400,21 @@ OFFSET_MAP : {
 }
 // 6) place dots
 PLACE_DOTS : {
-    cout << "\nBeginning dot placement map proccess\n"
-            "Press:\n"
-            "   'D' / 'd' to increase / decrease space between dots "
-            "distance by 1 px "
-            "(initial value is 6.0 px)\n";
+    std::cout << "\nBeginning dot placement map proccess\n"
+                 "Press:\n"
+                 "   'D' / 'd' to increase / decrease space between dots "
+                 "distance by 1 px "
+                 "(initial value is 6.0 px)\n";
 
     d = l;
     initial_dots =
         placeSeeds(image_path, offset_map, image_path, mask, d, false);
-    cout << "Finished placing dots" << endl;
+    std::cout << "Finished placing dots" << std::endl;
     imshow("Hedcut Demo - Initial Dots", initial_dots);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-initial-dots";
+            std::string tag = "-initial-dots";
             save(initial_dots, image_path, tag);
         }
         if (key == 27) {
@@ -439,22 +439,22 @@ PLACE_DOTS : {
         }
         initial_dots =
             placeSeeds(image_path, offset_map, image_path, mask, d, false);
-        cout << "Finished placing seed dots" << endl;
+        std::cout << "Finished placing seed dots" << std::endl;
         imshow("Hedcut Demo - Initial Dots", initial_dots);
     }
 }
 // 7) accept initial dots and begin dot adjusting
 ADJUST_DOTS : {
-    cout << "\nBeginning dot adjusting process.\n";
+    std::cout << "\nBeginning dot adjusting process.\n";
 
     adjusted_dots =
         dots(image_path, offset_map, image_path, initial_dots, l, false);
-    cout << "Finished adjusting dots" << endl;
+    std::cout << "Finished adjusting dots" << std::endl;
     imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-adjusted";
+            std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
         if (key == 27) {
@@ -470,21 +470,22 @@ ADJUST_DOTS : {
         }
         adjusted_dots =
             dots(image_path, offset_map, image_path, initial_dots, d, false);
-        cout << "Finished adjusting dots" << endl;
+        std::cout << "Finished adjusting dots" << std::endl;
         imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
 POSTERIZE_NEGATIVE : {
-    cout << "\nBeginning posterization proccess for negative space\n\n"
-            "Press:\n"
-            "   'P' / 'p' to increase / decrease number of bins for "
-            "posterization (initial value is 5)\n ";
+    std::cout << "\nBeginning posterization proccess for negative space\n\n"
+                 "Press:\n"
+                 "   'P' / 'p' to increase / decrease number of bins for "
+                 "posterization (initial value is 5)\n ";
     negative_posterized = posterize(image_path, image, negative_bins, false);
     imshow("Hedcut Demo - Negative Posterized", negative_posterized);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-negative-posterized-" + to_string(negative_bins);
+            std::string tag =
+                "-negative-posterized-" + std::to_string(negative_bins);
             save(negative_posterized, image_path, tag);
         }
         if (key == 27) {
@@ -516,18 +517,19 @@ POSTERIZE_NEGATIVE : {
 }
 // 8) accept adjusted dots and choose areas to not place circles
 CHOOSE_NEGATIVE : {
-    cout << "\nBeginning negative space detection proccess.\nWhite areas "
-            "will not contain dots in final image.\n\n"
-            "Press:\n"
-            "   'I' / 'i' to increase / decrease fraction of isophotes "
-            "taken to 1/n (initial value is 1/5)\n ";
+    std::cout << "\nBeginning negative space detection proccess.\nWhite areas "
+                 "will not contain dots in final image.\n\n"
+                 "Press:\n"
+                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "taken to 1/n (initial value is 1/5)\n ";
     negative_space = getIsophotes(image_path, negative_posterized,
                                   thresh_negative_space, false);
     imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-negative-space-" + to_string(thresh_negative_space);
+            std::string tag =
+                "-negative-space-" + std::to_string(thresh_negative_space);
             save(negative_space, image_path, tag);
         }
         if (key == 27) {
@@ -559,10 +561,10 @@ CHOOSE_NEGATIVE : {
 }
 // 9) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
-    cout << "\nBeginning circle placement process.\n"
-            "Press:\n"
-            "   'D' / 'd' to increase / decrease maximum circle size by 1 "
-            "(initial value is 12 px)\n";
+    std::cout << "\nBeginning circle placement process.\n"
+                 "Press:\n"
+                 "   'D' / 'd' to increase / decrease maximum circle size by 1 "
+                 "(initial value is 12 px)\n";
 
     float density = 1 / float(l * l);
     max_size = sqrt((1 / density));
@@ -573,7 +575,7 @@ PLACE_CIRCLES : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-rendered-" + to_string(max_size);
+            std::string tag = "-rendered-" + std::to_string(max_size);
             save(rendered, image_path, tag);
         }
         if (key == 27) {
@@ -604,22 +606,22 @@ PLACE_CIRCLES : {
 }
 // // 10) accept rendered dots, find image outline
 // OUTLINE : {
-//     cout << "\nBeginning outline detection proccess\n\n"
+//     std::cout<< "\nBeginning outline detection proccess\n\n"
 //                  "Press:\n"
 //                  "   'T' / 't'to increase / decrease threshold parameter by
 //                  25 " "px for edge detection (initial " "value is 500 px)\n";
 OUTLINE : {
-    cout << "\nBeginning outline detection proccess\n\n"
-            "Press:\n"
-            "   'T' / 't'to increase / decrease threshold parameter by 25 "
-            "px for edge detection (initial "
-            "value is 500 px)\n";
+    std::cout << "\nBeginning outline detection proccess\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 500 px)\n";
     outline = extractEdges(image_path, image, thresh_outline, false);
     imshow("Hedcut Demo - Outline", outline);
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-outline-" + to_string(thresh_edges);
+            std::string tag = "-outline-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
         if (key == 27) {
@@ -648,11 +650,11 @@ OUTLINE : {
 }
 // 10) accept rendered dots, find image outline
 ADDITIONAL_DETAILS : {
-    cout << "\nBeginning outline detection proccess\n\n"
-            "Press:\n"
-            "   'T' / 't'to increase / decrease threshold parameter by 25 "
-            "px for edge detection (initial "
-            "value is 500 px)\n";
+    std::cout << "\nBeginning outline detection proccess\n\n"
+                 "Press:\n"
+                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "px for edge detection (initial "
+                 "value is 500 px)\n";
 
     Mat eye_balls = posterize(image_path, image, bins, false);
     mouse_src2 = eye_balls;
@@ -664,7 +666,7 @@ ADDITIONAL_DETAILS : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-details";
+            std::string tag = "-details";
             save(mouse_src2, image_path, tag);
         }
         if (key == 27) {
@@ -688,28 +690,29 @@ ADDITIONAL_DETAILS : {
                 }
                 flag2 = 1;
                 img12 = mouse_src2.clone();
-                for (vector<Point> s : sections2) {
+                for (std::vector<Point> s : sections2) {
                     polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
                 }
                 flag2 = var2;
                 final2 = Mat::zeros(mouse_src2.size(), CV_8UC3);
                 mask2 = Mat::zeros(mouse_src2.size(), CV_8UC1);
                 fillPoly(mask2, sections2, Scalar(255, 255, 255), 8, 0);
-                cout << "shit" << endl;
+                std::cout << "shit" << std::endl;
                 bitwise_and(mouse_src2, mouse_src2, final2, mask2);
-                cout << "fuck" << endl;
+                std::cout << "fuck" << std::endl;
                 bitwise_not(final2, final2, mask2);
-                cout << "bitch" << endl;
+                std::cout << "bitch" << std::endl;
                 bitwise_not(final2, final2);
-                cout << "whore" << endl;
+                std::cout << "whore" << std::endl;
                 threshold(final2, final2, 125, 255, THRESH_BINARY);
-                cout << "ass" << endl;
+                std::cout << "ass" << std::endl;
 
-                cout << "final 2 typetype: " << type2str(final2.type()) << endl;
+                std::cout << "final 2 typetype: " << type2str(final2.type())
+                          << std::endl;
                 cvtColor(final2, final2, COLOR_RGB2GRAY);
-                cout << "cock" << endl;
+                std::cout << "cock" << std::endl;
                 final2.convertTo(final2, 0);
-                cout << "final 2 typetype: " << final2.type() << endl;
+                std::cout << "final 2 typetype: " << final2.type() << std::endl;
                 imshow("Hedcut Demo - Select 2", final2);
                 waitKey(0);
             }
@@ -731,7 +734,7 @@ ADDITIONAL_DETAILS : {
             }
             flag2 = 1;
             img12 = mouse_src2.clone();
-            for (vector<Point> s : sections2) {
+            for (std::vector<Point> s : sections2) {
                 polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
             }
             flag2 = var2;
@@ -744,7 +747,7 @@ ADDITIONAL_DETAILS : {
             threshold(final2, final2, 125, 255, THRESH_BINARY);
             cvtColor(final2, final2, COLOR_RGB2GRAY);
             final2.convertTo(final2, 0);
-            cout << "final 2 typetype: " << final2.type() << endl;
+            std::cout << "final 2 typetype: " << final2.type() << std::endl;
             imshow("Hedcut Demo - Select 2", final2);
             finalized = true;
         }
@@ -761,7 +764,7 @@ ADDITIONAL_DETAILS : {
     }
 }
 // ADDITIONAL_DETAILS : {
-//     cout << "\nBeginning outline detection proccess\n\n"
+//     std::cout<< "\nBeginning outline detection proccess\n\n"
 //                  "Press:\n"
 //                  "   'T' / 't'to increase / decrease threshold parameter by
 //                  25 " "px for edge detection (initial " "value is 500 px)\n";
@@ -778,7 +781,7 @@ ADDITIONAL_DETAILS : {
 //     for (;;) {
 //         char key = (char)waitKey(0);
 //         if (auto_save || key == 's' || key == 'S') {
-//             string tag = "-details";
+//             std::string tag = "-details";
 //             save(mouse_src2, image_path, tag);
 //         }
 //         if (key == 27) {
@@ -802,7 +805,7 @@ ADDITIONAL_DETAILS : {
 //                 }
 //                 flag2 = 1;
 //                 img12 = mouse_src2.clone();
-//                 for (vector<Point> s : sections2) {
+//                 for (std::vector<Point> s : sections2) {
 //                     polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
 //                 }
 //                 flag2 = var2;
@@ -832,7 +835,7 @@ ADDITIONAL_DETAILS : {
 //             }
 //             flag2 = 1;
 //             img12 = mouse_src2.clone();
-//             for (vector<Point> s : sections2) {
+//             for (std::vector<Point> s : sections2) {
 //                 polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
 //             }
 //             flag2 = var2;
@@ -859,13 +862,13 @@ ADDITIONAL_DETAILS : {
 // }
 // 11) combine final rendering
 FINAL_RENDERING : {
-    cout << "\nFinalizing rendering\n\n";
+    std::cout << "\nFinalizing rendering\n\n";
 
     destroyWindow("Hedcut Demo - Outline");
 
-    cout << "final2 type: " << type2str(final2.type()) << endl;
-    cout << "enlarged_details type: " << type2str(enlarged_details.type())
-         << endl;
+    std::cout << "final2 type: " << type2str(final2.type()) << std::endl;
+    std::cout << "enlarged_details type: " << type2str(enlarged_details.type())
+              << std::endl;
 
     resize(outline, enlarged_outline, Size(), scale, scale);
     // resize(final2, enlarged_details, Size(), scale, scale);
@@ -875,7 +878,7 @@ FINAL_RENDERING : {
     for (;;) {
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
-            string tag = "-final-rendering";
+            std::string tag = "-final-rendering";
             save(final_rendering, image_path, tag);
         }
         if (key == 27) {
