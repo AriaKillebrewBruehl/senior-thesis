@@ -25,6 +25,20 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
 add_executable(main main.cpp read-save.cpp)
+add_executable(compare-gs compare-gs.cpp ../boiler-plate/read-save.cpp ../boiler-plate/invert.cpp
+../dots/dots.cpp ../dots/place-dots.cpp ../dots/place-seeds.cpp ../dots/adjust-cells.cpp
+../distance-map/sampled-transform-seeds.cpp)
+
+add_executable(circles match-circles.cpp ../boiler-plate/read-save.cpp ../boiler-plate/invert.cpp
+../dots/dots.cpp ../dots/place-dots.cpp ../dots/place-seeds.cpp ../dots/adjust-cells.cpp
+../distance-map/sampled-transform-seeds.cpp)
+
+add_executable(match match_tone.cpp ../boiler-plate/read-save.cpp ../boiler-plate/invert.cpp
+../dots/dots.cpp ../dots/place-dots.cpp ../dots/place-seeds.cpp ../dots/adjust-cells.cpp
+../distance-map/sampled-transform-seeds.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(main ${OpenCV_LIBS})
+target_link_libraries(compare-gs ${OpenCV_LIBS})
+target_link_libraries(circles ${OpenCV_LIBS})
+target_link_libraries(match ${OpenCV_LIBS})
