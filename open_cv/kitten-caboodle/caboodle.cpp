@@ -32,37 +32,6 @@ int main(int argc, char** argv) {
         cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
     }
 
-    // set up default parameter values
-    const int EDGE_THRESH = 300;
-    const int ISOS_HIGHLIGHT_THRESH = 1;
-    const int ISOS_THRESH = 200;
-    const int L = 6.0;
-    const int NEGATIVE_SPACE_THRESH = 1;
-    const int MAX_SIZE = 15;
-    const int OUTLINE_THRESH = 800;
-    // setup variables
-    bool auto_save = false;
-    cv::Mat edges;
-    int thresh_edges = EDGE_THRESH;
-    cv::Mat isophotes;
-    int thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
-    cv::Mat isophotes_extracted;
-    int thresh_isophotes = ISOS_THRESH;
-    cv::Mat distances;
-    cv::Mat offset_map;
-    cv::Mat offset_map_visual;
-    int l = L;
-    cv::Mat initial_dots;
-    int d = l;
-    cv::Mat adjusted_dots;
-    cv::Mat negative_space;
-    int thresh_negative_space = NEGATIVE_SPACE_THRESH;
-    cv::Mat rendered;
-    int max_size = MAX_SIZE;
-    cv::Mat outline;
-    int thresh_outline = OUTLINE_THRESH;
-    cv::Mat final_rendering;
-
 SET_UP : {
     std::cout << "\nBeginning hedcut generation proccess\n"
                  "Press:\n"
