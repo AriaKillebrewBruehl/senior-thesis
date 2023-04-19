@@ -69,7 +69,9 @@
         "variant": "cpp",
         "cstdlib": "cpp",
         "algorithm": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "__verbose_abort": "cpp",
+        "bit": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/open_cv/build/3rdparty/ade/ade-0.1.2a"
 }
