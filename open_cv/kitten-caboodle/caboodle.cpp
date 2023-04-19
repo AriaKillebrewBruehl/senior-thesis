@@ -637,8 +637,6 @@ FINAL_RENDERING : {
     destroyWindow("Hedcut Demo - Outline");
 
     resize(outline, enlarged_outline, Size(), scale, scale);
-    std::cout << "enlarged_outline type: " << type2str(enlarged_outline.type())
-              << std::endl;
     bitwise_and(rendered, enlarged_outline, final_rendering);
     imshow("Hedcut Demo - Final Rendering", final_rendering);
     for (;;) {
