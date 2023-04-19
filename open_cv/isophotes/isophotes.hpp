@@ -19,4 +19,16 @@ struct comp {
     }
 };
 
+// Returns binary image with posterization
+// parameters:
+//
+// path - file path to input image
+// (can be "" if img is not empty)
+//
+// img - the input image as a cv::Mat
+// (can be empty if path is not "")
+//
+// thresh - the fraction of posterized sections to be taken
+//
+// saving - saves the posterized image to the file system
 cv::Mat getIsophotes(std::string path, cv::Mat img, int thresh, bool saving);
