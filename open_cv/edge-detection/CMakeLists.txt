@@ -25,7 +25,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
 add_executable(tests tests.cpp 
-    extract-edges.cpp canny.cpp DoG.cpp threshold-edges.cpp skeleton.cpp
+    extract-edges.cpp canny.cpp threshold-edges.cpp skeleton.cpp
      ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/invert.cpp ../boiler-plate/CIEprocess.cpp)
 
 # tell it to link the executable target against OpenCV
