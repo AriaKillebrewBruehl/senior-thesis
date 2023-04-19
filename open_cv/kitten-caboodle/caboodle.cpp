@@ -53,6 +53,7 @@ SET_UP : {
             std::cout << std::endl;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Initial Input");
             goto EDGE_EXTRACTION;
         }
     }
@@ -65,7 +66,7 @@ EDGE_EXTRACTION : {
                  "px for edge detection (initial "
                  "value is 300 px)\n";
     edges = extractEdges(image_path, image, thresh_edges, false);
-    cv::destroyWindow("Hedcut Demo - Initial Input");
+
     cv::imshow("Hedcut Demo - Extracted Edges", edges);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -81,6 +82,7 @@ EDGE_EXTRACTION : {
             goto SET_UP;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Extracted Edges");
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'r' || key == 'R') {
@@ -102,9 +104,8 @@ ISOPHOTE_DETECTION : {
     std::cout << "\nBeginning isophote detection proccess\n\n"
                  "Press:\n"
                  "\t'I' / 'i' to increase / decrease fraction of isophotes "
-                 "taken to 1/n (initial value is 1/5)\n ";
+                 "taken (initial value is top 1 section)\n ";
     isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
-    cv::destroyWindow("Hedcut Demo - Extracted Edges");
     cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -121,6 +122,7 @@ ISOPHOTE_DETECTION : {
             goto EDGE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Detected Isophotes");
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'r' || key == 'R') {
@@ -148,7 +150,6 @@ ISOPHOTE_EXTRACTION : {
 
     isophotes_extracted =
         extractEdges(image_path, isophotes, thresh_isophotes, false);
-    cv::destroyWindow("Hedcut Demo - Detected Isophotes");
     cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -164,6 +165,7 @@ ISOPHOTE_EXTRACTION : {
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
             goto OFFSET_MAP;
         }
         if (key == 'r' || key == 'R') {
@@ -193,7 +195,6 @@ OFFSET_MAP : {
     offset_map = offsetMap(image_path, distances, l, false, true);
     offset_map_visual = offsetMap(image_path, distances, l, false, false);
     offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
-    cv::destroyWindow("Hedcut Demo - Extracted Isophotes");
     cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -209,6 +210,7 @@ OFFSET_MAP : {
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Offset Map");
             goto PLACE_DOTS;
         }
         if (key == 'r' || key == 'R') {
@@ -240,7 +242,6 @@ PLACE_DOTS : {
     initial_dots = placeSeedsAdjusted(image_path, offset_map, image_path,
                                       distances, d, false);
     std::cout << "Finished placing dots" << std::endl;
-    cv::destroyWindow("Hedcut Demo - Offset Map");
     cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -262,6 +263,7 @@ PLACE_DOTS : {
             d++;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Initial Dots");
             goto ADJUST_DOTS;
         }
         if (key == 'r' || key == 'R') {
@@ -280,7 +282,6 @@ ADJUST_DOTS : {
     adjusted_dots =
         dots(image_path, offset_map, image_path, initial_dots, l, false);
     std::cout << "Finished adjusting dots" << std::endl;
-    cv::destroyWindow("Hedcut Demo - Initial Dots");
     cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -296,6 +297,7 @@ ADJUST_DOTS : {
             goto PLACE_DOTS;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Adjusted Dots");
             goto CHOOSE_NEGATIVE;
         }
         adjusted_dots =
@@ -314,7 +316,6 @@ CHOOSE_NEGATIVE : {
                  "taken to 1/n (initial value is 1/5)\n ";
     negative_space =
         getIsophotes(image_path, image, thresh_negative_space, false);
-    cv::destroyWindow("Hedcut Demo - Adjusted Dots");
     cv::imshow("Hedcut Demo - Negative Space", negative_space);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -331,6 +332,7 @@ CHOOSE_NEGATIVE : {
             goto ADJUST_DOTS;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Negative Space");
             goto PLACE_CIRCLES;
         }
         if (key == 'r' || key == 'R') {
@@ -359,7 +361,7 @@ PLACE_CIRCLES : {
     rendered =
         placeDotsNegativeSpace(image_path, adjusted_dots, image_path, image,
                                image_path, negative_space, max_size, false);
-    cv::destroyWindow("Hedcut Demo - Negative Space");
+
     cv::imshow("Hedcut Demo - Rendered", rendered);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -375,6 +377,7 @@ PLACE_CIRCLES : {
             goto CHOOSE_NEGATIVE;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Rendered");
             goto OUTLINE;
         }
         if (key == 'r' || key == 'R') {
@@ -401,7 +404,6 @@ OUTLINE : {
                  "value is 500 px)\n";
 
     outline = extractEdges(image_path, image, thresh_outline, false);
-    cv::destroyWindow("Hedcut Demo - Rendered");
     cv::imshow("Hedcut Demo - Outline", outline);
     for (;;) {
         char key = (char)cv::waitKey(0);
@@ -417,6 +419,7 @@ OUTLINE : {
             goto PLACE_CIRCLES;
         }
         if (key == 'n' || key == 'N') {
+            cv::destroyWindow("Hedcut Demo - Outline");
             goto FINAL_RENDERING;
         }
         if (key == 'r' || key == 'R') {
@@ -436,7 +439,6 @@ OUTLINE : {
 FINAL_RENDERING : {
     std::cout << "\nFinalizing rendering\n\n";
 
-    cv::destroyWindow("Hedcut Demo - Outline");
     int scale = 6;
     cv::Mat enlarged_outline;
     cv::resize(outline, enlarged_outline, cv::Size(), scale, scale);
