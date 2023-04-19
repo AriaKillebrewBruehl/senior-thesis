@@ -9,6 +9,15 @@ cv::Mat invert(cv::Mat arr) {
         arr.convertTo(arr, 0);
     }
 
+    if (cv::countNonZero(arr) == (arr.rows * arr.cols)) {
+        // image is fully white, so just return it
+        return arr;
+    } else if (cv::countNonZero(arr) == 0) {
+        // image is fully black, so invert and return
+        cv::bitwise_not(arr, arr);
+        return arr;
+    }
+
     // get components
     cv::Mat labels;
     cv::Mat stats;
