@@ -16,6 +16,19 @@ The main paper I will be following for this work is the 2010 Kim et al. paper [A
 
 I am currently working on changing the edge detection process to follow the 2007 Kang et al. paper [Coherent Line Drawing](http://www.umsl.edu/cmpsci/faculty-sites/kang/publications/2007/npar07/kang_npar07_hi.pdf)
 
-## `caboodle3` branch
+## Version 3
 
-This branch has the first iteration of the full `caboodle` program (called caboodle because it is the whole kitten caboodle). This version builds on `caboodle2` by allowing the user to select areas where no dots will be placed.
+This version of the `caboodle` program takes user input through a CLI. This version builds on `Version2` by allowing the user to select regions of negative space where dots will not be placed in the final rendering and by allowing the user to put an outline around the final stipple dots.
+
+To run the program:
+
+    > cd open_cv/kitten-caboodle/
+    > mkdir build
+    > cd build
+    > cmake ..
+    > make caboodle
+    > ./caboodle ../demo_images/sydney_sweeny.png
+
+The program will run and print feedback in the terminal and specify which buttons to press to adjust parameters. Please note that the dot adjusting process (after initial dot placement) can be quite slow for large images.
+
+This program can be run on any `.png` and it is preferred that the image is large (large than `750 px x 750 px`). Final renderings look best if the background is removed. This can be easily done using Apple's copy subject tool. Additionally it helps if the subject is well lit, has neat hair, is face on, and if there is contrast in the image.
