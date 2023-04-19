@@ -145,11 +145,12 @@ EDGE_EXTRACTION : {
     for (;;) {
         edges = extractEdges(image_path, image, thresh_edges, false);
         cv::imshow("Hedcut Demo - Extracted Edges", edges);
-        if (auto_save) {
+
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-edges-" + std::to_string(thresh_edges);
             save(edges, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -162,10 +163,6 @@ EDGE_EXTRACTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_edges = EDGE_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-edges-" + std::to_string(thresh_edges);
-            save(edges, image_path, tag);
         }
         if (key == 't') {
             thresh_edges -= 25;
@@ -186,12 +183,13 @@ ISOPHOTE_DETECTION : {
         isophotes =
             getIsophotes(image_path, image, thresh_iso_highlights, false);
         cv::imshow("Hedcut Demo - Detected Isophotes", isophotes);
-        if (auto_save) {
+
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag =
                 "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
             save(isophotes, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -204,11 +202,6 @@ ISOPHOTE_DETECTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_iso_highlights = ISOS_HIGHLIGHT_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag =
-                "-detected-isophotes-" + std::to_string(thresh_iso_highlights);
-            save(isophotes, image_path, tag);
         }
         if (key == 'i') {
             if (thresh_iso_highlights != 1) {
@@ -231,11 +224,11 @@ ISOPHOTE_EXTRACTION : {
         isophotes_extracted =
             extractEdges(image_path, isophotes, thresh_isophotes, false);
         cv::imshow("Hedcut Demo - Extracted Isophotes", isophotes_extracted);
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
             save(isophotes_extracted, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -248,10 +241,6 @@ ISOPHOTE_EXTRACTION : {
         }
         if (key == 'r' || key == 'R') {
             thresh_isophotes = ISOS_THRESH;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-isophotes-" + std::to_string(thresh_isophotes);
-            save(isophotes_extracted, image_path, tag);
         }
         if (key == 't') {
             thresh_isophotes -= 10;
@@ -277,11 +266,11 @@ OFFSET_MAP : {
         offset_map_visual.convertTo(offset_map_visual, CV_8UC1);
 
         cv::imshow("Hedcut Demo - Offset Map", offset_map_visual);
-        if (auto_save) {
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-offset-map-" + std::to_string(l);
             save(offset_map_visual, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -294,10 +283,6 @@ OFFSET_MAP : {
         }
         if (key == 'r' || key == 'R') {
             l = L;
-        }
-        if (key == 's' || key == 'S') {
-            std::string tag = "-offset-map-" + std::to_string(l);
-            save(offset_map_visual, image_path, tag);
         }
         if (key == 'l') {
             l -= 1.0;
@@ -321,11 +306,12 @@ PLACE_DOTS : {
         initial_dots = placeSeeds(image_path, offset_map, d, false);
         std::cout << "Finished placing dots" << std::endl;
         cv::imshow("Hedcut Demo - Initial Dots", initial_dots);
-        if (auto_save) {
+
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-initial-dots";
             save(initial_dots, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -345,10 +331,6 @@ PLACE_DOTS : {
         if (key == 'r' || key == 'R') {
             d = L;
         }
-        if (key == 's' || 'S') {
-            std::string tag = "-initial-dots";
-            save(initial_dots, image_path, tag);
-        }
     }
 }
 // 7) accept initial dots and begin dot adjusting
@@ -360,11 +342,12 @@ ADJUST_DOTS : {
             dots(image_path, offset_map, image_path, initial_dots, l, false);
         std::cout << "Finished adjusting dots" << std::endl;
         cv::imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
-        if (auto_save) {
+
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-adjusted";
             save(adjusted_dots, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
@@ -374,10 +357,6 @@ ADJUST_DOTS : {
         }
         if (key == 'n' || key == 'N') {
             goto PLACE_CIRCLES;
-        }
-        if (key == 's' || 'S') {
-            std::string tag = "-adjusted";
-            save(adjusted_dots, image_path, tag);
         }
     }
 }
@@ -392,20 +371,18 @@ PLACE_CIRCLES : {
         rendered = placeDots(image_path, adjusted_dots, image_path, image,
                              max_size, false);
         cv::imshow("Hedcut Demo - Rendered", rendered);
-        if (auto_save) {
+
+        char key = (char)cv::waitKey(0);
+        if (auto_save || key == 's' || key == 'S') {
             std::string tag = "-rendered-" + std::to_string(max_size);
             save(rendered, image_path, tag);
         }
-        char key = (char)cv::waitKey(0);
         if (key == 27) {
             return EXIT_SUCCESS;
         }
         if (key == 'b' || key == 'B') {
             cv::destroyWindow("Hedcut Demo - Rendered");
             goto ADJUST_DOTS;
-        }
-        if (key == 's' || key == 'S') {
-            save(rendered, image_path, "-rendered");
         }
         if (key == 'r' || key == 'R') {
             max_size = MAX_SIZE;
