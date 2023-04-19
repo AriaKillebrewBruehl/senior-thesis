@@ -7,7 +7,6 @@
 #include "../boiler-plate/invert.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
-#include "DoG.hpp"
 #include "canny.hpp"
 #include "threshold-edges.hpp"
 
