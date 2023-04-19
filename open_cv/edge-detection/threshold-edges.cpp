@@ -73,11 +73,7 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
         cv::Mat comp = labels(cv::Range(y, y + h), cv::Range(x, x + w));
         // isolate component
         cv::Mat isolated = isolate(comp, i);
-        // cv::Mat visual =
-        //     cv::Mat::zeros(isolated.rows, isolated.cols, isolated.type());
-        // cv::threshold(isolated, visual, 0, 255, cv::THRESH_BINARY);
-        // std::string slug = "-isolate" + std::to_string(i);
-        // save(visual, path, slug);
+
         // get component skeleton
         isolated.convertTo(isolated, CV_8UC1);
         cv::threshold(isolated, isolated, 0, 255, cv::THRESH_BINARY);
@@ -108,14 +104,3 @@ cv::Mat threshold(std::string path, cv::Mat img, int threshold, bool saving) {
 
     return labels;
 }
-
-// int main(int argc, char** argv) {
-//     if (argc < 2) {
-//          std::cerr << "Must pass in image to run DoG on." << std::endl;
-//     } else {
-//         for (int i = 1; i < argc; i++) {
-//             cv::Mat image;
-//             threshold(argv[i], image, 50, true);
-//         }
-//     }
-// }

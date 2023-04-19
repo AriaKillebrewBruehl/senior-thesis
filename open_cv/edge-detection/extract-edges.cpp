@@ -29,7 +29,7 @@ cv::Mat extractEdges(std::string path, cv::Mat img, int thresh, bool saving) {
     inverted = invert(extracted);
 
     if (saving) {
-        save(inverted, path, "-extracted-m6");
+        save(inverted, path, "-extracted");
     }
     return inverted;
 }
