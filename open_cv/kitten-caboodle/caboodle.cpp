@@ -15,21 +15,6 @@ void mouseHandler(int event, int x, int y, int, void*) {
     }
 }
 
-void mouseHandler2(int event, int x, int y, int, void*) {
-    if (event == EVENT_LBUTTONDOWN || event == EVENT_RBUTTONDOWN ||
-        event == EVENT_MBUTTONDOWN) {
-        if (flag2 == 0) {
-            point2 = Point(x, y);
-            circle(img12, point2, 2, Scalar(0, 0, 255), -1, 8, 0);
-            pts2.push_back(point2);
-            var2++;
-            if (var2 > 1)
-                line(img12, pts2[var2 - 2], point2, Scalar(0, 0, 255), 2, 8, 0);
-            imshow("Hedcut Demo - Select 2", img12);
-        }
-    }
-}
-
 int main(int argc, char** argv) {
     CommandLineParser parser(argc, argv, "{@input   ||input image}");
 
@@ -80,12 +65,12 @@ SET_UP : {
             std::cout << std::endl;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Initial Input");
+            destroyWindow("Hedcut Demo - Initial Input");
             goto EDGE_EXTRACTION;
         }
     }
 }
-// 2) loop over edge detection, allow tuning of threshold paramenter
+// 2) loop over edge detection, allow tuning of threshold parameter
 EDGE_EXTRACTION : {
     std::cout << "\nBeginning edge detection proccess\n\n"
                  "Press:\n"
@@ -108,7 +93,7 @@ EDGE_EXTRACTION : {
             goto SET_UP;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Extracted Edges");
+            destroyWindow("Hedcut Demo - Extracted Edges");
             goto POSTERIZE;
         }
         if (key == 'r' || key == 'R') {
@@ -146,7 +131,7 @@ POSTERIZE : {
             goto EDGE_EXTRACTION;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Posterized");
+            destroyWindow("Hedcut Demo - Posterized");
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'r' || key == 'R') {
@@ -189,7 +174,7 @@ ISOPHOTE_DETECTION : {
             goto POSTERIZE;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Detected Isophotes");
+            destroyWindow("Hedcut Demo - Detected Isophotes");
             goto ISOPHOTE_EXTRACTION;
         }
         if (key == 'r' || key == 'R') {
@@ -232,8 +217,7 @@ ISOPHOTE_EXTRACTION : {
             goto ISOPHOTE_DETECTION;
         }
         if (key == 'n' || key == 'N') {
-            // namedWindow("Hedcut Demo - Select Details",
-            // WINDOW_AUTOSIZE);
+            destroyWindow("Hedcut Demo - Extracted Isophotes");
             goto DETAIL_SELECTION;
         }
         if (key == 'r' || key == 'R') {
@@ -302,7 +286,7 @@ DETAIL_SELECTION : {
                 bitwise_and(mouse_src, mouse_src, final, mask);
                 imshow("Hedcut Demo - Select Details", final);
             }
-            // destroyWindow("Hedcut Demo - Select Details");
+            destroyWindow("Hedcut Demo - Select Details");
             goto OFFSET_MAP;
         }
         if (key == 'a' || key == 'A') {
@@ -343,15 +327,16 @@ DETAIL_SELECTION : {
         }
     }
 }
-// 5) accept isophotes and begin offsetmap generation
+// 7) accept isophotes and begin offsetmap generation
 OFFSET_MAP : {
     assert(!final.empty());
     std::cout << "\nBeginning offset map proccess\n"
                  "Press:\n"
-                 "   'L' / 'l' to increase / decrease offset lane distance "
+                 "\t'L' / 'l' to increase / decrease offset lane distance "
                  "by 1 px "
                  "(initial value is 6.0 px)\n";
 
+    // 7.5) show distance map
     distances =
         distanceMap(image_path, edges, image_path, isophotes_extracted, false);
     Mat distancesToShow = distances.clone();
@@ -378,7 +363,7 @@ OFFSET_MAP : {
             goto DETAIL_SELECTION;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Offset Map");
+            destroyWindow("Hedcut Demo - Offset Map");
             goto PLACE_DOTS;
         }
         if (key == 'r' || key == 'R') {
@@ -398,11 +383,11 @@ OFFSET_MAP : {
         imshow("Hedcut Demo - Offset Map", offset_map_visual);
     }
 }
-// 6) place dots
+// 8) place dots
 PLACE_DOTS : {
     std::cout << "\nBeginning dot placement map proccess\n"
                  "Press:\n"
-                 "   'D' / 'd' to increase / decrease space between dots "
+                 "\t'D' / 'd' to increase / decrease space between dots "
                  "distance by 1 px "
                  "(initial value is 6.0 px)\n";
 
@@ -431,7 +416,7 @@ PLACE_DOTS : {
             d++;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Initial Dots");
+            destroyWindow("Hedcut Demo - Initial Dots");
             goto ADJUST_DOTS;
         }
         if (key == 'r' || key == 'R') {
@@ -443,7 +428,7 @@ PLACE_DOTS : {
         imshow("Hedcut Demo - Initial Dots", initial_dots);
     }
 }
-// 7) accept initial dots and begin dot adjusting
+// 9) accept initial dots and begin dot adjusting
 ADJUST_DOTS : {
     std::cout << "\nBeginning dot adjusting process.\n";
 
@@ -465,7 +450,7 @@ ADJUST_DOTS : {
             goto PLACE_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Adjusted Dots");
+            destroyWindow("Hedcut Demo - Adjusted Dots");
             goto POSTERIZE_NEGATIVE;
         }
         adjusted_dots =
@@ -474,10 +459,12 @@ ADJUST_DOTS : {
         imshow("Hedcut Demo - Adjusted Dots", adjusted_dots);
     }
 }
+
+// 10) posterize image for negative space selection
 POSTERIZE_NEGATIVE : {
     std::cout << "\nBeginning posterization proccess for negative space\n\n"
                  "Press:\n"
-                 "   'P' / 'p' to increase / decrease number of bins for "
+                 "\t'P' / 'p' to increase / decrease number of bins for "
                  "posterization (initial value is 5)\n ";
     negative_posterized = posterize(image_path, image, negative_bins, false);
     imshow("Hedcut Demo - Negative Posterized", negative_posterized);
@@ -496,7 +483,7 @@ POSTERIZE_NEGATIVE : {
             goto ADJUST_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Negative Posterize");
+            destroyWindow("Hedcut Demo - Negative Posterize");
             goto CHOOSE_NEGATIVE;
         }
         if (key == 'r' || key == 'R') {
@@ -515,12 +502,12 @@ POSTERIZE_NEGATIVE : {
         imshow("Hedcut Demo - Negative Posterized", negative_posterized);
     }
 }
-// 8) accept adjusted dots and choose areas to not place circles
+// 11) accept adjusted dots and choose areas to not place circles
 CHOOSE_NEGATIVE : {
     std::cout << "\nBeginning negative space detection proccess.\nWhite areas "
                  "will not contain dots in final image.\n\n"
                  "Press:\n"
-                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "\t'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     negative_space = getIsophotes(image_path, negative_posterized,
                                   thresh_negative_space, false);
@@ -540,7 +527,7 @@ CHOOSE_NEGATIVE : {
             goto POSTERIZE_NEGATIVE;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Negative Space");
+            destroyWindow("Hedcut Demo - Negative Space");
             goto PLACE_CIRCLES;
         }
         if (key == 'r' || key == 'R') {
@@ -559,11 +546,11 @@ CHOOSE_NEGATIVE : {
         imshow("Hedcut Demo - Negative Space", negative_space);
     }
 }
-// 9) accept adjusted dots and place final circles
+// 12) accept adjusted dots and place final circles
 PLACE_CIRCLES : {
     std::cout << "\nBeginning circle placement process.\n"
                  "Press:\n"
-                 "   'D' / 'd' to increase / decrease maximum circle size by 1 "
+                 "\t'D' / 'd' to increase / decrease maximum circle size by 1 "
                  "(initial value is 12 px)\n";
 
     float density = 1 / float(l * l);
@@ -586,7 +573,7 @@ PLACE_CIRCLES : {
             goto CHOOSE_NEGATIVE;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Rendered");
+            destroyWindow("Hedcut Demo - Rendered");
             goto OUTLINE;
         }
         if (key == 'r' || key == 'R') {
@@ -604,16 +591,11 @@ PLACE_CIRCLES : {
         imshow("Hedcut Demo - Rendered", rendered);
     }
 }
-// // 10) accept rendered dots, find image outline
-// OUTLINE : {
-//     std::cout<< "\nBeginning outline detection proccess\n\n"
-//                  "Press:\n"
-//                  "   'T' / 't'to increase / decrease threshold parameter by
-//                  25 " "px for edge detection (initial " "value is 500 px)\n";
+// 13) accept rendered dots, find image outline
 OUTLINE : {
     std::cout << "\nBeginning outline detection proccess\n\n"
                  "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "\t'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 500 px)\n";
     outline = extractEdges(image_path, image, thresh_outline, false);
@@ -632,8 +614,8 @@ OUTLINE : {
             goto PLACE_CIRCLES;
         }
         if (key == 'n' || key == 'N') {
-            // destroyWindow("Hedcut Demo - Outline");
-            goto ADDITIONAL_DETAILS;
+            destroyWindow("Hedcut Demo - Outline");
+            goto FINAL_RENDERING;
         }
         if (key == 'r' || key == 'R') {
             thresh_outline = OUTLINE_THRESH;
@@ -648,232 +630,16 @@ OUTLINE : {
         imshow("Hedcut Demo - Outline", outline);
     }
 }
-// 10) accept rendered dots, find image outline
-ADDITIONAL_DETAILS : {
-    std::cout << "\nBeginning outline detection proccess\n\n"
-                 "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
-                 "px for edge detection (initial "
-                 "value is 500 px)\n";
-
-    Mat eye_balls = posterize(image_path, image, bins, false);
-    mouse_src2 = eye_balls;
-    img12 = mouse_src2.clone();
-    namedWindow("Hedcut Demo - Select 2", WINDOW_AUTOSIZE);
-    setMouseCallback("Hedcut Demo - Select 2", mouseHandler2, NULL);
-    imshow("Hedcut Demo - Select 2", mouse_src2);
-    bool finalized = false;
-    for (;;) {
-        char key = (char)waitKey(0);
-        if (auto_save || key == 's' || key == 'S') {
-            std::string tag = "-details";
-            save(mouse_src2, image_path, tag);
-        }
-        if (key == 27) {
-            return EXIT_SUCCESS;
-        }
-        if (key == 'b' || key == 'B') {
-            // reset variables
-            pts2.clear();
-            sections2.clear();
-            var2 = 0;
-            drag2 = 0;
-            flag2 = 0;
-            destroyWindow("Hedcut Demo - 2");
-            goto OUTLINE;
-        }
-        if (key == 'n' || key == 'N') {
-            if (!finalized) {
-                if (!pts2.empty()) {
-                    sections2.push_back(pts2);
-                    pts2.clear();
-                }
-                flag2 = 1;
-                img12 = mouse_src2.clone();
-                for (std::vector<Point> s : sections2) {
-                    polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
-                }
-                flag2 = var2;
-                final2 = Mat::zeros(mouse_src2.size(), CV_8UC3);
-                mask2 = Mat::zeros(mouse_src2.size(), CV_8UC1);
-                fillPoly(mask2, sections2, Scalar(255, 255, 255), 8, 0);
-                std::cout << "shit" << std::endl;
-                bitwise_and(mouse_src2, mouse_src2, final2, mask2);
-                std::cout << "fuck" << std::endl;
-                bitwise_not(final2, final2, mask2);
-                std::cout << "bitch" << std::endl;
-                bitwise_not(final2, final2);
-                std::cout << "whore" << std::endl;
-                threshold(final2, final2, 125, 255, THRESH_BINARY);
-                std::cout << "ass" << std::endl;
-
-                std::cout << "final 2 typetype: " << type2str(final2.type())
-                          << std::endl;
-                cvtColor(final2, final2, COLOR_RGB2GRAY);
-                std::cout << "cock" << std::endl;
-                final2.convertTo(final2, 0);
-                std::cout << "final 2 typetype: " << final2.type() << std::endl;
-                imshow("Hedcut Demo - Select 2", final2);
-                waitKey(0);
-            }
-            // destroyWindow("Hedcut Demo - Select Details");
-            goto FINAL_RENDERING;
-        }
-        if (key == 'a' || key == 'A') {
-            // save current section
-            sections2.push_back(pts2);
-            // reset variables
-            flag2 = 0;
-            pts2.clear();
-            var2 = 0;
-        }
-        if (key == 'd' || key == 'D') {
-            if (!pts2.empty()) {
-                sections2.push_back(pts2);
-                pts2.clear();
-            }
-            flag2 = 1;
-            img12 = mouse_src2.clone();
-            for (std::vector<Point> s : sections2) {
-                polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
-            }
-            flag2 = var2;
-            final2 = Mat::zeros(mouse_src2.size(), CV_8UC3);
-            mask2 = Mat::zeros(mouse_src2.size(), CV_8UC1);
-            fillPoly(mask2, sections2, Scalar(255, 255, 255), 8, 0);
-            bitwise_and(mouse_src2, mouse_src2, final2, mask2);
-            bitwise_not(final2, final2, mask2);
-            bitwise_not(final2, final2);
-            threshold(final2, final2, 125, 255, THRESH_BINARY);
-            cvtColor(final2, final2, COLOR_RGB2GRAY);
-            final2.convertTo(final2, 0);
-            std::cout << "final 2 typetype: " << final2.type() << std::endl;
-            imshow("Hedcut Demo - Select 2", final2);
-            finalized = true;
-        }
-        if (key == 'r' || key == 'R') {
-            pts2.clear();
-            sections2.clear();
-            var2 = 0;
-            drag2 = 0;
-            flag2 = 0;
-            finalized = false;
-            img12 = mouse_src2.clone();
-            imshow("Hedcut Demo - Select 2", mouse_src2);
-        }
-    }
-}
-// ADDITIONAL_DETAILS : {
-//     std::cout<< "\nBeginning outline detection proccess\n\n"
-//                  "Press:\n"
-//                  "   'T' / 't'to increase / decrease threshold parameter by
-//                  25 " "px for edge detection (initial " "value is 500 px)\n";
-
-//     Mat eye_balls = posterize(image_path, image, bins, false);
-
-//     thresh_outline = OUTLINE_THRESH;
-//     additional_details = extractEdges(image_path, image, thresh_outline,
-//     false); mouse_src2 = additional_details; img12 = mouse_src2.clone();
-//     namedWindow("Hedcut Demo - Select 2", WINDOW_AUTOSIZE);
-//     setMouseCallback("Hedcut Demo - Select 2", mouseHandler2, NULL);
-//     imshow("Hedcut Demo - Select 2", mouse_src2);
-//     bool finalized = false;
-//     for (;;) {
-//         char key = (char)waitKey(0);
-//         if (auto_save || key == 's' || key == 'S') {
-//             std::string tag = "-details";
-//             save(mouse_src2, image_path, tag);
-//         }
-//         if (key == 27) {
-//             return EXIT_SUCCESS;
-//         }
-//         if (key == 'b' || key == 'B') {
-//             // reset variables
-//             pts2.clear();
-//             sections2.clear();
-//             var2 = 0;
-//             drag2 = 0;
-//             flag2 = 0;
-//             destroyWindow("Hedcut Demo - 2");
-//             goto OUTLINE;
-//         }
-//         if (key == 'n' || key == 'N') {
-//             if (!finalized) {
-//                 if (!pts2.empty()) {
-//                     sections2.push_back(pts2);
-//                     pts2.clear();
-//                 }
-//                 flag2 = 1;
-//                 img12 = mouse_src2.clone();
-//                 for (std::vector<Point> s : sections2) {
-//                     polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
-//                 }
-//                 flag2 = var2;
-//                 final2 = Mat::zeros(mouse_src2.size(), CV_8UC3);
-//                 mask2 = Mat::zeros(mouse_src2.size(), CV_8UC1);
-//                 fillPoly(mask2, sections2, Scalar(255, 255, 255), 8,
-//                 0); bitwise_and(mouse_src2, mouse_src2, final, mask2);
-//                 bitwise_not(final2, final2, mask2);
-//                 bitwise_not(final2, final2);
-//                 imshow("Hedcut Demo - Select 2", final2);
-//             }
-//             // destroyWindow("Hedcut Demo - Select Details");
-//             goto FINAL_RENDERING;
-//         }
-//         if (key == 'a' || key == 'A') {
-//             // save current section
-//             sections2.push_back(pts2);
-//             // reset variables
-//             flag2 = 0;
-//             pts2.clear();
-//             var2 = 0;
-//         }
-//         if (key == 'd' || key == 'D') {
-//             if (!pts2.empty()) {
-//                 sections2.push_back(pts2);
-//                 pts2.clear();
-//             }
-//             flag2 = 1;
-//             img12 = mouse_src2.clone();
-//             for (std::vector<Point> s : sections2) {
-//                 polylines(img12, s, 1, Scalar(0, 0, 0), 2, 8, 0);
-//             }
-//             flag2 = var2;
-//             final2 = Mat::zeros(mouse_src2.size(), CV_8UC3);
-//             mask2 = Mat::zeros(mouse_src2.size(), CV_8UC1);
-//             fillPoly(mask2, sections2, Scalar(255, 255, 255), 8, 0);
-//             bitwise_and(mouse_src2, mouse_src2, final2, mask2);
-//             bitwise_not(final2, final2, mask2);
-//             bitwise_not(final2, final2);
-//             imshow("Hedcut Demo - Select 2", final2);
-//             finalized = true;
-//         }
-//         if (key == 'r' || key == 'R') {
-//             pts2.clear();
-//             sections2.clear();
-//             var2 = 0;
-//             drag2 = 0;
-//             flag2 = 0;
-//             finalized = false;
-//             img12 = mouse_src2.clone();
-//             imshow("Hedcut Demo - Select 2", mouse_src2);
-//         }
-//     }
-// }
-// 11) combine final rendering
+// 14) combine final rendering
 FINAL_RENDERING : {
     std::cout << "\nFinalizing rendering\n\n";
 
     destroyWindow("Hedcut Demo - Outline");
 
-    std::cout << "final2 type: " << type2str(final2.type()) << std::endl;
-    std::cout << "enlarged_details type: " << type2str(enlarged_details.type())
-              << std::endl;
-
     resize(outline, enlarged_outline, Size(), scale, scale);
-    // resize(final2, enlarged_details, Size(), scale, scale);
+    std::cout << "enlarged_outline type: " << type2str(enlarged_outline.type())
+              << std::endl;
     bitwise_and(rendered, enlarged_outline, final_rendering);
-    // bitwise_and(final_rendering, enlarged_details, final_rendering);
     imshow("Hedcut Demo - Final Rendering", final_rendering);
     for (;;) {
         char key = (char)waitKey(0);
