@@ -24,7 +24,7 @@ cv::Mat offsetMap(std::string pathDists, cv::Mat imgDists, float l, bool saving,
             if (delta <= w) {
                 map.at<int32_t>(i, j) = 0;
             } else {
-                // if recording secitons give pixel id
+                // if recording sections give pixel id
                 // otherwise keep white
                 if (sections) {
                     map.at<int32_t>(i, j) = id + 1;
