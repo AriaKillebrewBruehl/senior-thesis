@@ -6,13 +6,13 @@ int main(int argc, char** argv) {
     std::cout
         << "This program renders an input photograph as a hedcut drawing\n\n"
            "At any stage: \n"
-           "   press 'B' / 'b' to move to previous step in hedcut "
+           "\tpress 'B' / 'b' to move to previous step in hedcut "
            "process\n"
-           "   press 'N' / 'n' to move to next step in hedcut "
+           "\tpress 'N' / 'n' to move to next step in hedcut "
            "process\n"
-           "   press 'R' / 'r' to reset parameters to default values\n"
-           "   press 'S' / 's' to save current image\n"
-           "   press 'ESC' to exit program\n"
+           "\tpress 'R' / 'r' to reset parameters to default values\n"
+           "\tpress 'S' / 's' to save current image\n"
+           "\tpress 'ESC' to exit program\n"
            "!!!\n"
            "PLEASE NOTE THIS IS A SLOW PROGRAM (particularly the dot adjusting "
            "step) DO NOT SPAM THE KEYS IF YOU SEE NO CHANGE\n"
@@ -61,7 +61,7 @@ SET_UP : {
 EDGE_EXTRACTION : {
     std::cout << "\nBeginning edge detection proccess\n\n"
                  "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "\t'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 300 px)\n";
     edges = extractEdges(image_path, image, thresh_edges, false);
@@ -101,7 +101,7 @@ EDGE_EXTRACTION : {
 ISOPHOTE_DETECTION : {
     std::cout << "\nBeginning isophote detection proccess\n\n"
                  "Press:\n"
-                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "\t'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     isophotes = getIsophotes(image_path, image, thresh_iso_highlights, false);
     cv::destroyWindow("Hedcut Demo - Extracted Edges");
@@ -143,7 +143,7 @@ ISOPHOTE_DETECTION : {
 ISOPHOTE_EXTRACTION : {
     std::cout << "\nBeginning isophote extraction proccess\n"
                  "Press:\n"
-                 "   'T' / 't' to increase / decrease threshold parameter by "
+                 "\t'T' / 't' to increase / decrease threshold parameter by "
                  "10 px for edge detection (initial value is 50 px)\n";
 
     isophotes_extracted =
@@ -185,7 +185,7 @@ OFFSET_MAP : {
     std::cout
         << "\nBeginning offset map proccess\n"
            "Press:\n"
-           "   'L' / 'l' to increase / decrease offset lane distance by 1 px "
+           "\t'L' / 'l' to increase / decrease offset lane distance by 1 px "
            "(initial value is 6.0 px)\n";
 
     distances =
@@ -232,7 +232,7 @@ OFFSET_MAP : {
 PLACE_DOTS : {
     std::cout << "\nBeginning dot placement map proccess\n"
                  "Press:\n"
-                 "   'D' / 'd' to increase / decrease space between dots "
+                 "\t'D' / 'd' to increase / decrease space between dots "
                  "distance by 1 px "
                  "(initial value is 6.0 px)\n";
 
@@ -310,7 +310,7 @@ CHOOSE_NEGATIVE : {
     std::cout << "\nBeginning negative space detection proccess.\nWhite areas "
                  "will not contain dots in final image.\n\n"
                  "Press:\n"
-                 "   'I' / 'i' to increase / decrease fraction of isophotes "
+                 "\t'I' / 'i' to increase / decrease fraction of isophotes "
                  "taken to 1/n (initial value is 1/5)\n ";
     negative_space =
         getIsophotes(image_path, image, thresh_negative_space, false);
@@ -353,7 +353,7 @@ CHOOSE_NEGATIVE : {
 PLACE_CIRCLES : {
     std::cout << "\nBeginning circle placement process.\n"
                  "Press:\n"
-                 "   'D' / 'd' to increase / decrease maximum circle size by 1 "
+                 "\t'D' / 'd' to increase / decrease maximum circle size by 1 "
                  "(initial value is 12 px)\n";
 
     rendered =
@@ -396,7 +396,7 @@ PLACE_CIRCLES : {
 OUTLINE : {
     std::cout << "\nBeginning outline detection proccess\n\n"
                  "Press:\n"
-                 "   'T' / 't'to increase / decrease threshold parameter by 25 "
+                 "\t'T' / 't'to increase / decrease threshold parameter by 25 "
                  "px for edge detection (initial "
                  "value is 500 px)\n";
 
