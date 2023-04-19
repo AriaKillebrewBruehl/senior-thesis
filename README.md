@@ -30,3 +30,7 @@ To run the program:
 The program will run and print feedback in the terminal. Please note that the dot adjusting process (after initial dot placement) can be quite slow for large images.
 
 This program can be run on any `.png` and it is preferred that the image is large (large than `750 px x 750 px`). Final renderings look best if the background is removed. This can be easily done using Apple's copy subject tool. Additionally it helps if the subject is well lit, has neat hair, is face on, and if there is contrast in the image.
+
+## Other Branches
+
+The other branches contain more robust versions of the program and take user input through a CLI.
