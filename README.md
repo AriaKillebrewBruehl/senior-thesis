@@ -10,11 +10,23 @@ The goal of my thesis is to write a program that can render photographs as stipp
 
 I will render these images without the use of AI or ML, in part because I have no AI or ML experience and in part because this will avoid the question of [the ethics of AI generated art](https://jamiearpinricci.medium.com/the-ethics-of-ai-generated-art-57fb04b71646).
 
-## Process 
+## Process
 
-The main paper I will be following for this work is the 2010 Kim et al. paper [Automated Hedcut Illustration Using Isophotes](https://link.springer.com/chapter/10.1007/978-3-642-13544-6_17). I have diverged from this paper in a few ways, most notibly in the edge detection process and the distance transform calculation for which I use the 2009 Felzenszwalb and Huttenlocher paper [Distance Transforms of Sampled Functons](https://cs.brown.edu/people/pfelzens/papers/dt-final.pdf). 
+The main paper I will be following for this work is the 2010 Kim et al. paper [Automated Hedcut Illustration Using Isophotes](https://link.springer.com/chapter/10.1007/978-3-642-13544-6_17). I have diverged from this paper in a few ways, most notibly in the edge detection process and the distance transform calculation for which I use the 2009 Felzenszwalb and Huttenlocher paper [Distance Transforms of Sampled Functons](https://cs.brown.edu/people/pfelzens/papers/dt-final.pdf).
 
-## CLI 
+## Version 1
 
-I have built a CLI that allows the user to tune parameters on each step to acheive the best possible results. 
+This version of the `caboodle` program (called `caboodle` because it is the whole kitten caboodle) is fully automated. The only user input is the input image. All parameters to edge detection, isophote detection, offset map generation, etc. are hardcoded using the parameters specified in the papers I followed.
 
+To run the program:
+
+    > cd open_cv/kitten-caboodle/
+    > mkdir build
+    > cd build
+    > cmake ..
+    > make caboodle
+    > ./caboodle ../demo_images/sydney_sweeny.png
+
+The program will run and print feedback in the terminal. Please note that the dot adjusting process (after initial dot placement) can be quite slow for large images.
+
+This program can be run on any `.png` and it is preferred that the image is large (large than `750 px x 750 px`). Final renderings look best if the background is removed. This can be easily done using Apple's copy subject tool. Additionally it helps if the subject is well lit, has neat hair, is face on, and if there is contrast in the image.
