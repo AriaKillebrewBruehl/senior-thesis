@@ -53,13 +53,6 @@ cv::Mat placeSeedsAdjusted(std::string pathOffset, cv::Mat offsetMap,
     distancess = read(pathDists, dists);
 
     assert(!distancess.empty());
-    std::cout << distancess.type() << std::endl;
-    // if (offset.type() != CV_32SC1) {
-    //     if (offset.channels() != 1) {
-    //         cv::cvtColor(offset, offset, cv::COLOR_RGB2GRAY);
-    //     }
-    //     offset.convertTo(offset, CV_32SC1);
-    // }
 
     // blank map for seed pixels
     cv::Mat seeds = cv::Mat(offset.rows, offset.cols, CV_8UC1, cv::Scalar(255));

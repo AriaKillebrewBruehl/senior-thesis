@@ -65,10 +65,8 @@ int32_t f2(cv::Mat3i arr, int32_t p) {
     return value;
 }
 
-cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f,
-               int32_t n) {
+cv::Mat3i OneD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
     // type checking
-
     assert(!arr.empty());
 
     if (arr.type() != 20) {
@@ -200,7 +198,7 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // extract column and run one-dimensional distance transform
         cv::Mat3i column = arr.col(j);
         assert(column.type() == 20);
-        cv::Mat3i transformed = OneD(column, f2, j);
+        cv::Mat3i transformed = OneD(column, f2);
         assert(column.type() == 20);
         // replace column in original array
         transformed.col(0).copyTo(arr.col(j));
@@ -210,7 +208,7 @@ cv::Mat3i TwoD(cv::Mat3i arr, std::function<int32_t(cv::Mat, int32_t)> f) {
         // extract row and run one-dimensional distance transform
         cv::Mat row = arr.row(i);
         assert(row.type() == 20);
-        cv::Mat3i transformed = OneD(row, f2, i);
+        cv::Mat3i transformed = OneD(row, f2);
         assert(row.type() == 20);
         // replace row in original array
         transformed.row(0).copyTo(arr.row(i));
