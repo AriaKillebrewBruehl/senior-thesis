@@ -10,8 +10,10 @@ The goal of my thesis is to write a program that can render photographs as stipp
 
 I will render these images without the use of AI or ML, in part because I have no AI or ML experience and in part because this will avoid the question of [the ethics of AI generated art](https://jamiearpinricci.medium.com/the-ethics-of-ai-generated-art-57fb04b71646).
 
-## Process 
+## Process
 
-The main paper I will be following for this work is the 2010 Kim et al. paper [Automated Hedcut Illustration Using Isophotes](https://link.springer.com/chapter/10.1007/978-3-642-13544-6_17). I have diverged from this paper in a few ways, most notibly in the distance transform calculation for which I use the 2009 Felzenszwalb and Huttenlocher paper [Distance Transforms of Sampled Functons](https://cs.brown.edu/people/pfelzens/papers/dt-final.pdf). 
+The main paper I will be following for this work is the 2010 Kim et al. paper [Automated Hedcut Illustration Using Isophotes](https://link.springer.com/chapter/10.1007/978-3-642-13544-6_17). I have diverged from this paper in a few ways, most notably in the distance transform calculation for which I use the 2009 Felzenszwalb and Huttenlocher paper [Distance Transforms of Sampled Functions](https://cs.brown.edu/people/pfelzens/papers/dt-final.pdf).
 
-I am currently working on changing the edge detection process to follow the 2007 Kang et al. paper [Coherent Line Drawing](http://www.umsl.edu/cmpsci/faculty-sites/kang/publications/2007/npar07/kang_npar07_hi.pdf)
+## Posterize Version
+
+This version is quite similar to `Version 3` which has a CLI and allows the user to specify parameters at each step. Like `Version 3` the user can select regions of negative space where stipples will no be placed in the final rendering. The difference between `posterize` and `caboodle3` is the method of posterizing the input image for isophote and negative space selection. In this version we allow the user to specify how many segments they would like the input image to be split into.
