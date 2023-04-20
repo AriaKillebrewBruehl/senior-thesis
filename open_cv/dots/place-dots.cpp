@@ -136,7 +136,7 @@ cv::Mat placeDotsNegativeSpace(std::string pathSeeds, cv::Mat imgSeeds,
                 float s = s_max * std::pow((1 - t), gamma);
                 if (details.at<uchar>(i, j) == 0) {
                     // make dots in less detailed area (black) bigger
-                    s *= 1.75;
+                    s *= 1.65;
                 } else {
                     s *= 1;
                 }
