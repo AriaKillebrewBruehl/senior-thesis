@@ -13,3 +13,7 @@ I will render these images without the use of AI or ML, in part because I have n
 ## Process
 
 The main paper I will be following for this work is the 2010 Kim et al. paper [Automated Hedcut Illustration Using Isophotes](https://link.springer.com/chapter/10.1007/978-3-642-13544-6_17). I have diverged from this paper in a few ways, most notibly in the distance transform calculation for which I use the 2009 Felzenszwalb and Huttenlocher paper [Distance Transforms of Sampled Functons](https://cs.brown.edu/people/pfelzens/papers/dt-final.pdf).
+
+## Mouse Selection Version
+
+This version builds on `Version 3` by allowing the user to select areas that they desire to have more detail. In the `Detail Selection` step the user selects regions where a greater density of stipples will be placed in the final rendering. Varying stipple density is a technique used by hedcut artists rendering images by hand. Often artists increate dot density around more complicated features such as eyes, noses, and lips. This expansion is an improvement upon other stippling techniques which assume a uniform density of stipples throughout the rendering.
