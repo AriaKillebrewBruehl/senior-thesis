@@ -40,7 +40,7 @@ cv::Mat placeSeeds(std::string pathOffset, cv::Mat offsetMap,
                 int s = d;
                 if (details.at<uchar>(i, j) == 255) {
                     // detailed sections are while
-                    s /= 4;
+                    s /= 3;
                 }
                 if (r <= 1 / double(s * s)) {
                     seeds.at<uchar>(i, j) = uchar(0);
