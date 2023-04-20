@@ -56,6 +56,38 @@ cv::Mat binary(cv::Mat img) {
     return img;
 }
 
+cv::Mat enlargeDots(std::string pathSeeds, cv::Mat imgSeeds, bool saving) {
+    cv::Mat seeds = read(pathSeeds, imgSeeds);
+    assert(!seeds.empty());
+
+    if (seeds.type() != 0) {
+        if (seeds.channels() != 1) {
+            cv::cvtColor(seeds, seeds, cv::COLOR_RGB2GRAY);
+        }
+        seeds.convertTo(seeds, 0);
+    }
+    assert(seeds.type() == 0);
+
+    int scale = 6;
+    cv::Mat rendered = cv::Mat(seeds.rows * scale, seeds.cols * scale, CV_8UC1,
+                               cv::Scalar(255));
+
+    for (int i = 0; i < seeds.rows; i++) {
+        for (int j = 0; j < seeds.cols; j++) {
+            if (seeds.at<uchar>(i, j) == 0) {
+                cv::circle(rendered, cv::Point2d(j * scale, i * scale), int(10),
+                           cv::Scalar(0), -1);
+            }
+        }
+    }
+
+    if (saving) {
+        save(rendered, pathSeeds, "-better-dots");
+    }
+
+    return rendered;
+}
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cerr << "Must pass in image to run DoG on." << std::endl;
@@ -64,14 +96,7 @@ int main(int argc, char** argv) {
             cv::Mat image;
             image = read(argv[i], image);
             assert(!image.empty());
-            // cv::Mat mE = morphErode(image);
-            // save(mE, argv[i], "-eroded");
-            // cv::Mat mD = morphDilate(image);
-            // save(mD, argv[i], "-dilated");
-            cv::Mat bin = binary(image);
-            save(bin, argv[i], "-binary");
-            // cv::Mat mC = morphClose(image);
-            // save(mC, argv[i], "-closed");
+            enlargeDots(argv[i], image, true);
         }
     }
     return 0;
