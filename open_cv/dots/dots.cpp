@@ -40,7 +40,8 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
         }
         if (!t1 && t2) {
             // alternate offset lane constraints
-            seeds = adjust("", offsets, "", voronoi, false, t2 % 2);
+            // seeds = adjust("", offsets, "", voronoi, false, t2 % 2);
+            seeds = adjust("", offsets, "", voronoi, false, true);
             t2--;
         }
     }
