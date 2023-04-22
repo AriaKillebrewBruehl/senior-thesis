@@ -24,7 +24,7 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(main main.cpp read-save.cpp)
+add_executable(main main.cpp read-save.cpp ../boiler-plate/type2str.cpp)
 
 # tell it to link the executable target against OpenCV
 target_link_libraries(main ${OpenCV_LIBS})
