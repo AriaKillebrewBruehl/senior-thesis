@@ -48,12 +48,31 @@ cv::Mat grayscale(cv::Mat img) {
 
 cv::Mat binary(cv::Mat img) {
     if (img.channels() == 4) {
-        cv::cvtColor(img, img, cv::COLOR_RGBA2RGB);
+        cv::cvtColor(img, img, cv::COLOR_RGBA2GRAY);
     } else if (img.channels() == 3) {
         cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
     }
-    cv::threshold(img, img, 10, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(img, img, 200, 255, cv::THRESH_BINARY);
     return img;
+}
+
+cv::Mat getCurly(cv::Mat img) {
+    cv::Mat gs = grayscale(img);
+    cv::imshow("gs", gs);
+    cv::waitKey(0);
+    std::cout << type2str(gs.type()) << std::endl;
+    for (int i = 0; i < gs.rows; i++) {
+        for (int j = 0; j < gs.cols; j++) {
+            if (gs.at<uchar>(i, j) < 50) {
+                gs.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+
+    cv::imshow("binary", gs);
+    cv::waitKey(0);
+    cv::threshold(gs, gs, 250, 255, cv::THRESH_BINARY);
+    return gs;
 }
 
 int main(int argc, char** argv) {
@@ -69,7 +88,7 @@ int main(int argc, char** argv) {
             // cv::Mat mD = morphDilate(image);
             // save(mD, argv[i], "-dilated");
             cv::Mat bin = binary(image);
-            save(bin, argv[i], "-binary");
+            save(bin, argv[i], "-smoothed");
             // cv::Mat mC = morphClose(image);
             // save(mC, argv[i], "-closed");
         }
