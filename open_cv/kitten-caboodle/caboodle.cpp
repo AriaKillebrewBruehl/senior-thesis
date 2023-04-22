@@ -36,6 +36,20 @@ int main(int argc, char** argv) {
     if (image.channels() == 4) {
         cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
     }
+    // cv::Mat image;
+    // for (int i = 1; i < argc; i += 3) {
+    //     cv::Mat blank;
+    //     edges = read(argv[i], blank);
+    //     isophotes_extracted = read(argv[i + 1], blank);
+    //     image = read(argv[i + 2], blank);
+    //     cv::cvtColor(image, image, cv::COLOR_RGBA2RGB);
+    // }
+    // assert(!edges.empty());
+    // assert(!isophotes_extracted.empty());
+    // assert(!image.empty());
+    // std::cout << "bitch" << std::endl;
+    // std::string image_path = "";
+    // goto OFFSET_MAP;
 
 SET_UP : {
     std::cout << "\nBeginning hedcut generation proccess\n"
