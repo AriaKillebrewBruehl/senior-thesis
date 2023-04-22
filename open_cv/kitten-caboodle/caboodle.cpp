@@ -290,8 +290,10 @@ DETAIL_SELECTION : {
             goto OFFSET_MAP;
         }
         if (key == 'a' || key == 'A') {
-            // save current section
-            sections.push_back(pts);
+            if (!pts.empty()) {
+                // save current section
+                sections.push_back(pts);
+            }
             // reset variables
             flag = 0;
             pts.clear();
@@ -343,6 +345,7 @@ OFFSET_MAP : {
     distancesToShow.convertTo(distancesToShow, CV_8UC1);
     imshow("Hedcut Demo - Distance Map", distancesToShow);
     waitKey(0);
+    destroyWindow("Hedcut Demo - Distance Map");
     offset_map =
         offsetMap(image_path, distances, image_path, mask, l, false, true);
     offset_map_visual =
