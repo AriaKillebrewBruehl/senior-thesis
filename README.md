@@ -17,3 +17,7 @@ The main paper I will be following for this work is the 2010 Kim et al. paper [A
 ## Mouse Selection Version
 
 This version builds on `Version 3` by allowing the user to select areas that they desire to have more detail. In the `Detail Selection` step the user selects regions where a greater density of stipples will be placed in the final rendering. Varying stipple density is a technique used by hedcut artists rendering images by hand. Often artists increate dot density around more complicated features such as eyes, noses, and lips. This expansion is an improvement upon other stippling techniques which assume a uniform density of stipples throughout the rendering.
+
+### CLI Video
+
+[![Watch the video](./images/thumbnail.png)](https://youtu.be/x-0Trv44cH0)
