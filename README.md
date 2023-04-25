@@ -17,3 +17,7 @@ The main paper I will be following for this work is the 2010 Kim et al. paper [A
 ## Posterize Version
 
 This version is quite similar to `Version 3` which has a CLI and allows the user to specify parameters at each step. Like `Version 3` the user can select regions of negative space where stipples will no be placed in the final rendering. The difference between `posterize` and `caboodle3` is the method of posterizing the input image for isophote and negative space selection. In this version we allow the user to specify how many segments they would like the input image to be split into. I recommend using this version over `caboodle3`.
+
+### CLI Video
+
+[![Watch the video](./images/thumbnail.png)](https://youtu.be/x-0Trv44cH0)
