@@ -32,3 +32,7 @@ To run the program:
 The program will run and print feedback in the terminal and specify which buttons to press to adjust parameters. Please note that the dot adjusting process (after initial dot placement) can be quite slow for large images.
 
 This program can be run on any `.png` and it is preferred that the image is large (large than `750 px x 750 px`). Final renderings look best if the background is removed. This can be easily done using Apple's copy subject tool. Additionally it helps if the subject is well lit, has neat hair, is face on, and if there is contrast in the image.
+
+### CLI Video
+
+[![Watch the video](./images/thumbnail.png)](https://youtu.be/x-0Trv44cH0)
