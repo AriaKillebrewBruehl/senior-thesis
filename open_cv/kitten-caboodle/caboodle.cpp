@@ -486,7 +486,7 @@ POSTERIZE_NEGATIVE : {
             goto ADJUST_DOTS;
         }
         if (key == 'n' || key == 'N') {
-            destroyWindow("Hedcut Demo - Negative Posterize");
+            destroyWindow("Hedcut Demo - Negative Posterized");
             goto CHOOSE_NEGATIVE;
         }
         if (key == 'r' || key == 'R') {
