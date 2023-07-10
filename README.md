@@ -16,7 +16,7 @@ The main paper I will be following for this work is the 2010 Kim et al. paper [A
 
 ## Version 1
 
-This version of the `caboodle` program (called `caboodle` because it is the whole kitten caboodle) is fully automated. The only user input is the input image. All parameters to edge detection, isophote detection, offset map generation, etc. are hardcoded using the parameters specified in the papers I followed.
+This version of the `caboodle` program (called `caboodle` because it is the whole kit and caboodle) is fully automated. The only user input is the input image. All parameters to edge detection, isophote detection, offset map generation, etc. are hardcoded using the parameters specified in the papers I followed.
 
 To run the program:
 
