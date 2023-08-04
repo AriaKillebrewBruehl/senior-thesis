@@ -12,5 +12,3 @@
 #include "../dots/place-dots.hpp"
 #include "../edge-detection/extract-edges.hpp"
 #include "../isophotes/extract-isophotes.hpp"
-
-cv::Mat caboodle(std::string path, cv::Mat img, bool saving);
