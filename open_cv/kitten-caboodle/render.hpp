@@ -67,5 +67,3 @@ int scale = 6;
 Mat enlarged_outline;
 Mat enlarged_details;
 Mat final_rendering;
-
-Mat caboodle(std::string path, Mat img, bool saving);
