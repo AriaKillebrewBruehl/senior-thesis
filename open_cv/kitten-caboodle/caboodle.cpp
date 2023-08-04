@@ -159,7 +159,6 @@ ISOPHOTE_DETECTION : {
         getIsophotes(image_path, posterized, thresh_iso_highlights, false);
     imshow("Hedcut Demo - Detected Isophotes", isophotes);
     for (;;) {
-        std::cout << thresh_iso_highlights << std::endl;
         char key = (char)waitKey(0);
         if (auto_save || key == 's' || key == 'S') {
             std::string tag =

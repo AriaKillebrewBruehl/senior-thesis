@@ -27,7 +27,7 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
     }
 
     int t1 = 10;
-    int t2 = 30;
+    int t2 = 40;
     while (t1 || t2) {
         // step 1: generate voronoi  diagram of seed pixels
         cv::Mat3i voronoi = sample_seeds(seeds, "", false, true);
@@ -40,8 +40,8 @@ cv::Mat dots(std::string pathOffset, cv::Mat imgOffset, std::string pathSeeds,
         }
         if (!t1 && t2) {
             // alternate offset lane constraints
-            // seeds = adjust("", offsets, "", voronoi, false, t2 % 2);
-            seeds = adjust("", offsets, "", voronoi, false, true);
+            seeds = adjust("", offsets, "", voronoi, false, t2 % 2);
+            // seeds = adjust("", offsets, "", voronoi, false, true);
             t2--;
         }
     }
