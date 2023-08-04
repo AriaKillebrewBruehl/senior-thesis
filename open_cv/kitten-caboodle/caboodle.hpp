@@ -7,7 +7,7 @@
 #include "../boiler-plate/CIEprocess.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
-#include "../distance-map/fullMap.hpp"
+#include "../distance-map/full-map.hpp"
 #include "../dots/dots.hpp"
 #include "../dots/place-dots.hpp"
 #include "../edge-detection/extract-edges.hpp"
