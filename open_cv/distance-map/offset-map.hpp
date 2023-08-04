@@ -4,7 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
-#include "distance-map2.hpp"
+#include "distance-map.hpp"
 
 // Returns an offset map given a distance map
 // parameters:
