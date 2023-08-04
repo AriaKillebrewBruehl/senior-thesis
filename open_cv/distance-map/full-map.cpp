@@ -1,4 +1,4 @@
-#include "fullMap.hpp"
+#include "full-map.hpp"
 
 cv::Mat fullMap(std::string pathEdges, cv::Mat imgEdges, std::string pathIsos,
                 cv::Mat imgIsos, float l, bool offset_sections, bool saving) {
