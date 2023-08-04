@@ -1,5 +1,5 @@
-#include "caboodle.hpp"
-cv::Mat caboodle(std::string path, cv::Mat img, bool saving) {
+#include "render.hpp"
+cv::Mat render(std::string path, cv::Mat img, bool saving) {
     cv::Mat image;
     image = read(path, img);
     assert(!image.empty());
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     } else {
         for (int i = 1; i < argc; i++) {
             cv::Mat image;
-            caboodle(argv[i], image, true);
+            render(argv[i], image, true);
         }
     }
 }
