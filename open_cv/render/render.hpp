@@ -7,7 +7,7 @@
 #include "../boiler-plate/CIEprocess.hpp"
 #include "../boiler-plate/read-save.hpp"
 #include "../boiler-plate/type2str.hpp"
-#include "../distance-map/fullMap.hpp"
+#include "../distance-map/full-map.hpp"
 #include "../dots/dots.hpp"
 #include "../dots/place-dots.hpp"
 #include "../edge-detection/extract-edges.hpp"
@@ -35,5 +35,3 @@ int d = l;
 cv::Mat adjusted_dots;
 cv::Mat rendered;
 int max_size = MAX_SIZE;
-
-cv::Mat caboodle(std::string path, cv::Mat img, bool saving);

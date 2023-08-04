@@ -1,4 +1,4 @@
-#include "distance-map2.hpp"
+#include "distance-map.hpp"
 
 cv::Mat distanceMap(std::string pathEdges, cv::Mat imgEdges,
                     std::string pathIsos, cv::Mat imgIsos, bool saving) {

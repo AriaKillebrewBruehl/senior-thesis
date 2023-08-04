@@ -24,7 +24,13 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # specify the executable target to be built
-add_executable(main main.cpp read-save.cpp ../boiler-plate/type2str.cpp)
+add_executable(render render.cpp 
+    ../boiler-plate/invert.cpp ../boiler-plate/read-save.cpp ../boiler-plate/type2str.cpp ../boiler-plate/CIEprocess.cpp
+    ../distance-map/distance-map.cpp ../distance-map/full-map.cpp  ../distance-map/sampled-transform-seeds.cpp ../distance-map/offset-map.cpp
+    ../dots/adjust-cells.cpp ../dots/dots.cpp ../dots/place-dots.cpp ../dots/place-seeds.cpp
+    ../isophotes/extract-isophotes.cpp ../isophotes/isophotes.cpp 
+    ../edge-detection/canny.cpp  ../edge-detection/extract-edges.cpp  ../edge-detection/skeleton.cpp ../edge-detection/threshold-edges.cpp 
+    )
 
 # tell it to link the executable target against OpenCV
-target_link_libraries(main ${OpenCV_LIBS})
+target_link_libraries(render ${OpenCV_LIBS})

@@ -1,6 +1,6 @@
 #pragma once
 #include "../boiler-plate/invert.hpp"
-#include "distance-map2.hpp"
+#include "distance-map.hpp"
 #include "offset-map.hpp"
 
 // parameters:
